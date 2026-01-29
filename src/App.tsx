@@ -5,14 +5,19 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
 import MouseGlow from './components/MouseGlow';
+import ValueProp from './components/ValueProp';
+import { useTranslation } from 'react-i18next';
 
 function App() {
+  const { t } = useTranslation();
+
   return (
     <div className="App">
       <MouseGlow />
       <Navbar />
       <main>
         <Hero />
+        <ValueProp />
         <Stats />
       </main>
 
@@ -20,7 +25,7 @@ function App() {
       <footer style={styles.footer}>
         <div className="container">
           <p style={styles.footerText}>
-            © 2026 CAT Crypto Ambassador Team. All rights reserved.
+            {t('footer.copyright')}
           </p>
         </div>
       </footer>

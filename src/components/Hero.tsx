@@ -36,8 +36,8 @@ const Hero: React.FC = () => {
                     <p style={styles.description}>{t('hero.description')}</p>
 
                     <div style={styles.ctaContainer}>
-                        <button style={styles.primaryCta}>{t('hero.cta')}</button>
-                        <button style={styles.secondaryCta}>{t('nav.governance')}</button>
+                        <button style={styles.primaryCta}>{t('hero.ctaPrimary')}</button>
+                        <button style={styles.secondaryCta}>{t('hero.ctaSecondary')}</button>
                     </div>
                 </motion.div>
             </div>
