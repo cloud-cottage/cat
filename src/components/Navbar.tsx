@@ -18,10 +18,10 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div style={styles.links}>
-                    <a href="https://docs.catcatcat.com" target="_blank" rel="noopener noreferrer" style={styles.link}>
+                    <a href="https://docs.catcat.meme" target="_blank" rel="noopener noreferrer" style={styles.link}>
                         {t('nav.governance')} <ArrowUpRight size={14} />
                     </a>
-                    <a href="#" style={styles.applyBtn}>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeblTSdxCThVTDPda_hnae1Cp3163D4wmo-5nItBpRs7JS7zw/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" style={styles.applyBtn}>
                         {t('nav.apply')}
                     </a>
 
