@@ -4,10 +4,12 @@ import './i18n';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
+import MouseGlow from './components/MouseGlow';
 
 function App() {
   return (
     <div className="App">
+      <MouseGlow />
       <Navbar />
       <main>
         <Hero />

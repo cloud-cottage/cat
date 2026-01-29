@@ -19,13 +19,24 @@ const Stats: React.FC = () => {
                     {statsData.map((stat, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            whileHover={{
+                                scale: 1.05,
+                                rotateX: index % 2 === 0 ? 5 : -5,
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                            }}
+                            transition={{ duration: 0.4, delay: index * 0.1 }}
                             style={styles.card}
                         >
-                            <h3 style={styles.value}>{stat.value}</h3>
+                            <motion.h3
+                                initial={{ scale: 0.8 }}
+                                whileInView={{ scale: 1 }}
+                                style={styles.value}
+                            >
+                                {stat.value}
+                            </motion.h3>
                             <p style={styles.label}>{stat.label}</p>
                         </motion.div>
                     ))}

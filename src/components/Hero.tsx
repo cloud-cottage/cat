@@ -1,24 +1,38 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import InteractiveBG from './InteractiveBG';
 
 const Hero: React.FC = () => {
     const { t } = useTranslation();
 
     return (
         <section style={styles.hero}>
-            {/* Background Pattern - Dot Matrix/Grid Style */}
-            <div style={styles.bgOverlay} />
+            <InteractiveBG />
 
             <div className="container" style={styles.container}>
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, ease: "easeOut" }}
                     style={styles.content}
                 >
-                    <h2 style={styles.slogan}>{t('hero.slogan')}</h2>
-                    <h1 style={styles.title}>{t('hero.title')}</h1>
+                    <motion.h2
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        style={styles.slogan}
+                    >
+                        {t('hero.slogan')}
+                    </motion.h2>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        style={styles.title}
+                    >
+                        {t('hero.title')}
+                    </motion.h1>
                     <p style={styles.description}>{t('hero.description')}</p>
 
                     <div style={styles.ctaContainer}>
