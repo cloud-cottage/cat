@@ -30,9 +30,8 @@ const Hero: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                         style={styles.title}
-                    >
-                        {t('hero.title')}
-                    </motion.h1>
+                        dangerouslySetInnerHTML={{ __html: t('hero.title') }}
+                    />
                     <p style={styles.description}>{t('hero.description')}</p>
 
                     <div style={styles.ctaContainer}>

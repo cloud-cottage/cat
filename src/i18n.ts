@@ -9,7 +9,7 @@ const resources = {
         governance: 'Governance Whitepaper',
       },
       hero: {
-        title: 'Redefining "Reach": Closer, Truer, More Effective.',
+        title: 'Redefining <i>REACH</i>: Closer, Truer, More Effective.',
         slogan: 'Paws for Web3',
         description: 'CAT Ambassador Team helps brands build an agile network that directly reaches new user ecosystems. We are not middlemen, but your most sensitive market nerve endings.',
         ctaPrimary: 'Explore Our Method',
