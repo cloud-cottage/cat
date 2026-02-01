@@ -13,25 +13,25 @@ const partnersData: Partner[] = [
         id: 1,
         name: 'Ethereum Foundation',
         url: 'https://ethereum.org',
-        imageUrl: 'https://via.placeholder.com/280x120/627EEA/FFFFFF?text=Ethereum',
+        imageUrl: 'https://via.placeholder.com/320x100/627EEA/FFFFFF?text=Ethereum',
     },
     {
         id: 2,
         name: 'Uniswap Labs',
         url: 'https://uniswap.org',
-        imageUrl: 'https://via.placeholder.com/280x120/FF007A/FFFFFF?text=Uniswap',
+        imageUrl: 'https://via.placeholder.com/320x100/FF007A/FFFFFF?text=Uniswap',
     },
     {
         id: 3,
         name: 'OpenSea',
         url: 'https://opensea.io',
-        imageUrl: 'https://via.placeholder.com/280x120/2081E2/FFFFFF?text=OpenSea',
+        imageUrl: 'https://via.placeholder.com/320x100/2081E2/FFFFFF?text=OpenSea',
     },
     {
         id: 4,
         name: 'MetaMask',
         url: 'https://metamask.io',
-        imageUrl: 'https://via.placeholder.com/280x120/F6851B/FFFFFF?text=MetaMask',
+        imageUrl: 'https://via.placeholder.com/320x100/F6851B/FFFFFF?text=MetaMask',
     },
 ];
 
@@ -114,8 +114,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     },
     imageContainer: {
-        width: '100%',
-        height: '120px',
+        width: '320px',
+        height: '100px',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
