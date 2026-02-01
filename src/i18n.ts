@@ -4,6 +4,9 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      meta: {
+        title: 'CAT | Your Web3 Paws',
+      },
       nav: {
         apply: 'Apply to be CA',
         governance: 'Governance Whitepaper',
@@ -43,6 +46,9 @@ const resources = {
   },
   zh: {
     translation: {
+      meta: {
+        title: 'CAT | 助你一爪之力',
+      },
       nav: {
         apply: '申请成为 CA',
         governance: '治理白皮书',
@@ -82,6 +88,9 @@ const resources = {
   },
   'zh-TW': {
     translation: {
+      meta: {
+        title: 'CAT | 助你一爪之力',
+      },
       nav: {
         apply: '申請成為 CA',
         governance: '治理白皮書',

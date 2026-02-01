@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.css';
 import './i18n';
 import Navbar from './components/Navbar';
@@ -9,7 +9,11 @@ import ValueProp from './components/ValueProp';
 import { useTranslation } from 'react-i18next';
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    document.title = t('meta.title');
+  }, [i18n.language, t]);
 
   return (
     <div className="App">
