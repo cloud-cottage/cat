@@ -6,6 +6,7 @@ import Hero from './components/Hero';
 import Stats from './components/Stats';
 import MouseGlow from './components/MouseGlow';
 import ValueProp from './components/ValueProp';
+import Partners from './components/Partners';
 import { useTranslation } from 'react-i18next';
 
 function App() {
@@ -24,6 +25,8 @@ function App() {
         <ValueProp />
         <Stats />
       </main>
+
+      <Partners />
 
       {/* Simple Footer */}
       <footer style={styles.footer}>
