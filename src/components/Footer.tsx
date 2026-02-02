@@ -13,7 +13,7 @@ const friendLinksData: FriendLink[] = [
         id: 1,
         name: '锦鲤社区',
         url: 'https://jinlibenli.com',
-        imageUrl: '/images/jinli.png',
+        imageUrl: 'https://placehold.co/160x50/3B82F6/FFFFFF?text=锦鲤社区',
     },
     {
         id: 2,
