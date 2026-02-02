@@ -13,7 +13,7 @@ const partnersData: Partner[] = [
         id: 1,
         name: 'Ethereum Foundation',
         url: 'https://ethereum.org',
-        imageUrl: '/images/ethereum-foundation.png',
+        imageUrl: 'https://placehold.co/320x100/627EEA/FFFFFF?text=Ethereum+Foundation',
     },
     {
         id: 2,
