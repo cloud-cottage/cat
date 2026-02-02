@@ -7,6 +7,7 @@ import Stats from './components/Stats';
 import MouseGlow from './components/MouseGlow';
 import ValueProp from './components/ValueProp';
 import Partners from './components/Partners';
+import Footer from './components/Footer';
 import { useTranslation } from 'react-i18next';
 
 function App() {
@@ -28,29 +29,9 @@ function App() {
 
       <Partners />
 
-      {/* Simple Footer */}
-      <footer style={styles.footer}>
-        <div className="container">
-          <p style={styles.footerText}>
-            {t('footer.copyright')}
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
-
-const styles: { [key: string]: React.CSSProperties } = {
-  footer: {
-    padding: '4rem 0',
-    backgroundColor: 'var(--color-text-dark)',
-    color: 'var(--color-bg)',
-    textAlign: 'center',
-  },
-  footerText: {
-    opacity: 0.7,
-    fontSize: '0.9rem',
-  }
-};
 
 export default App;
