@@ -106,6 +106,10 @@ const styles: { [key: string]: React.CSSProperties } = {
         alignItems: 'center',
         gap: '2rem',
         flexWrap: 'wrap',
+        backgroundColor: '#FF6B6B',
+        padding: '1rem',
+        borderRadius: '8px',
+        border: '3px solid #FFD93D',
     },
     linkItem: {
         display: 'block',
