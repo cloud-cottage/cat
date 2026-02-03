@@ -28,12 +28,6 @@ const partnersData: Partner[] = [
         url: 'https://opensea.io',
         imageUrl: 'https://via.placeholder.com/320x100/2081E2/FFFFFF?text=OpenSea',
     },
-    {
-        id: 4,
-        name: 'MetaMask',
-        url: 'https://metamask.io',
-        imageUrl: 'https://via.placeholder.com/320x100/F6851B/FFFFFF?text=MetaMask',
-    },
 ];
 
 const Partners: React.FC = () => {
@@ -100,7 +94,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '2rem',
         maxWidth: '1200px',
         margin: '0 auto',
