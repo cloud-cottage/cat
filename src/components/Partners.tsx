@@ -127,7 +127,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     image: {
         width: '100%',
         height: '100%',
-        objectFit: 'cover',
+        objectFit: 'contain',
+        display: 'block',
     },
     partnerName: {
         padding: '1rem',
