@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface Partner {
     id: number;
@@ -36,6 +37,8 @@ const partnersData: Partner[] = [
 ];
 
 const Partners: React.FC = () => {
+    const { t } = useTranslation();
+    
     return (
         <section style={styles.section}>
             <div className="container">
@@ -46,7 +49,7 @@ const Partners: React.FC = () => {
                     transition={{ duration: 0.6 }}
                     style={styles.title}
                 >
-                    Partners & Friends
+                    {t('partners.title')}
                 </motion.h2>
                 
                 <div style={styles.grid}>

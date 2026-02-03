@@ -39,6 +39,9 @@ const resources = {
         members: 'Member Count',
         partners: 'Brand Partners',
       },
+      partners: {
+        title: 'Collaborating Partners',
+      },
       footer: {
         copyright: '© 2025-2026 CAT Crypto Ambassador Team. All rights reserved.',
       }
@@ -81,6 +84,9 @@ const resources = {
         members: '成员数',
         partners: '合作品牌方',
       },
+      partners: {
+        title: '合作伙伴',
+      },
       footer: {
         copyright: '© 2025-2026 CAT Crypto Ambassador Team. All rights reserved.',
       }
@@ -122,6 +128,9 @@ const resources = {
         monthlyComp: '1月薪酬',
         members: '成員數',
         partners: '合作品牌方',
+      },
+      partners: {
+        title: '合作夥伴',
       },
       footer: {
         copyright: '© 2025-2026 CAT Crypto Ambassador Team. All rights reserved.',
