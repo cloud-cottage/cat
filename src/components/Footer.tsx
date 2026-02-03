@@ -43,7 +43,6 @@ const Footer: React.FC = () => {
             <div className="container">
                 {/* Friend Links Section */}
                 <div style={styles.linksSection}>
-                    <h3 style={styles.linksTitle}>友情链接</h3>
                     <div style={styles.linksGrid}>
                         {friendLinksData.map((link, index) => (
                             <motion.a
@@ -92,13 +91,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     linksSection: {
         marginBottom: '2rem',
-    },
-    linksTitle: {
-        fontSize: '1.1rem',
-        fontWeight: 600,
-        textAlign: 'center',
-        marginBottom: '1.5rem',
-        opacity: 0.9,
     },
     linksGrid: {
         display: 'flex',
