@@ -123,6 +123,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         height: '100%',
         objectFit: 'contain',
         display: 'block',
+        borderRadius: '8px',
     },
     partnerName: {
         padding: '1rem',
