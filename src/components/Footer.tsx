@@ -17,9 +17,9 @@ const friendLinksData: FriendLink[] = [
     },
     {
         id: 2,
-        name: 'Partner 2',
-        url: '#',
-        imageUrl: 'https://via.placeholder.com/160x50/4A90E2/FFFFFF?text=Partner+2',
+        name: 'Ethereum Foundation',
+        url: 'https://ethereum.org',
+        imageUrl: '/images/ETH_banner.png',
     },
     {
         id: 3,
