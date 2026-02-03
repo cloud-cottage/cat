@@ -28,8 +28,8 @@ const partnersData: Partner[] = [
         id: 3,
         name: 'OpenSea',
         url: 'https://opensea.io',
-        imageUrl: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(light).png',
-        imageUrlDark: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(dark).png',
+        imageUrl: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(dark).png',
+        imageUrlDark: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(light).png',
     },
 ];
 
