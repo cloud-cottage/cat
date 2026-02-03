@@ -11,7 +11,7 @@ interface FriendLink {
 const friendLinksData: FriendLink[] = [
     {
         id: 1,
-        name: '锦鲤社区',
+        name: '锦鱼社区',
         url: 'https://jinlibenli.com',
         imageUrl: '/images/Jinli_banner.png',
     },
@@ -23,9 +23,9 @@ const friendLinksData: FriendLink[] = [
     },
     {
         id: 3,
-        name: 'Partner 3',
-        url: '#',
-        imageUrl: 'https://via.placeholder.com/160x50/7B68EE/FFFFFF?text=Partner+3',
+        name: '云算准备计划',
+        url: 'https://www.yunduojihua.com',
+        imageUrl: '/images/CloudPlan_banner.png',
     },
     {
         id: 4,
