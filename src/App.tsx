@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './index.css';
 import './i18n';
 import Navbar from './components/Navbar';
