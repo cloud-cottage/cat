@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Partner {
     id: number;
     name: string;
     url: string;
     imageUrl: string;
+    imageUrlDark?: string;
 }
 
 const partnersData: Partner[] = [
@@ -26,12 +28,14 @@ const partnersData: Partner[] = [
         id: 3,
         name: 'OpenSea',
         url: 'https://opensea.io',
-        imageUrl: 'https://via.placeholder.com/320x100/2081E2/FFFFFF?text=OpenSea',
+        imageUrl: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(light).png',
+        imageUrlDark: 'https://static.seadn.io/logos/OpenSea-Full-Logo%20(dark).png',
     },
 ];
 
 const Partners: React.FC = () => {
     const { t } = useTranslation();
+    const { theme } = useTheme();
     
     return (
         <section style={styles.section}>
@@ -65,7 +69,7 @@ const Partners: React.FC = () => {
                         >
                             <div style={styles.imageContainer}>
                                 <img 
-                                    src={partner.imageUrl} 
+                                    src={theme === 'dark' && partner.imageUrlDark ? partner.imageUrlDark : partner.imageUrl}
                                     alt={partner.name}
                                     style={styles.image}
                                 />

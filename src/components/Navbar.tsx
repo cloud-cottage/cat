@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe, ArrowUpRight } from 'lucide-react';
+import { Globe, ArrowUpRight, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Navbar: React.FC = () => {
     const { t, i18n } = useTranslation();
+    const { theme, toggleTheme } = useTheme();
 
     const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
@@ -37,6 +39,14 @@ const Navbar: React.FC = () => {
                             <option value="zh-TW">繁體中文</option>
                         </select>
                     </div>
+
+                    <button
+                        onClick={toggleTheme}
+                        style={styles.themeToggle}
+                        aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                    >
+                        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                    </button>
                 </div>
             </div>
         </nav>
@@ -112,6 +122,18 @@ const styles: { [key: string]: React.CSSProperties } = {
         cursor: 'pointer',
         color: 'inherit',
         outline: 'none',
+    },
+    themeToggle: {
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        color: 'var(--color-text-dark)',
+        padding: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '50%',
+        transition: 'background-color 0.3s ease',
     }
 };
 
