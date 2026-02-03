@@ -22,7 +22,7 @@ const partnersData: Partner[] = [
         id: 2,
         name: 'Uniswap Labs',
         url: 'https://uniswap.org',
-        imageUrl: 'https://via.placeholder.com/320x100/FF007A/FFFFFF?text=Uniswap',
+        imageUrl: '/images/Uniswap_horizontallogo_pink.png',
     },
     {
         id: 3,
