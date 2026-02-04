@@ -27,12 +27,6 @@ const friendLinksData: FriendLink[] = [
         url: 'https://www.yunduojihua.com',
         imageUrl: '/images/CloudPlan_banner.png',
     },
-    {
-        id: 4,
-        name: 'Partner 4',
-        url: '#',
-        imageUrl: 'https://via.placeholder.com/160x50/FF6B6B/FFFFFF?text=Partner+4',
-    },
 ];
 
 const Footer: React.FC = () => {
