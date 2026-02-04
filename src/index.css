@@ -22,6 +22,10 @@
   color-scheme: light;
   color: var(--color-text-dark);
   background-color: var(--color-bg);
+  
+  /* Footer Colors - Light Mode */
+  --color-footer-bg: #2D3748; /* Deep Charcoal */
+  --color-footer-text: #F8F9FA;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -38,11 +42,12 @@
   --color-black: #F8F9FA;
   
   /* Footer Colors */
-  --color-footer-bg: #2D3748; /* Slightly darker than text */
-  --color-footer-text: #F8F9FA;
+  --color-footer-bg: #F8F9FA; /* Light grey white */
+  --color-footer-text: #2D3748;
   
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  /* Shadow & Radius */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   
   color-scheme: dark;
 }
