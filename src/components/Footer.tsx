@@ -124,6 +124,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         textAlign: 'center',
         opacity: 0.7,
         fontSize: '0.9rem',
+        color: 'var(--color-text-light)',
     }
 };
 
