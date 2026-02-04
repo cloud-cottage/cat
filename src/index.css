@@ -37,6 +37,10 @@
   --color-white: #2D3748;
   --color-black: #F8F9FA;
   
+  /* Footer Colors */
+  --color-footer-bg: #2D3748; /* Slightly darker than text */
+  --color-footer-text: #F8F9FA;
+  
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   

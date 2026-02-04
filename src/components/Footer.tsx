@@ -79,8 +79,8 @@ const Footer: React.FC = () => {
 const styles: { [key: string]: React.CSSProperties } = {
     footer: {
         padding: '3rem 0 2rem',
-        backgroundColor: 'var(--color-text-dark)',
-        color: 'var(--color-bg)',
+        backgroundColor: 'var(--color-footer-bg)',
+        color: 'var(--color-footer-text)',
     },
     linksSection: {
         marginBottom: '2rem',
