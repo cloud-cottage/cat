@@ -36,7 +36,6 @@ const friendLinksData: FriendLink[] = [
 ];
 
 const Footer: React.FC = () => {
-    const currentYear = new Date().getFullYear();
     
     return (
         <footer style={styles.footer}>
@@ -75,9 +74,9 @@ const Footer: React.FC = () => {
                 <div style={styles.divider} />
 
                 {/* Copyright */}
-                <p style={styles.copyright}>
-                    © {currentYear} CAT Crypto Ambassador Team. All rights reserved.
-                </p>
+                    <p style={styles.copyright}>
+                        © 2025-2026 CAT Crypto Ambassador Team. All rights reserved.
+                    </p>
             </div>
         </footer>
     );
