@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import './index.css'
 import './i18n'
 import './blog/styles/globals.css'
@@ -36,24 +36,35 @@ function HomePage() {
 }
 
 function SubdomainRouter() {
-  const navigate = useNavigate()
+  const [page, setPage] = useState<'home' | 'blog' | 'user'>('home')
+  const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
     const hostname = window.location.hostname
 
     if (hostname === 'i.catcat.meme') {
-      navigate('/i', { replace: true })
+      setPage('blog')
     } else if (hostname !== 'catcat.meme' && hostname !== 'www.catcat.meme' && hostname.endsWith('.catcat.meme')) {
-      const username = hostname.replace('.catcat.meme', '')
-      navigate(`/${username}`, { replace: true })
+      setUsername(hostname.replace('.catcat.meme', ''))
+      setPage('user')
+    } else {
+      setPage('home')
     }
     
     setReady(true)
-  }, [navigate])
+  }, [])
 
   if (!ready) {
     return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>
+  }
+
+  if (page === 'blog') {
+    return <BlogHome />
+  }
+
+  if (page === 'user') {
+    return <UserProfile />
   }
 
   return (
@@ -61,7 +72,7 @@ function SubdomainRouter() {
       <Route path="/" element={<HomePage />} />
       <Route path="/i" element={<BlogHome />} />
       <Route path="/setup" element={<Setup />} />
-      <Route path="/:username" element={<UserProfile />} />
+      <Route path="/:user" element={<UserProfile />} />
     </Routes>
   )
 }
