@@ -43,11 +43,13 @@ function SubdomainRouter() {
     const hostname = window.location.hostname
 
     // 处理开发环境和生产环境
-    if (hostname === 'i.catcat.meme' || hostname === 'localhost') {
+    if (hostname === 'i.catcat.meme') {
+      setPage('blog')
+    } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      // 本地开发环境，默认显示博客页面
       setPage('blog')
     } else if (hostname !== 'catcat.meme' && 
-               hostname !== 'www.catcat.meme' && 
-               hostname !== 'localhost' &&
+               hostname !== 'www.catcat.meme' &&
                (hostname.endsWith('.catcat.meme') || hostname.includes('.localhost'))) {
       // 用户子域名，直接渲染 UserProfile 组件
       setPage('user')
@@ -70,6 +72,7 @@ function SubdomainRouter() {
     return <UserProfile />
   }
 
+  // 只有在主页时才使用 Routes
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
