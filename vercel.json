@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    {
+      "source": "/setup",
+      "destination": "/setup"
+    },
+    {
+      "source": "/i/setup", 
+      "destination": "/setup"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
+}
