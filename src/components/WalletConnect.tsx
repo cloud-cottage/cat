@@ -39,11 +39,11 @@ export default function WalletConnect() {
         <button 
           onClick={handleDisconnect}
           style={{
-            padding: '0.25rem 0.75rem',
+            padding: '0.5rem 1rem',
             background: 'var(--accent)',
             color: 'white',
             border: 'none',
-            borderRadius: '6px',
+            borderRadius: '8px',
             cursor: 'pointer',
             fontSize: '0.9rem'
           }}
@@ -60,11 +60,11 @@ export default function WalletConnect() {
         onClick={() => handleConnect(injected())}
         disabled={isConnecting}
         style={{
-          padding: '0.25rem 0.75rem',
+          padding: '0.5rem 1rem',
           background: '#f6851b',
           color: 'white',
           border: 'none',
-          borderRadius: '6px',
+          borderRadius: '8px',
           cursor: isConnecting ? 'not-allowed' : 'pointer',
           fontSize: '0.9rem',
           opacity: isConnecting ? 0.6 : 1
@@ -76,11 +76,11 @@ export default function WalletConnect() {
         onClick={() => handleConnect(walletConnect({ projectId }))}
         disabled={isConnecting}
         style={{
-          padding: '0.25rem 0.75rem',
+          padding: '0.5rem 1rem',
           background: '#3b99fc',
           color: 'white',
           border: 'none',
-          borderRadius: '6px',
+          borderRadius: '8px',
           cursor: isConnecting ? 'not-allowed' : 'pointer',
           fontSize: '0.9rem',
           opacity: isConnecting ? 0.6 : 1
