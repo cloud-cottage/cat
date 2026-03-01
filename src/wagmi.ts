@@ -4,13 +4,16 @@ import { injected, metaMask, walletConnect } from 'wagmi/connectors'
 
 export const chains = [mainnet, polygon, arbitrum, optimism] as const
 
+// 从环境变量获取 WalletConnect Project ID
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'your-project-id'
+
 export const wagmiConfig = createConfig({
   chains,
   connectors: [
     injected(),
     metaMask(),
     walletConnect({ 
-      projectId: 'your-project-id' // 需要在 WalletConnect Cloud 获取
+      projectId // 需要在 WalletConnect Cloud 获取
     }),
   ],
   transports: {
