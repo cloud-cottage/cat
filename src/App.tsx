@@ -37,6 +37,7 @@ function HomePage() {
 
 function SubdomainRouter() {
   const [page, setPage] = useState<'home' | 'blog' | 'user'>('home')
+  const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -51,7 +52,11 @@ function SubdomainRouter() {
     } else if (hostname !== 'catcat.meme' && 
                hostname !== 'www.catcat.meme' &&
                (hostname.endsWith('.catcat.meme') || hostname.includes('.localhost'))) {
-      // 用户子域名，直接渲染 UserProfile 组件
+      // 用户子域名，提取用户名并重定向到博客页面
+      const extractedUsername = hostname.includes('.localhost') 
+        ? hostname.replace('.localhost', '')
+        : hostname.replace('.catcat.meme', '')
+      setUsername(extractedUsername)
       setPage('user')
     } else {
       setPage('home')
@@ -69,7 +74,12 @@ function SubdomainRouter() {
   }
 
   if (page === 'user') {
-    return <UserProfile />
+    // 用户子域名：重定向到 i.catcat.meme/username
+    if (typeof window !== 'undefined') {
+      window.location.href = `https://i.catcat.meme/${username}`
+      return <div style={{ padding: '2rem', textAlign: 'center' }}>跳转中...</div>
+    }
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>跳转中...</div>
   }
 
   // 只有在主页时才使用 Routes
