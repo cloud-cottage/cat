@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { injected, walletConnect } from 'wagmi/connectors'
 
+// 从环境变量获取 Project ID
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '66bf4af48b36ff6103c4177f6f1439a2'
+
 export default function WalletConnect() {
   const { address, isConnected } = useAccount()
   const { connect } = useConnect()
@@ -70,7 +73,7 @@ export default function WalletConnect() {
         {isConnecting ? '连接中...' : 'MetaMask'}
       </button>
       <button
-        onClick={() => handleConnect(walletConnect({ projectId: 'your-project-id' }))}
+        onClick={() => handleConnect(walletConnect({ projectId }))}
         disabled={isConnecting}
         style={{
           padding: '0.25rem 0.75rem',
