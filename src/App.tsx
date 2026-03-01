@@ -42,9 +42,12 @@ function SubdomainRouter() {
 
   useEffect(() => {
     const hostname = window.location.hostname
+    const pathname = window.location.pathname
 
-    // 处理开发环境和生产环境
-    if (hostname === 'i.catcat.meme') {
+    // 检查是否访问 setup 页面
+    if (pathname === '/setup') {
+      setPage('home') // 让 Routes 处理 setup
+    } else if (hostname === 'i.catcat.meme') {
       setPage('blog')
     } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
       // 本地开发环境，默认显示博客页面
