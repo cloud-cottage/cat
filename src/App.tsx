@@ -12,6 +12,7 @@ import Partners from './components/Partners'
 import Footer from './components/Footer'
 import { useTranslation } from 'react-i18next'
 import { BlogHome, Setup, UserProfile } from './blog/pages'
+import EditBlog from './blog/pages/EditBlog'
 
 function HomePage() {
   const { t, i18n } = useTranslation()
@@ -50,6 +51,9 @@ function SubdomainRouter() {
     if (pathname === '/setup') {
       console.log('SubdomainRouter: detected /setup path, using Routes')
       setPage('home') // 让 Routes 处理 setup
+    } else if (pathname.endsWith('/edit')) {
+      console.log('SubdomainRouter: detected /edit path, using Routes')
+      setPage('home') // 让 Routes 处理编辑页面
     } else if (hostname === 'i.catcat.meme') {
       console.log('SubdomainRouter: detected i.catcat.meme, showing BlogHome')
       setPage('blog')
@@ -94,6 +98,7 @@ function SubdomainRouter() {
       <Route path="/" element={<HomePage />} />
       <Route path="/i" element={<BlogHome />} />
       <Route path="/setup" element={<Setup />} />
+      <Route path="/:user/edit" element={<EditBlog />} />
       <Route path="/:user" element={<UserProfile />} />
     </Routes>
   )

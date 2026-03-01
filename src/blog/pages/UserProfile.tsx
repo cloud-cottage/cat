@@ -269,6 +269,13 @@ export default function UserProfile({ username: propUsername }: { username?: str
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <WalletConnect />
+            <button 
+              onClick={() => window.location.href = `https://${user.username}.catcat.meme/edit`}
+              className="btn-secondary"
+              style={{ fontSize: '0.9rem' }}
+            >
+              编辑博客
+            </button>
             <select 
               value={themeId} 
               onChange={e => handleThemeChange(Number(e.target.value))} 
