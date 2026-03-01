@@ -37,16 +37,19 @@ function HomePage() {
 
 function SubdomainRouter() {
   const [page, setPage] = useState<'home' | 'blog' | 'user'>('home')
-  const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
     const hostname = window.location.hostname
 
-    if (hostname === 'i.catcat.meme') {
+    // 处理开发环境和生产环境
+    if (hostname === 'i.catcat.meme' || hostname === 'localhost') {
       setPage('blog')
-    } else if (hostname !== 'catcat.meme' && hostname !== 'www.catcat.meme' && hostname.endsWith('.catcat.meme')) {
-      setUsername(hostname.replace('.catcat.meme', ''))
+    } else if (hostname !== 'catcat.meme' && 
+               hostname !== 'www.catcat.meme' && 
+               hostname !== 'localhost' &&
+               (hostname.endsWith('.catcat.meme') || hostname.includes('.localhost'))) {
+      // 用户子域名，直接渲染 UserProfile 组件
       setPage('user')
     } else {
       setPage('home')

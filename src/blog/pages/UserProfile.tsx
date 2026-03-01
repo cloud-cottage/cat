@@ -1,41 +1,53 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { db, generateUser, type User, type Link } from '../lib/db'
-
-function getInitialUserData(username: string) {
-  let existingUser = db.getUserByUsername(username)
-  if (!existingUser) {
-    existingUser = generateUser(username)
-    db.createUser(existingUser)
-  }
-  return {
-    user: existingUser,
-    themeId: existingUser.themeId || 1,
-    twitterHandle: existingUser.twitterHandle || '',
-    bio: existingUser.bio || '',
-    links: db.getLinks(existingUser.id)
-  }
-}
+import { useAccount } from 'wagmi'
+import { api, type User, type Link } from '../lib/api'
+import WalletConnect from '../../components/WalletConnect'
 
 export default function UserProfile() {
   const { username } = useParams<{ username: string }>()
+  const { address } = useAccount()
   
-  const initialData = useMemo(() => {
-    if (!username) return null
-    return getInitialUserData(username)
-  }, [username])
-  
-  const [themeId, setThemeId] = useState<number>(() => initialData?.themeId ?? 1)
+  const [user, setUser] = useState<User | null>(null)
+  const [links, setLinks] = useState<Link[]>([])
+  const [themeId, setThemeId] = useState<number>(1)
   const [isEditingProfile, setIsEditingProfile] = useState(false)
   const [isEditingLinks, setIsEditingLinks] = useState(false)
-  const [twitterHandle, setTwitterHandle] = useState<string>(() => initialData?.twitterHandle ?? '')
-  const [bio, setBio] = useState<string>(() => initialData?.bio ?? '')
-  const [links, setLinks] = useState<Link[]>(() => initialData?.links ?? [])
+  const [twitterHandle, setTwitterHandle] = useState<string>('')
+  const [bio, setBio] = useState<string>('')
   const [newLink, setNewLink] = useState({ label: '', url: '', description: '' })
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
   const [urlError, setUrlError] = useState(false)
-  const [user, setUser] = useState<User | null>(() => initialData?.user ?? null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!username) return
+    
+    const loadUserData = async () => {
+      try {
+        let userData = await api.getUserByUsername(username)
+        
+        if (!userData) {
+          // 创建新用户，如果钱包已连接则使用钱包地址
+          const newUser = await api.createUser(username, address)
+          userData = { user: newUser, links: [] }
+        }
+        
+        setUser(userData.user)
+        setLinks(userData.links)
+        setThemeId(userData.user.themeId || 1)
+        setTwitterHandle(userData.user.twitterHandle || '')
+        setBio(userData.user.bio || '')
+      } catch (error) {
+        console.error('Error loading user data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadUserData()
+  }, [username, address])
 
   useEffect(() => {
     if (!user) return
@@ -45,22 +57,26 @@ export default function UserProfile() {
   const handleThemeChange = async (newThemeId: number) => {
     if (!user) return
     setThemeId(newThemeId)
-    const updatedUser = { ...user, themeId: newThemeId, updatedAt: new Date().toISOString() }
-    db.updateUser(updatedUser)
-    setUser(updatedUser)
+    try {
+      const updatedUser = await api.updateUser(user.username, { themeId: newThemeId })
+      setUser(updatedUser)
+    } catch (error) {
+      console.error('Error updating theme:', error)
+    }
   }
 
   const handleSaveProfile = async () => {
     if (!user) return
-    const updatedUser = { 
-      ...user, 
-      twitterHandle, 
-      bio, 
-      updatedAt: new Date().toISOString() 
+    try {
+      const updatedUser = await api.updateUser(user.username, { 
+        twitterHandle, 
+        bio 
+      })
+      setUser(updatedUser)
+      setIsEditingProfile(false)
+    } catch (error) {
+      console.error('Error saving profile:', error)
     }
-    db.updateUser(updatedUser)
-    setUser(updatedUser)
-    setIsEditingProfile(false)
   }
 
   const validateUrl = (url: string): { valid: boolean; processed: string; error: string } => {
@@ -139,20 +155,42 @@ export default function UserProfile() {
       return
     }
     
-    const newDbLink = db.addLink(user.id, {
+    const newDbLink: Link = {
+      id: 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36),
+      userId: user.id,
       label: newLink.label,
       url: processed,
-      description: newLink.description
-    })
+      description: newLink.description,
+      order: links.length,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
     
-    setLinks([...links, newDbLink])
+    const updatedLinks = [...links, newDbLink]
+    setLinks(updatedLinks)
     setNewLink({ label: '', url: '', description: '' })
+    
+    try {
+      await api.updateLinks(user.username, updatedLinks)
+    } catch (error) {
+      console.error('Error adding link:', error)
+      // 回滚
+      setLinks(links)
+    }
   }
 
-  const handleDeleteLink = (linkId: string) => {
+  const handleDeleteLink = async (linkId: string) => {
     if (!user) return
-    db.deleteLink(user.id, linkId)
-    setLinks(links.filter(l => l.id !== linkId))
+    const updatedLinks = links.filter(l => l.id !== linkId)
+    setLinks(updatedLinks)
+    
+    try {
+      await api.updateLinks(user.username, updatedLinks)
+    } catch (error) {
+      console.error('Error deleting link:', error)
+      // 回滚
+      setLinks(links)
+    }
   }
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
@@ -189,10 +227,17 @@ export default function UserProfile() {
     const [movedItem] = newLinks.splice(draggedIndex, 1)
     newLinks.splice(dropIndex, 0, movedItem)
     
-    setLinks(newLinks)
+    const reorderedLinks = newLinks.map((l, i) => ({ ...l, order: i, updatedAt: new Date().toISOString() }))
+    setLinks(reorderedLinks)
     setDraggedIndex(null)
     
-    db.reorderLinks(user.id, newLinks)
+    try {
+      await api.updateLinks(user.username, reorderedLinks)
+    } catch (error) {
+      console.error('Error reordering links:', error)
+      // 回滚
+      setLinks(links)
+    }
   }
 
   const handleDragEnd = () => {
@@ -200,8 +245,12 @@ export default function UserProfile() {
     setDragOverIndex(null)
   }
 
-  if (!user) {
+  if (loading) {
     return <div className="blog-container">加载中...</div>
+  }
+
+  if (!user) {
+    return <div className="blog-container">用户不存在</div>
   }
 
   return (
@@ -210,18 +259,40 @@ export default function UserProfile() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h2>{user.username}</h2>
-            <p className="blog-muted">Twitter: @{user.twitterHandle || '未设置'}</p>
+            <p className="blog-muted">
+              Twitter: @{user.twitterHandle || '未设置'} | 
+              钱包: {user.walletAddress === '0x0000' ? '未连接' : `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}
+            </p>
           </div>
-          <select 
-            value={themeId} 
-            onChange={e => handleThemeChange(Number(e.target.value))} 
-            style={{ padding: '0.25rem 0.5rem', background: 'var(--bg)', color: 'var(--fg)', border: '1px solid #444', borderRadius: '6px' }}
-          >
-            {Array.from({ length: 9 }).map((_, i) => (
-              <option key={i + 1} value={i + 1}>主题 {i + 1}</option>
-            ))}
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <WalletConnect />
+            <select 
+              value={themeId} 
+              onChange={e => handleThemeChange(Number(e.target.value))} 
+              style={{ padding: '0.25rem 0.5rem', background: 'var(--bg)', color: 'var(--fg)', border: '1px solid #444', borderRadius: '6px' }}
+            >
+              {Array.from({ length: 9 }).map((_, i) => (
+                <option key={i + 1} value={i + 1}>主题 {i + 1}</option>
+              ))}
+            </select>
+          </div>
         </div>
+        
+        {/* 钱包连接状态提示 */}
+        {user.walletAddress === '0x0000' && (
+          <div style={{ 
+            marginTop: '1rem', 
+            padding: '0.75rem', 
+            background: 'rgba(255, 193, 7, 0.1)', 
+            border: '1px solid rgba(255, 193, 7, 0.3)', 
+            borderRadius: '6px',
+            fontSize: '0.9rem',
+            color: '#ffc107'
+          }}>
+            ⚠️ 建议连接钱包以获得更好的体验和安全性
+          </div>
+        )}
+        
         <div style={{ marginTop: '1rem' }}>
           {isEditingProfile ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
