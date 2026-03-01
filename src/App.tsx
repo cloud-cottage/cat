@@ -43,11 +43,15 @@ function SubdomainRouter() {
   useEffect(() => {
     const hostname = window.location.hostname
 
+    console.log('SubdomainRouter: hostname =', hostname)
+
     // 处理开发环境和生产环境
     if (hostname === 'i.catcat.meme') {
+      console.log('SubdomainRouter: setting page to blog')
       setPage('blog')
     } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
       // 本地开发环境，默认显示博客页面
+      console.log('SubdomainRouter: localhost, setting page to blog')
       setPage('blog')
     } else if (hostname !== 'catcat.meme' && 
                hostname !== 'www.catcat.meme' &&
@@ -56,9 +60,11 @@ function SubdomainRouter() {
       const extractedUsername = hostname.includes('.localhost') 
         ? hostname.replace('.localhost', '')
         : hostname.replace('.catcat.meme', '')
+      console.log('SubdomainRouter: user subdomain detected, username =', extractedUsername)
       setUsername(extractedUsername)
       setPage('user')
     } else {
+      console.log('SubdomainRouter: setting page to home')
       setPage('home')
     }
     
@@ -70,15 +76,18 @@ function SubdomainRouter() {
   }
 
   if (page === 'blog') {
+    console.log('SubdomainRouter: rendering BlogHome')
     return <BlogHome />
   }
 
   if (page === 'user') {
-    // 用户子域名：直接显示用户页面，不跳转
+    console.log('SubdomainRouter: rendering UserProfile with username =', username)
+    // 用户子域名：直接显示用户页面，不使用 React Router
     return <UserProfile username={username} />
   }
 
-  // 只有在主页时才使用 Routes
+  console.log('SubdomainRouter: rendering Routes')
+  // 只有在主页或博客页面时才使用 Routes
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
