@@ -44,13 +44,18 @@ function SubdomainRouter() {
     const hostname = window.location.hostname
     const pathname = window.location.pathname
 
+    console.log('SubdomainRouter:', { hostname, pathname })
+
     // 检查是否访问 setup 页面
     if (pathname === '/setup') {
+      console.log('SubdomainRouter: detected /setup path, using Routes')
       setPage('home') // 让 Routes 处理 setup
     } else if (hostname === 'i.catcat.meme') {
+      console.log('SubdomainRouter: detected i.catcat.meme, showing BlogHome')
       setPage('blog')
     } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
       // 本地开发环境，默认显示博客页面
+      console.log('SubdomainRouter: localhost, showing BlogHome')
       setPage('blog')
     } else if (hostname !== 'catcat.meme' && 
                hostname !== 'www.catcat.meme' &&
@@ -59,9 +64,11 @@ function SubdomainRouter() {
       const extractedUsername = hostname.includes('.localhost') 
         ? hostname.replace('.localhost', '')
         : hostname.replace('.catcat.meme', '')
+      console.log('SubdomainRouter: user subdomain detected:', extractedUsername)
       setUsername(extractedUsername)
       setPage('user')
     } else {
+      console.log('SubdomainRouter: default, showing HomePage')
       setPage('home')
     }
     
