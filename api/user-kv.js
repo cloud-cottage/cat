@@ -1,9 +1,13 @@
 import { Redis } from '@upstash/redis'
 
-// 初始化 Redis 客户端
+// 初始化 Redis 客户端，支持多种环境变量名
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  url: process.env.UPSTASH_REDIS_REST_URL || 
+       process.env.cat_KV_REST_API_URL || 
+       process.env.REDIS_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || 
+        process.env.cat_KV_REST_API_TOKEN || 
+        process.env.REDIS_TOKEN,
 })
 
 export default async function handler(req, res) {
