@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { api } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
@@ -8,19 +7,14 @@ export default function Setup() {
   const [username, setUsername] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const navigate = useNavigate()
   const { address, isConnected } = useAccount()
 
-  useEffect(() => {
-    // 暂时移除 token 检查，让用户直接访问 setup 页面
-    // const token = localStorage.getItem('siwe_token')
-    // if (!token) {
-    //   navigate('/')
-    // }
-  }, [navigate])
+  console.log('Setup render:', { isConnected, address, username })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('handleSubmit called:', { username, isConnected, address })
+    
     if (!username) {
       setError('请设置用户名')
       return
@@ -38,6 +32,7 @@ export default function Setup() {
     setIsLoading(true)
     setError('')
     try {
+      console.log('Creating user:', { username, address })
       // 检查用户是否已存在
       const existingUser = await api.getUserByUsername(username)
       if (existingUser) {
@@ -105,6 +100,7 @@ export default function Setup() {
               opacity: (isLoading || !isConnected) ? 0.6 : 1,
               cursor: (isLoading || !isConnected) ? 'not-allowed' : 'pointer'
             }}
+            onClick={() => console.log('Button clicked!')}
           >
             {isLoading ? '保存中...' : '打开博客'}
           </button>
