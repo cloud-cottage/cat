@@ -37,16 +37,16 @@ export default function Setup() {
       const existingUser = await api.getUserByUsername(username)
       if (existingUser) {
         localStorage.setItem('current_username', username)
-        // 跳转到用户页面，使用 i.catcat.meme/:username 路径
-        window.location.href = `https://i.catcat.meme/${username}`
+        // 跳转到用户子域名
+        window.location.href = `https://${username}.catcat.meme/`
         return
       }
       
       // 创建新用户，使用钱包地址
       await api.createUser(username, address)
       localStorage.setItem('current_username', username)
-      // 跳转到用户页面，使用 i.catcat.meme/:username 路径
-      window.location.href = `https://i.catcat.meme/${username}`
+      // 跳转到用户子域名
+      window.location.href = `https://${username}.catcat.meme/`
     } catch (err) {
       console.error('Setup error:', err)
       setError('保存失败，请重试')
