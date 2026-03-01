@@ -52,7 +52,7 @@ function SubdomainRouter() {
     } else if (hostname !== 'catcat.meme' && 
                hostname !== 'www.catcat.meme' &&
                (hostname.endsWith('.catcat.meme') || hostname.includes('.localhost'))) {
-      // 用户子域名，提取用户名并重定向到博客页面
+      // 用户子域名，提取用户名
       const extractedUsername = hostname.includes('.localhost') 
         ? hostname.replace('.localhost', '')
         : hostname.replace('.catcat.meme', '')
@@ -74,12 +74,8 @@ function SubdomainRouter() {
   }
 
   if (page === 'user') {
-    // 用户子域名：重定向到 i.catcat.meme/username
-    if (typeof window !== 'undefined') {
-      window.location.href = `https://i.catcat.meme/${username}`
-      return <div style={{ padding: '2rem', textAlign: 'center' }}>跳转中...</div>
-    }
-    return <div style={{ padding: '2rem', textAlign: 'center' }}>跳转中...</div>
+    // 用户子域名：直接显示用户页面，不跳转
+    return <UserProfile username={username} />
   }
 
   // 只有在主页时才使用 Routes

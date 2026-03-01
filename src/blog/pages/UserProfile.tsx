@@ -4,9 +4,12 @@ import { useAccount } from 'wagmi'
 import { api, type User, type Link } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
-export default function UserProfile() {
-  const { username } = useParams<{ username: string }>()
+export default function UserProfile({ username: propUsername }: { username?: string }) {
+  const { username: paramUsername } = useParams<{ username: string }>()
   const { address } = useAccount()
+  
+  // 优先使用传入的 username prop（来自子域名），其次使用 URL 参数
+  const username = propUsername || paramUsername
   
   const [user, setUser] = useState<User | null>(null)
   const [links, setLinks] = useState<Link[]>([])
