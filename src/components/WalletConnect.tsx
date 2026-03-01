@@ -12,9 +12,12 @@ export default function WalletConnect() {
   const [isConnecting, setIsConnecting] = useState(false)
 
   const handleConnect = async (connector: any) => {
+    console.log('WalletConnect: handleConnect called', connector)
     setIsConnecting(true)
     try {
+      console.log('WalletConnect: calling connect')
       await connect({ connector })
+      console.log('WalletConnect: connect successful')
     } catch (error) {
       console.error('Failed to connect wallet:', error)
     } finally {
