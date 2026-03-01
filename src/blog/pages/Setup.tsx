@@ -12,10 +12,11 @@ export default function Setup() {
   const { address, isConnected } = useAccount()
 
   useEffect(() => {
-    const token = localStorage.getItem('siwe_token')
-    if (!token) {
-      navigate('/')
-    }
+    // 暂时移除 token 检查，让用户直接访问 setup 页面
+    // const token = localStorage.getItem('siwe_token')
+    // if (!token) {
+    //   navigate('/')
+    // }
   }, [navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
