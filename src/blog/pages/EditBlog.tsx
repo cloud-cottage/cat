@@ -70,7 +70,6 @@ export default function EditBlog() {
       return
     }
 
-    // 如果钱包未连接，停止加载并显示连接提示
     if (!isConnected || !address) {
       console.log('Wallet not connected, stopping loading')
       setIsLoading(false)
@@ -81,7 +80,19 @@ export default function EditBlog() {
     loadUserData()
   }, [user, isConnected, address, navigate])
 
-  // 添加超时机制，防止无限加载
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('selectedTheme')
+    if (savedTheme) {
+      setThemeId(Number(savedTheme))
+    }
+  }, [])
+
+  useEffect(() => {
+    document.body.className = document.body.className.replace(/theme-\d+/g, '')
+    document.body.classList.add(`theme-${themeId}`)
+    localStorage.setItem('selectedTheme', themeId.toString())
+  }, [themeId])
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isLoading) {

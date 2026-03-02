@@ -8,68 +8,103 @@
   --shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
+/* 钻石手 - 简洁白色主题 */
 .theme-1 {
-  --bg: #0b1020;
-  --fg: #e8eaff;
-  --card: #141a2b;
-  --muted: #b7c0ff;
-  --link: #7bdff6;
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --card: #ffffff;
+  --muted: #666666;
+  --link: #3b82f6;
+  --surface: #f8f9fa;
+  --accent: #3b82f6;
 }
+
+/* HODL蓝 - 深蓝坚定主题 */
 .theme-2 {
-  --bg: #0f0e1a;
-  --fg: #f9f7ff;
-  --card: #171327;
-  --muted: #d2b8ff;
-  --link: #7bdc8f;
+  --bg: #0f172a;
+  --fg: #f1f5f9;
+  --card: #1e293b;
+  --muted: #94a3b8;
+  --link: #3b82f6;
+  --surface: #334155;
+  --accent: #3b82f6;
 }
+
+/* 草莓熊 - 粉色可爱主题 */
 .theme-3 {
-  --bg: #0b111a;
-  --fg: #f5f7ff;
-  --card: #141a28;
-  --muted: #a1b2ff;
-  --link: #f5a623;
+  --bg: #fdf2f8;
+  --fg: #831843;
+  --card: #fce7f3;
+  --muted: #be185d;
+  --link: #ec4899;
+  --surface: #fbcfe8;
+  --accent: #ec4899;
 }
+
+/* 赛博橙 - 科技橙色主题 */
 .theme-4 {
-  --bg: #0a101a;
-  --fg: #e9f0ff;
-  --card: #111727;
-  --muted: #a6b8e8;
-  --link: #8be9fd;
-}
-.theme-5 {
-  --bg: #0f1a2b;
-  --fg: #eaf6ff;
-  --card: #142033;
-  --muted: #b5e1ff;
-  --link: #9bcbff;
-}
-.theme-6 {
-  --bg: #111b1f;
-  --fg: #e4fff7;
-  --card: #1a2720;
-  --muted: #9ff0d8;
-  --link: #7ad6ff;
-}
-.theme-7 {
-  --bg: #10131a;
-  --fg: #eafff4;
-  --card: #182022;
-  --muted: #a3ffd9;
-  --link: #ffd166;
-}
-.theme-8 {
-  --bg: #0b0e14;
-  --fg: #e6f0ff;
-  --card: #141e26;
-  --muted: #b3c7ff;
-  --link: #8bd3ff;
-}
-.theme-9 {
   --bg: #0a0a0a;
-  --fg: #f0f0f0;
-  --card: #101010;
-  --muted: #d0d0d0;
-  --link: #7bdcff;
+  --fg: #ff6b35;
+  --card: #1a1a1a;
+  --muted: #ff8c42;
+  --link: #ff6b35;
+  --surface: #2a2a2a;
+  --accent: #ff6b35;
+}
+
+/* 韭菜绿 - 自嘲绿色主题 */
+.theme-5 {
+  --bg: #f0fdf4;
+  --fg: #14532d;
+  --card: #dcfce7;
+  --muted: #16a34a;
+  --link: #22c55e;
+  --surface: #bbf7d0;
+  --accent: #22c55e;
+}
+
+/* 拿铁棕 - 温暖棕色主题 */
+.theme-6 {
+  --bg: #fef7ed;
+  --fg: #7c2d12;
+  --card: #fed7aa;
+  --muted: #c2410c;
+  --link: #ea580c;
+  --surface: #ffedd5;
+  --accent: #ea580c;
+}
+
+/* 神秘紫 - 高级紫色主题 */
+.theme-7 {
+  --bg: #1a1a2e;
+  --fg: #e9d5ff;
+  --card: #2d2d44;
+  --muted: #c084fc;
+  --link: #a855f7;
+  --surface: #3f3f5f;
+  --accent: #a855f7;
+}
+
+/* 深海蓝 - 深邃蓝色主题 */
+.theme-8 {
+  --bg: #083344;
+  --fg: #e0f2fe;
+  --card: #0c4a6e;
+  --muted: #0284c7;
+  --link: #0ea5e9;
+  --surface: #075985;
+  --accent: #0ea5e9;
+}
+
+/* 黄金橙 - 活力橙色主题 */
+.theme-9 {
+  --bg: #fff7ed;
+  --fg: #9a3412;
+  --card: #fed7aa;
+  --muted: #ea580c;
+  --link: #f97316;
+  --surface: #ffedd5;
+  --accent: #f97316;
 }
 
 .blog-container {
