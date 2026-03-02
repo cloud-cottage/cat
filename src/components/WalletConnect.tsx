@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { injected, walletConnect } from 'wagmi/connectors'
+import { walletConnect } from 'wagmi/connectors'
 
 // 从环境变量获取 Project ID
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '66bf4af48b36ff6103c4177f6f1439a2'
@@ -11,12 +11,12 @@ export default function WalletConnect() {
   const { disconnect } = useDisconnect()
   const [isConnecting, setIsConnecting] = useState(false)
 
-  const handleConnect = async (connector: any) => {
-    console.log('WalletConnect: handleConnect called', connector)
+  const handleConnect = async () => {
+    console.log('WalletConnect: handleConnect called')
     setIsConnecting(true)
     try {
       console.log('WalletConnect: calling connect')
-      await connect({ connector })
+      await connect({ connector: walletConnect({ projectId }) })
       console.log('WalletConnect: connect successful')
     } catch (error) {
       console.error('Failed to connect wallet:', error)
@@ -58,39 +58,23 @@ export default function WalletConnect() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-      <button
-        onClick={() => handleConnect(injected())}
-        disabled={isConnecting}
-        style={{
-          padding: '0.5rem 1rem',
-          background: '#f6851b',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: isConnecting ? 'not-allowed' : 'pointer',
-          fontSize: '0.9rem',
-          opacity: isConnecting ? 0.6 : 1
-        }}
-      >
-        {isConnecting ? '连接中...' : 'MetaMask'}
-      </button>
-      <button
-        onClick={() => handleConnect(walletConnect({ projectId }))}
-        disabled={isConnecting}
-        style={{
-          padding: '0.5rem 1rem',
-          background: '#3b99fc',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: isConnecting ? 'not-allowed' : 'pointer',
-          fontSize: '0.9rem',
-          opacity: isConnecting ? 0.6 : 1
-        }}
-      >
-        {isConnecting ? '连接中...' : 'WalletConnect'}
-      </button>
-    </div>
+    <button
+      onClick={handleConnect}
+      disabled={isConnecting}
+      style={{
+        padding: '0.75rem 1.5rem',
+        background: '#3b99fc',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: isConnecting ? 'not-allowed' : 'pointer',
+        fontSize: '1rem',
+        fontWeight: '500',
+        opacity: isConnecting ? 0.6 : 1,
+        transition: 'all 0.2s'
+      }}
+    >
+      {isConnecting ? '连接中...' : '连接钱包'}
+    </button>
   )
 }
