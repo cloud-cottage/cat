@@ -60,13 +60,27 @@ export default function UserProfile({ username: propUsername }: { username?: str
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h2>{user.username}</h2>
-            <p className="blog-muted">
-              Twitter: @{user.twitterHandle || '未设置'} | 
-              钱包: {user.walletAddress === '0x0000' ? '未连接' : `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}
-            </p>
           </div>
         </div>
         
+        {/* 检查博客是否为空 */}
+        {!user.bio && links.length === 0 && (
+          <div style={{ 
+            marginTop: '2rem', 
+            padding: '2rem', 
+            background: 'var(--surface)', 
+            border: '1px solid #444', 
+            borderRadius: '12px',
+            textAlign: 'center',
+            fontSize: '1.1rem',
+            color: 'var(--muted)'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📝</div>
+            <p style={{ margin: 0, fontWeight: 'bold' }}>此博客尚未设置任何信息</p>
+            <p style={{ margin: '0.5rem 0 0', fontSize: '0.9rem' }}>博主正在努力完善中...</p>
+          </div>
+        )}
+
         {/* 个人简介 */}
         {user.bio && (
           <div style={{ marginTop: '1rem' }}>
@@ -75,12 +89,10 @@ export default function UserProfile({ username: propUsername }: { username?: str
         )}
         
         {/* 外部链接 */}
-        <div className="blog-card" style={{ marginTop: '1rem' }}>
-          <h3 style={{ margin: 0, marginBottom: '1rem' }}>外部链接</h3>
-          
-          {links.length === 0 ? (
-            <p className="blog-muted">暂无外部链接</p>
-          ) : (
+        {links.length > 0 && (
+          <div className="blog-card" style={{ marginTop: '1rem' }}>
+            <h3 style={{ margin: 0, marginBottom: '1rem' }}>外部链接</h3>
+            
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {links.map((link, index) => (
                 <div 
@@ -146,8 +158,8 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
