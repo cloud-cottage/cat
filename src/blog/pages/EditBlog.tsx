@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type Link, type User } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
@@ -13,7 +13,26 @@ interface Post {
 
 export default function EditBlog() {
   console.log('EditBlog component mounted')
-  const { user } = useParams()
+  // 从 URL 路径获取用户名
+  const getUsernameFromPath = () => {
+    const pathname = window.location.pathname
+    const hostname = window.location.hostname
+    
+    // 如果是子域名形式 (username.catcat.meme/edit)
+    if (hostname.endsWith('.catcat.meme') && hostname !== 'catcat.meme') {
+      return hostname.replace('.catcat.meme', '')
+    }
+    
+    // 如果是路径形式 (/username/edit)
+    if (pathname.endsWith('/edit')) {
+      const parts = pathname.split('/').filter(Boolean)
+      return parts[parts.length - 2] // 获取 /username/edit 中的 username
+    }
+    
+    return null
+  }
+  
+  const user = getUsernameFromPath()
   const { address, isConnected } = useAccount()
   const navigate = useNavigate()
   

@@ -37,7 +37,7 @@ function HomePage() {
 }
 
 function SubdomainRouter() {
-  const [page, setPage] = useState<'home' | 'blog' | 'user'>('home')
+  const [page, setPage] = useState<'home' | 'blog' | 'user' | 'edit'>('home')
   const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
@@ -52,8 +52,8 @@ function SubdomainRouter() {
       console.log('SubdomainRouter: detected /setup path, using Routes')
       setPage('home') // 让 Routes 处理 setup
     } else if (pathname.endsWith('/edit')) {
-      console.log('SubdomainRouter: detected /edit path, using Routes')
-      setPage('home') // 让 Routes 处理编辑页面
+      console.log('SubdomainRouter: detected /edit path, setting edit page')
+      setPage('edit') // 设置为编辑页面
     } else if (hostname === 'i.catcat.meme') {
       console.log('SubdomainRouter: detected i.catcat.meme, showing BlogHome')
       setPage('blog')
@@ -90,6 +90,11 @@ function SubdomainRouter() {
   if (page === 'user') {
     // 用户子域名：直接显示用户页面，不使用 React Router
     return <UserProfile username={username} />
+  }
+
+  if (page === 'edit') {
+    // 编辑页面：直接显示编辑页面，传递用户名
+    return <EditBlog />
   }
 
   // 只有在主页或博客页面时才使用 Routes
