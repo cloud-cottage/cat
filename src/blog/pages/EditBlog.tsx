@@ -19,6 +19,8 @@ export default function EditBlog() {
   const [posts, setPosts] = useState<Post[]>([])
   const [userData, setUserData] = useState<User | null>(null)
   const [themeId, setThemeId] = useState<number>(1)
+  const [twitterHandle, setTwitterHandle] = useState<string>('')
+  const [bio, setBio] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
@@ -40,6 +42,8 @@ export default function EditBlog() {
         setLinks(userData.links || [])
         setUserData(userData.user)
         setThemeId(userData.user.themeId || 1)
+        setTwitterHandle(userData.user.twitterHandle || '')
+        setBio(userData.user.bio || '')
         // 暂时没有 posts，使用空数组
         setPosts([])
       }
@@ -59,9 +63,13 @@ export default function EditBlog() {
       // 先更新链接
       await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
       
-      // 更新用户信息（包括主题）
+      // 更新用户信息（包括主题、个人简介、Twitter）
       if (userData) {
-        await api.updateUser(user!, { themeId })
+        await api.updateUser(user!, { 
+          themeId,
+          bio: bio.trim() || undefined,
+          twitterHandle: twitterHandle.trim() || undefined
+        })
       }
       
       // 保存成功后跳转到展示页面
@@ -480,8 +488,55 @@ export default function EditBlog() {
               borderRadius: '8px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1.5rem'
             }}>
+              {/* Twitter 设置 */}
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  Twitter 用户名
+                </label>
+                <input
+                  type="text"
+                  value={twitterHandle}
+                  onChange={(e) => setTwitterHandle(e.target.value)}
+                  placeholder="输入你的 Twitter 用户名（不包含 @）"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: 'var(--surface)',
+                    border: '1px solid #666',
+                    borderRadius: '6px',
+                    color: 'var(--fg)',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+
+              {/* 个人简介 */}
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  个人简介
+                </label>
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="介绍一下你自己..."
+                  rows={4}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: 'var(--surface)',
+                    border: '1px solid #666',
+                    borderRadius: '6px',
+                    color: 'var(--fg)',
+                    fontSize: '0.9rem',
+                    resize: 'vertical',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              {/* 主题选择 */}
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
                   博客主题
@@ -514,7 +569,7 @@ export default function EditBlog() {
                 fontSize: '0.9rem',
                 color: 'var(--muted)'
               }}>
-                💡 选择你喜欢的博客主题，访问者将看到你选择的主题样式
+                💡 这些信息将在你的博客页面显示给访问者
               </div>
             </div>
           </div>
