@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type Link, type User } from '../lib/api'
+import WalletConnect from '../../components/WalletConnect'
 
 interface Post {
   id: string
@@ -26,8 +27,13 @@ export default function EditBlog() {
   const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
 
   useEffect(() => {
-    if (!isConnected || !address) {
+    if (!user) {
       navigate('/')
+      return
+    }
+
+    // 如果钱包未连接，显示连接提示而不是跳转
+    if (!isConnected || !address) {
       return
     }
 
@@ -161,6 +167,30 @@ export default function EditBlog() {
         <div className="blog-card">
           <div style={{ textAlign: 'center', padding: '2rem' }}>
             加载中...
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isConnected || !address) {
+    return (
+      <div className="blog-container">
+        <div className="blog-card">
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h2 style={{ marginBottom: '1rem' }}>需要连接钱包</h2>
+            <p style={{ marginBottom: '2rem', color: 'var(--muted)' }}>
+              请连接你的钱包以访问编辑功能
+            </p>
+            <div style={{ marginBottom: '2rem' }}>
+              <WalletConnect />
+            </div>
+            <button 
+              onClick={() => window.location.href = `https://${user}.catcat.meme/`}
+              className="btn-secondary"
+            >
+              返回博客
+            </button>
           </div>
         </div>
       </div>
