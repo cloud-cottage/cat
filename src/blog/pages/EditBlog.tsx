@@ -6,15 +6,15 @@ import WalletConnect from '../../components/WalletConnect'
 
 // 主题配置
 const themes = [
-  { id: 1, name: '极简白', description: '清爽简约，专注内容' },
-  { id: 2, name: '深夜蓝', description: '护眼模式，夜间阅读' },
-  { id: 3, name: '樱花粉', description: '温柔浪漫，少女心' },
-  { id: 4, name: '赛博朋克', description: '未来科技，霓虹风格' },
-  { id: 5, name: '森林绿', description: '自然清新，护眼舒适' },
-  { id: 6, name: '奶茶色', description: '温暖治愈，ins 风格' },
-  { id: 7, name: '暗夜紫', description: '神秘优雅，高级感' },
-  { id: 8, name: '海洋蓝', description: '清新宁静，夏日气息' },
-  { id: 9, name: '复古橙', description: '活力满满，怀旧情怀' }
+  { id: 1, name: '钻石手', description: '清爽简约，专注内容' },
+  { id: 2, name: 'HODL蓝', description: '长期持有，信仰坚定' },
+  { id: 3, name: '草莓熊', description: '温柔浪漫，少女心' },
+  { id: 4, name: '赛博橙', description: '未来科技，霓虹风格' },
+  { id: 5, name: '韭菜绿', description: '自然清新，护眼舒适' },
+  { id: 6, name: '拿铁棕', description: '温暖治愈，ins 风格' },
+  { id: 7, name: '神秘紫', description: '神秘优雅，高级感' },
+  { id: 8, name: '深海蓝', description: '清新宁静，夏日气息' },
+  { id: 9, name: '黄金橙', description: '活力满满，怀旧情怀' }
 ]
 
 interface Post {
