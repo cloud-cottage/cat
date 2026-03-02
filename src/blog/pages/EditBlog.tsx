@@ -269,12 +269,59 @@ export default function EditBlog() {
           borderBottom: '1px solid #444'
         }}>
           <h1 className="blog-title">编辑博客</h1>
-          <button 
-            onClick={() => window.location.href = `https://${user}.catcat.meme/`}
-            className="btn-secondary"
-          >
-            预览
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {/* 主题选择下拉框 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', color: 'var(--fg)' }}>主题:</span>
+              <select
+                value={themeId}
+                onChange={(e) => setThemeId(Number(e.target.value))}
+                style={{
+                  padding: '0.5rem',
+                  background: 'var(--surface)',
+                  border: '1px solid #666',
+                  borderRadius: '6px',
+                  color: 'var(--fg)',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+              >
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    主题 {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* 设置图标 */}
+            <button
+              onClick={() => setActiveTab('settings')}
+              style={{
+                width: '40px',
+                height: '40px',
+                background: 'var(--surface)',
+                border: '1px solid #666',
+                borderRadius: '8px',
+                color: 'var(--fg)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s'
+              }}
+              title="博客设置"
+            >
+              ⚙️
+            </button>
+            
+            <button 
+              onClick={() => window.location.href = `https://${user}.catcat.meme/`}
+              className="btn-secondary"
+            >
+              预览
+            </button>
+          </div>
         </div>
 
         {/* 错误提示 */}
@@ -304,7 +351,7 @@ export default function EditBlog() {
             style={{
               padding: '0.5rem 1rem',
               background: activeTab === 'links' ? 'var(--accent)' : 'transparent',
-              color: activeTab === 'links' ? 'white' : 'var(--fg)',
+              color: activeTab === 'links' ? 'var(--bg)' : 'var(--fg)',
               border: '1px solid var(--accent)',
               borderRadius: '6px 6px 0 0',
               cursor: 'pointer'
@@ -317,26 +364,13 @@ export default function EditBlog() {
             style={{
               padding: '0.5rem 1rem',
               background: activeTab === 'posts' ? 'var(--accent)' : 'transparent',
-              color: activeTab === 'posts' ? 'white' : 'var(--fg)',
+              color: activeTab === 'posts' ? 'var(--bg)' : 'var(--fg)',
               border: '1px solid var(--accent)',
               borderRadius: '6px 6px 0 0',
               cursor: 'pointer'
             }}
           >
             文章管理
-          </button>
-          <button 
-            onClick={() => setActiveTab('settings')}
-            style={{
-              padding: '0.5rem 1rem',
-              background: activeTab === 'settings' ? 'var(--accent)' : 'transparent',
-              color: activeTab === 'settings' ? 'white' : 'var(--fg)',
-              border: '1px solid var(--accent)',
-              borderRadius: '6px 6px 0 0',
-              cursor: 'pointer'
-            }}
-          >
-            博客设置
           </button>
         </div>
 
