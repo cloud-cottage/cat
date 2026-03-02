@@ -3,6 +3,102 @@ import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link } from '../lib/api'
 
+// Twitter 组件
+function TwitterEmbed({ handle }: { handle: string }) {
+  const [tweets, setTweets] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    if (!handle) return
+
+    const loadTweets = async () => {
+      try {
+        // 使用 Twitter API v2 获取最新推文
+        const response = await fetch(`https://api.allorigins.win/raw?url=https://syndication.twitter.com/srv/timeline-profile?screenName=${handle}&count=3`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch tweets')
+        }
+
+        const data = await response.text()
+        
+        // 简单的 HTML 解析来提取推文内容
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(data, 'text/html')
+        const tweetElements = doc.querySelectorAll('.timeline-Tweet')
+        
+        const extractedTweets = Array.from(tweetElements).slice(0, 3).map((tweet, index) => {
+          const textElement = tweet.querySelector('.timeline-Tweet-text')
+          const timeElement = tweet.querySelector('.timeline-Tweet-timestamp')
+          
+          return {
+            id: index,
+            text: textElement ? textElement.textContent || '' : '',
+            time: timeElement ? timeElement.textContent || '' : ''
+          }
+        })
+        
+        setTweets(extractedTweets)
+      } catch (err) {
+        console.error('Error loading tweets:', err)
+        setError('无法加载推文')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTweets()
+  }, [handle])
+
+  if (!handle) return null
+  if (loading) return <div style={{ color: 'var(--muted)' }}>加载推文中...</div>
+  if (error) return <div style={{ color: 'var(--muted)' }}>{error}</div>
+  if (tweets.length === 0) return <div style={{ color: 'var(--muted)' }}>暂无推文</div>
+
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <h3 style={{ margin: 0, marginBottom: '1rem' }}>最新推文</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        {tweets.map((tweet) => (
+          <div 
+            key={tweet.id}
+            style={{
+              padding: '0.75rem',
+              background: 'var(--surface)',
+              border: '1px solid #444',
+              borderRadius: '8px',
+              fontSize: '0.9rem',
+              lineHeight: 1.4
+            }}
+          >
+            <div style={{ color: 'var(--fg)', marginBottom: '0.5rem' }}>
+              {tweet.text}
+            </div>
+            <div style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>
+              {tweet.time}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+        <a 
+          href={`https://twitter.com/${handle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ 
+            color: 'var(--link)', 
+            fontSize: '0.9rem',
+            textDecoration: 'none'
+          }}
+        >
+          查看更多推文 →
+        </a>
+      </div>
+    </div>
+  )
+}
+
 export default function UserProfile({ username: propUsername }: { username?: string }) {
   const { username: paramUsername } = useParams<{ username: string }>()
   const { address } = useAccount()
@@ -43,7 +139,13 @@ export default function UserProfile({ username: propUsername }: { username?: str
 
   useEffect(() => {
     if (!user) return
-    document.body.className = `theme-${themeId}`
+    
+    // 移除所有主题类
+    document.body.className = document.body.className.replace(/theme-\d+/g, '')
+    // 添加当前主题类
+    document.body.classList.add(`theme-${themeId}`)
+    
+    console.log('UserProfile: 应用主题', { themeId, username: user.username })
   }, [themeId, user])
 
   if (loading) {
@@ -87,6 +189,9 @@ export default function UserProfile({ username: propUsername }: { username?: str
             <p style={{ lineHeight: 1.6, color: 'var(--fg)' }}>{user.bio}</p>
           </div>
         )}
+        
+        {/* Twitter 推文 */}
+        {user.twitterHandle && <TwitterEmbed handle={user.twitterHandle} />}
         
         {/* 外部链接 */}
         {links.length > 0 && (
