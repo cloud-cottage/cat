@@ -12,9 +12,12 @@ interface Post {
 }
 
 export default function EditBlog() {
+  console.log('EditBlog component mounted')
   const { user } = useParams()
   const { address, isConnected } = useAccount()
   const navigate = useNavigate()
+  
+  console.log('EditBlog initial state:', { user, address, isConnected })
   
   const [links, setLinks] = useState<Link[]>([])
   const [posts, setPosts] = useState<Post[]>([])
@@ -30,6 +33,7 @@ export default function EditBlog() {
     console.log('EditBlog useEffect:', { user, isConnected, address })
     
     if (!user) {
+      console.log('No user parameter, navigating to home')
       navigate('/')
       return
     }
@@ -41,6 +45,7 @@ export default function EditBlog() {
       return
     }
 
+    console.log('All conditions met, loading user data')
     loadUserData()
   }, [user, isConnected, address, navigate])
 
