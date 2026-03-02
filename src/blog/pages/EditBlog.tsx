@@ -4,6 +4,19 @@ import { useAccount } from 'wagmi'
 import { api, type Link, type User } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
+// 主题配置
+const themes = [
+  { id: 1, name: '极简白', description: '清爽简约，专注内容' },
+  { id: 2, name: '深夜蓝', description: '护眼模式，夜间阅读' },
+  { id: 3, name: '樱花粉', description: '温柔浪漫，少女心' },
+  { id: 4, name: '赛博朋克', description: '未来科技，霓虹风格' },
+  { id: 5, name: '森林绿', description: '自然清新，护眼舒适' },
+  { id: 6, name: '奶茶色', description: '温暖治愈，ins 风格' },
+  { id: 7, name: '暗夜紫', description: '神秘优雅，高级感' },
+  { id: 8, name: '海洋蓝', description: '清新宁静，夏日气息' },
+  { id: 9, name: '复古橙', description: '活力满满，怀旧情怀' }
+]
+
 interface Post {
   id: string
   title: string
@@ -286,9 +299,9 @@ export default function EditBlog() {
                   cursor: 'pointer'
                 }}
               >
-                {Array.from({ length: 9 }).map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    主题 {i + 1}
+                {themes.map((theme) => (
+                  <option key={theme.id} value={theme.id}>
+                    {theme.name}
                   </option>
                 ))}
               </select>
@@ -671,22 +684,31 @@ export default function EditBlog() {
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
                   博客主题
                 </label>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  {Array.from({ length: 9 }).map((_, i) => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                  {themes.map((theme) => (
                     <button
-                      key={i + 1}
-                      onClick={() => setThemeId(i + 1)}
+                      key={theme.id}
+                      onClick={() => setThemeId(theme.id)}
                       style={{
-                        padding: '0.5rem 1rem',
-                        background: themeId === i + 1 ? 'var(--accent)' : 'var(--surface)',
-                        color: themeId === i + 1 ? 'white' : 'var(--fg)',
+                        padding: '0.75rem',
+                        background: themeId === theme.id ? 'var(--accent)' : 'var(--surface)',
+                        color: themeId === theme.id ? 'var(--bg)' : 'var(--fg)',
                         border: '1px solid #666',
-                        borderRadius: '4px',
+                        borderRadius: '8px',
                         cursor: 'pointer',
-                        transition: 'all 0.2s'
+                        transition: 'all 0.2s',
+                        textAlign: 'left',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.25rem'
                       }}
                     >
-                      主题 {i + 1}
+                      <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+                        {theme.name}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                        {theme.description}
+                      </div>
                     </button>
                   ))}
                 </div>
