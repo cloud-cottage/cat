@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type Link } from '../lib/api'
+import { api, type Link, type User } from '../lib/api'
 
 interface Post {
   id: string
@@ -17,9 +17,11 @@ export default function EditBlog() {
   
   const [links, setLinks] = useState<Link[]>([])
   const [posts, setPosts] = useState<Post[]>([])
+  const [userData, setUserData] = useState<User | null>(null)
+  const [themeId, setThemeId] = useState<number>(1)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'links' | 'posts'>('links')
+  const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
 
   useEffect(() => {
     if (!isConnected || !address) {
@@ -36,6 +38,8 @@ export default function EditBlog() {
       const userData = await api.getUserByUsername(user!)
       if (userData) {
         setLinks(userData.links || [])
+        setUserData(userData.user)
+        setThemeId(userData.user.themeId || 1)
         // 暂时没有 posts，使用空数组
         setPosts([])
       }
@@ -54,6 +58,11 @@ export default function EditBlog() {
       
       // 先更新链接
       await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
+      
+      // 更新用户信息（包括主题）
+      if (userData) {
+        await api.updateUser(user!, { themeId })
+      }
       
       // 保存成功后跳转到展示页面
       window.location.href = `https://${user}.catcat.meme/`
@@ -227,6 +236,19 @@ export default function EditBlog() {
             }}
           >
             文章管理
+          </button>
+          <button 
+            onClick={() => setActiveTab('settings')}
+            style={{
+              padding: '0.5rem 1rem',
+              background: activeTab === 'settings' ? 'var(--accent)' : 'transparent',
+              color: activeTab === 'settings' ? 'white' : 'var(--fg)',
+              border: '1px solid var(--accent)',
+              borderRadius: '6px 6px 0 0',
+              cursor: 'pointer'
+            }}
+          >
+            博客设置
           </button>
         </div>
 
@@ -441,6 +463,59 @@ export default function EditBlog() {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3>博客设置</h3>
+            </div>
+            
+            <div style={{ 
+              padding: '1rem', 
+              background: 'var(--bg)', 
+              border: '1px solid #444', 
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem'
+            }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                  博客主题
+                </label>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => setThemeId(i + 1)}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        background: themeId === i + 1 ? 'var(--accent)' : 'var(--surface)',
+                        color: themeId === i + 1 ? 'white' : 'var(--fg)',
+                        border: '1px solid #666',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      主题 {i + 1}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <div style={{ 
+                padding: '0.75rem', 
+                background: 'rgba(255, 255, 255, 0.05)', 
+                borderRadius: '6px',
+                fontSize: '0.9rem',
+                color: 'var(--muted)'
+              }}>
+                💡 选择你喜欢的博客主题，访问者将看到你选择的主题样式
+              </div>
             </div>
           </div>
         )}

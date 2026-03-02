@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link } from '../lib/api'
-import WalletConnect from '../../components/WalletConnect'
 
 export default function UserProfile({ username: propUsername }: { username?: string }) {
   const { username: paramUsername } = useParams<{ username: string }>()
@@ -47,19 +46,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
     document.body.className = `theme-${themeId}`
   }, [themeId, user])
 
-  const handleThemeChange = async (newThemeId: number) => {
-    if (!user) return
-    setThemeId(newThemeId)
-    try {
-      const updatedUser = await api.updateUser(user.username, { themeId: newThemeId })
-      setUser(updatedUser)
-    } catch (error) {
-      console.error('Error updating theme:', error)
-      // 回滚
-      setThemeId(user.themeId || 1)
-    }
-  }
-
   if (loading) {
     return <div className="blog-container">加载中...</div>
   }
@@ -79,34 +65,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
               钱包: {user.walletAddress === '0x0000' ? '未连接' : `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}
             </p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <WalletConnect />
-            <select 
-              value={themeId} 
-              onChange={e => handleThemeChange(Number(e.target.value))} 
-              style={{ padding: '0.25rem 0.5rem', background: 'var(--bg)', color: 'var(--fg)', border: '1px solid #444', borderRadius: '6px' }}
-            >
-              {Array.from({ length: 9 }).map((_, i) => (
-                <option key={i + 1} value={i + 1}>主题 {i + 1}</option>
-              ))}
-            </select>
-          </div>
         </div>
-        
-        {/* 钱包连接状态提示 */}
-        {user.walletAddress === '0x0000' && (
-          <div style={{ 
-            marginTop: '1rem', 
-            padding: '0.75rem', 
-            background: 'rgba(255, 193, 7, 0.1)', 
-            border: '1px solid rgba(255, 193, 7, 0.3)', 
-            borderRadius: '6px',
-            fontSize: '0.9rem',
-            color: '#fbbf24'
-          }}>
-            💡 提示：连接钱包后可以访问编辑页面
-          </div>
-        )}
         
         {/* 个人简介 */}
         {user.bio && (
