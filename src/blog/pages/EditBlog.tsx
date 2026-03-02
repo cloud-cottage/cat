@@ -22,7 +22,7 @@ export default function EditBlog() {
   const [themeId, setThemeId] = useState<number>(1)
   const [twitterHandle, setTwitterHandle] = useState<string>('')
   const [bio, setBio] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true) // 初始设为 true
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
 
@@ -32,8 +32,9 @@ export default function EditBlog() {
       return
     }
 
-    // 如果钱包未连接，显示连接提示而不是跳转
+    // 如果钱包未连接，停止加载并显示连接提示
     if (!isConnected || !address) {
+      setIsLoading(false)
       return
     }
 
