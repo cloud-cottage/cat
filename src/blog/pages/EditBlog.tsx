@@ -128,6 +128,25 @@ export default function EditBlog() {
     }
   }
 
+  const saveLinks = async () => {
+    try {
+      setIsLoading(true)
+      setError('')
+      
+      // 只更新链接
+      await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
+      
+      // 保存成功提示
+      setError('')
+      // 可以添加成功提示，但不跳转
+    } catch (err) {
+      console.error('Failed to save links:', err)
+      setError('保存链接失败，请重试')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const addLink = () => {
     const newLink: Link = {
       id: Date.now().toString(),
@@ -250,21 +269,12 @@ export default function EditBlog() {
           borderBottom: '1px solid #444'
         }}>
           <h1 className="blog-title">编辑博客</h1>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button 
-              onClick={() => window.location.href = `https://${user}.catcat.meme/`}
-              className="btn-secondary"
-            >
-              预览
-            </button>
-            <button 
-              onClick={saveUserData}
-              disabled={isLoading}
-              className="btn-primary"
-            >
-              {isLoading ? '保存中...' : '保存'}
-            </button>
-          </div>
+          <button 
+            onClick={() => window.location.href = `https://${user}.catcat.meme/`}
+            className="btn-secondary"
+          >
+            预览
+          </button>
         </div>
 
         {/* 错误提示 */}
@@ -335,9 +345,18 @@ export default function EditBlog() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3>链接管理</h3>
-              <button onClick={addLink} className="btn-secondary">
-                + 添加链接
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={addLink} className="btn-secondary">
+                  + 添加链接
+                </button>
+                <button 
+                  onClick={saveLinks}
+                  disabled={isLoading}
+                  className="btn-primary"
+                >
+                  {isLoading ? '保存中...' : '保存链接'}
+                </button>
+              </div>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -549,6 +568,13 @@ export default function EditBlog() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3>博客设置</h3>
+              <button 
+                onClick={saveUserData}
+                disabled={isLoading}
+                className="btn-primary"
+              >
+                {isLoading ? '保存中...' : '保存设置'}
+              </button>
             </div>
             
             <div style={{ 
