@@ -130,23 +130,36 @@ export default function EditBlog() {
       setIsLoading(true)
       setError('')
       
+      console.log('开始保存用户数据:', { user, themeId, twitterHandle, bio, linksCount: links.length })
+      
       // 先更新链接
-      await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
+      if (links.length > 0) {
+        console.log('保存链接数据...')
+        await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
+        console.log('链接保存成功')
+      }
       
       // 更新用户信息（包括主题、个人简介、Twitter）
       if (userData) {
-        await api.updateUser(user!, { 
+        console.log('保存用户信息...')
+        const updateData = { 
           themeId,
           bio: bio.trim() || undefined,
           twitterHandle: twitterHandle.trim() || undefined
-        })
+        }
+        console.log('用户更新数据:', updateData)
+        await api.updateUser(user!, updateData)
+        console.log('用户信息保存成功')
       }
       
       // 保存成功后跳转到展示页面
+      console.log('所有数据保存成功，准备跳转')
       window.location.href = `https://${user}.catcat.meme/`
     } catch (err) {
       console.error('Failed to save user data:', err)
-      setError('保存失败，请重试')
+      const errorMessage = err instanceof Error ? err.message : '未知错误'
+      console.error('详细错误信息:', errorMessage)
+      setError(`保存失败: ${errorMessage}`)
     } finally {
       setIsLoading(false)
     }
@@ -157,15 +170,20 @@ export default function EditBlog() {
       setIsLoading(true)
       setError('')
       
+      console.log('开始保存链接数据:', { user, linksCount: links.length })
+      
       // 只更新链接
       await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
       
+      console.log('链接保存成功')
       // 保存成功提示
       setError('')
       // 可以添加成功提示，但不跳转
     } catch (err) {
       console.error('Failed to save links:', err)
-      setError('保存链接失败，请重试')
+      const errorMessage = err instanceof Error ? err.message : '未知错误'
+      console.error('详细错误信息:', errorMessage)
+      setError(`保存链接失败: ${errorMessage}`)
     } finally {
       setIsLoading(false)
     }

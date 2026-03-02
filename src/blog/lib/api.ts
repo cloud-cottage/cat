@@ -1,4 +1,4 @@
-const API_BASE = '/api/user-kv'
+const API_BASE = 'https://www.catcat.meme/api/user-kv'
 
 export interface User {
   id: string
