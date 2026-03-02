@@ -27,6 +27,8 @@ export default function EditBlog() {
   const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
 
   useEffect(() => {
+    console.log('EditBlog useEffect:', { user, isConnected, address })
+    
     if (!user) {
       navigate('/')
       return
@@ -34,12 +36,25 @@ export default function EditBlog() {
 
     // 如果钱包未连接，停止加载并显示连接提示
     if (!isConnected || !address) {
+      console.log('Wallet not connected, stopping loading')
       setIsLoading(false)
       return
     }
 
     loadUserData()
   }, [user, isConnected, address, navigate])
+
+  // 添加超时机制，防止无限加载
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isLoading) {
+        console.log('Loading timeout, forcing stop')
+        setIsLoading(false)
+      }
+    }, 5000) // 5秒超时
+
+    return () => clearTimeout(timer)
+  }, [isLoading])
 
   const loadUserData = async () => {
     try {
