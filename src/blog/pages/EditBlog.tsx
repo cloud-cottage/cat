@@ -107,7 +107,10 @@ export default function EditBlog() {
   const loadUserData = async () => {
     try {
       setIsLoading(true)
+      console.log('开始加载用户数据，用户名:', user)
       const userData = await api.getUserByUsername(user!)
+      console.log('获取到的用户数据:', userData)
+      
       if (userData) {
         setLinks(userData.links || [])
         setUserData(userData.user)
@@ -116,6 +119,14 @@ export default function EditBlog() {
         setBio(userData.user.bio || '')
         // 暂时没有 posts，使用空数组
         setPosts([])
+        console.log('用户数据加载成功:', { 
+          themeId: userData.user.themeId, 
+          linksCount: userData.links?.length || 0,
+          twitterHandle: userData.user.twitterHandle,
+          bio: userData.user.bio
+        })
+      } else {
+        console.log('用户不存在，将创建新用户')
       }
     } catch (err) {
       console.error('Failed to load user data:', err)
