@@ -6,8 +6,8 @@
   },
   "rewrites": [
     {
-      "source": "/api/user-kv/(.*)",
-      "destination": "/api/user-kv/index.js"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
       "source": "/setup",
