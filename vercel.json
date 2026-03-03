@@ -1,13 +1,8 @@
 {
-  "functions": {
-    "api/user-kv.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/user-kv/(.*)",
-      "destination": "/api/user-kv.js"
+      "destination": "/api/user-kv/index.js"
     },
     {
       "source": "/setup",
