@@ -1,14 +1,7 @@
 import { Redis } from '@upstash/redis'
 
-// 初始化 Redis 客户端，支持多种环境变量名
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || 
-       process.env.cat_KV_REST_API_URL || 
-       process.env.REDIS_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || 
-        process.env.cat_KV_REST_API_TOKEN || 
-        process.env.REDIS_TOKEN,
-})
+// 使用 Upstash Redis 的环境变量初始化
+const redis = Redis.fromEnv()
 
 export default async function handler(req, res) {
   // 添加 CORS 头
@@ -24,12 +17,17 @@ export default async function handler(req, res) {
   
   if (req.method === 'GET') {
     try {
+      console.log('Getting user data for:', username)
+      
       // 获取用户信息
       const userKey = `user:${username}`
       const linksKey = `links:${username}`
       
       const user = await redis.hgetall(userKey)
       const links = await redis.lrange(linksKey, 0, -1)
+      
+      console.log('User data:', user)
+      console.log('Links data:', links)
       
       if (!user || Object.keys(user).length === 0) {
         return res.status(404).json({ error: 'User not found' })
@@ -47,6 +45,10 @@ export default async function handler(req, res) {
     try {
       const { user, userLinks } = req.body
       
+      console.log('Updating user data for:', username)
+      console.log('User update:', user)
+      console.log('Links update:', userLinks)
+      
       if (user) {
         // 更新用户信息
         const userKey = `user:${username}`
@@ -60,6 +62,7 @@ export default async function handler(req, res) {
         
         // 使用 hash 存储用户信息
         await redis.hmset(userKey, user)
+        console.log('User data saved successfully')
       }
       
       if (userLinks) {
@@ -73,6 +76,7 @@ export default async function handler(req, res) {
         if (userLinks.length > 0) {
           const linkStrings = userLinks.map(link => JSON.stringify(link))
           await redis.lpush(linksKey, ...linkStrings)
+          console.log('Links data saved successfully')
         }
       }
       
