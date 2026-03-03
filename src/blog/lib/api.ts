@@ -25,23 +25,55 @@ export interface Link {
 
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
 
+// 临时使用 localStorage 作为后备方案
+const localStorageKey = (username: string) => `catcat_blog_${username}`
+
+const getLocalData = (username: string) => {
+  try {
+    const data = localStorage.getItem(localStorageKey(username))
+    return data ? JSON.parse(data) : null
+  } catch {
+    return null
+  }
+}
+
+const setLocalData = (username: string, data: { user: User; links: Link[] }) => {
+  try {
+    localStorage.setItem(localStorageKey(username), JSON.stringify(data))
+  } catch (error) {
+    console.error('Failed to save to localStorage:', error)
+  }
+}
+
 export const api = {
   getUserByUsername: async (username: string): Promise<{ user: User; links: Link[] } | null> => {
     try {
+      console.log('尝试从 API 获取用户数据:', username)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`)
-      if (response.status === 404) return null
-      if (!response.ok) throw new Error('Failed to fetch user')
-      return await response.json()
+      
+      if (response.status === 404) {
+        console.log('API 返回 404，尝试从 localStorage 获取')
+        return getLocalData(username)
+      }
+      
+      if (!response.ok) {
+        console.log('API 请求失败，使用 localStorage 后备方案')
+        return getLocalData(username)
+      }
+      
+      const data = await response.json()
+      console.log('API 获取数据成功:', data)
+      return data
     } catch (error) {
-      console.error('Error fetching user:', error)
-      return null
+      console.error('API 请求出错，使用 localStorage 后备方案:', error)
+      return getLocalData(username)
     }
   },
 
   createUser: async (username: string, walletAddress?: string): Promise<User> => {
     const newUser: User = {
       id: genId(),
-      walletAddress: walletAddress || '0x0000', // 如果没有提供钱包地址，使用默认值
+      walletAddress: walletAddress || '0x0000',
       username,
       twitterHandle: '',
       themeId: 1,
@@ -52,6 +84,7 @@ export const api = {
     }
 
     try {
+      console.log('尝试创建用户:', username)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`, {
         method: 'POST',
         headers: {
@@ -63,18 +96,27 @@ export const api = {
         })
       })
 
-      if (!response.ok) throw new Error('Failed to create user')
+      if (!response.ok) {
+        console.log('API 创建用户失败，保存到 localStorage')
+        const data = { user: newUser, links: [] }
+        setLocalData(username, data)
+        return newUser
+      }
+
       const result = await response.json()
+      console.log('API 创建用户成功:', result)
       return result.user
     } catch (error) {
-      console.error('Error creating user:', error)
-      // 如果 API 失败，返回本地创建的用户
+      console.error('API 创建用户出错，保存到 localStorage:', error)
+      const data = { user: newUser, links: [] }
+      setLocalData(username, data)
       return newUser
     }
   },
 
   updateUser: async (username: string, user: Partial<User>): Promise<User> => {
     try {
+      console.log('尝试更新用户:', username, user)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`, {
         method: 'POST',
         headers: {
@@ -82,36 +124,66 @@ export const api = {
         },
         body: JSON.stringify({
           user,
-          userLinks: undefined // 不更新链接
+          userLinks: undefined
         })
       })
 
-      if (!response.ok) throw new Error('Failed to update user')
+      if (!response.ok) {
+        console.log('API 更新用户失败，更新 localStorage')
+        const localData = getLocalData(username)
+        if (localData) {
+          const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
+          setLocalData(username, { user: updatedUser, links: localData.links })
+          return updatedUser
+        }
+        throw new Error('Failed to update user')
+      }
+
       const result = await response.json()
+      console.log('API 更新用户成功:', result)
       return result.user
     } catch (error) {
-      console.error('Error updating user:', error)
+      console.error('API 更新用户出错，更新 localStorage:', error)
+      const localData = getLocalData(username)
+      if (localData) {
+        const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
+        setLocalData(username, { user: updatedUser, links: localData.links })
+        return updatedUser
+      }
       throw error
     }
   },
 
   updateLinks: async (username: string, userLinks: Link[]): Promise<void> => {
     try {
+      console.log('尝试更新链接:', username, userLinks)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: undefined, // 不更新用户信息
+          user: undefined,
           userLinks
         })
       })
 
-      if (!response.ok) throw new Error('Failed to update links')
+      if (!response.ok) {
+        console.log('API 更新链接失败，更新 localStorage')
+        const localData = getLocalData(username)
+        if (localData) {
+          setLocalData(username, { user: localData.user, links: userLinks })
+        }
+        return
+      }
+
+      console.log('API 更新链接成功')
     } catch (error) {
-      console.error('Error updating links:', error)
-      throw error
+      console.error('API 更新链接出错，更新 localStorage:', error)
+      const localData = getLocalData(username)
+      if (localData) {
+        setLocalData(username, { user: localData.user, links: userLinks })
+      }
     }
   }
 }
