@@ -1,10 +1,7 @@
 import { Redis } from '@upstash/redis'
 
-// 使用 cat_KV 环境变量
-const redis = new Redis({
-  url: process.env.cat_KV_REST_API_URL,
-  token: process.env.cat_KV_REST_API_TOKEN,
-});
+// Initialize Redis
+const redis = Redis.fromEnv()
 
 export default async function handler(req, res) {
   // 添加 CORS 头
