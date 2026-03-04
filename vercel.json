@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/user-kv/(.*)",
-      "destination": "/api/user-kv/$1"
+      "destination": "/api/user-kv.js"
     },
     {
       "source": "/api/(.*)",
