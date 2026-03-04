@@ -1,13 +1,9 @@
 import { Redis } from '@upstash/redis'
 
-// 初始化 Redis 客户端，支持多种环境变量名
+// 使用正确的环境变量
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || 
-       process.env.cat_KV_REST_API_URL || 
-       process.env.REDIS_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || 
-        process.env.cat_KV_REST_API_TOKEN || 
-        process.env.REDIS_TOKEN,
+  url: 'https://sound-asp-64435.upstash.io',
+  token: 'AfuzAAIncDFkNDFmZGIwYzNmMWQ0YjZiYjFlNjYzYjQ0NzIxZTBjNHAxNjQ0MzU',
 })
 
 export default async function handler(req, res) {
