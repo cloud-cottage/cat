@@ -13,7 +13,7 @@
       "destination": "/setup"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api).*)",
       "destination": "/index.html"
     }
   ],
