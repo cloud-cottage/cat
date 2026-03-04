@@ -1,9 +1,9 @@
 import { Redis } from '@upstash/redis'
 
-// 使用 UPSTASH_REDIS_REST_URL 环境变量
+// 使用正确的环境变量名
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  url: process.env.cat_KV_REST_API_URL,
+  token: process.env.cat_KV_REST_API_TOKEN,
 })
 
 export default async function handler(req, res) {
@@ -21,8 +21,8 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       console.log('Getting user data for:', username)
-      console.log('Redis URL:', process.env.UPSTASH_REDIS_REST_URL)
-      console.log('Redis Token exists:', !!process.env.UPSTASH_REDIS_REST_TOKEN)
+      console.log('Redis URL:', process.env.cat_KV_REST_API_URL)
+      console.log('Redis Token exists:', !!process.env.cat_KV_REST_API_TOKEN)
       
       // 获取用户信息
       const userKey = `user:${username}`
