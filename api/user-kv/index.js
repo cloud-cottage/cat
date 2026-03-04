@@ -1,5 +1,13 @@
 import { Redis } from '@upstash/redis'
 
+// 调试环境变量
+console.log('Environment variables:', {
+  UPSTASH_REDIS_KV_REST_API_URL: process.env.UPSTASH_REDIS_KV_REST_API_URL,
+  UPSTASH_REDIS_KV_REST_API_TOKEN: process.env.UPSTASH_REDIS_KV_REST_API_TOKEN ? 'EXISTS' : 'MISSING',
+  UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+  UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN ? 'EXISTS' : 'MISSING'
+})
+
 // 使用 UPSTASH_REDIS_KV 环境变量
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_KV_REST_API_URL,
