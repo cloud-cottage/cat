@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/user-kv/(.*)",
+      "destination": "/api/user-kv/$1"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
