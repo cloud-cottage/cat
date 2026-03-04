@@ -1,17 +1,9 @@
 import { Redis } from '@upstash/redis'
 
-// 调试环境变量
-console.log('Environment variables:', {
-  UPSTASH_REDIS_KV_REST_API_URL: process.env.UPSTASH_REDIS_KV_REST_API_URL,
-  UPSTASH_REDIS_KV_REST_API_TOKEN: process.env.UPSTASH_REDIS_KV_REST_API_TOKEN ? 'EXISTS' : 'MISSING',
-  UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
-  UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN ? 'EXISTS' : 'MISSING'
-})
-
-// 使用 UPSTASH_REDIS_KV 环境变量
+// 临时硬编码测试
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_KV_REST_API_URL,
-  token: process.env.UPSTASH_REDIS_KV_REST_API_TOKEN,
+  url: 'https://sound-asp-64435.upstash.io',
+  token: 'AfuzAAIncDFkNDFmZGIwYzNmMWQ0YjZiYjFlNjYzYjQ0NzIxZTBjNHAxNjQ0MzU',
 })
 
 export default async function handler(req, res) {
