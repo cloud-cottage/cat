@@ -1,10 +1,7 @@
 import { Redis } from '@upstash/redis'
 
-// 使用 cat_KV 环境变量
-const redis = new Redis({
-  url: process.env.cat_KV_REST_API_URL,
-  token: process.env.cat_KV_REST_API_TOKEN,
-})
+// Initialize Redis
+const redis = Redis.fromEnv()
 
 export default async function handler(req, res) {
   // 添加 CORS 头
@@ -21,8 +18,6 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       console.log('Getting user data for:', username)
-      console.log('Redis URL:', process.env.cat_KV_REST_API_URL)
-      console.log('Redis Token exists:', !!process.env.cat_KV_REST_API_TOKEN)
       
       // 获取用户信息
       const userKey = `user:${username}`
