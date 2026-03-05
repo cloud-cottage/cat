@@ -1,5 +1,65 @@
 const API_BASE = 'https://www.catcat.meme/api/user-kv'
 
+// IPFS 配置
+const IPFS_CONFIG = {
+  gateway: 'https://ipfs.io/ipfs/',
+  pinataApiKey: process.env.REACT_APP_PINATA_API_KEY || '',
+  pinataSecret: process.env.REACT_APP_PINATA_SECRET || '',
+  pinataUrl: 'https://api.pinata.cloud/pinning/pinFileToIPFS'
+}
+
+// IPFS 相关接口
+export interface IPFSUploadResult {
+  IpfsHash: string
+  PinSize: number
+  Timestamp: string
+}
+
+export interface IPFSFile {
+  file: File
+  cid?: string
+  uploaded?: boolean
+}
+
+// 上传文件到 IPFS (使用 Pinata)
+export const uploadToIPFS = async (file: File): Promise<IPFSUploadResult | null> => {
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    const response = await fetch(IPFS_CONFIG.pinataUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${IPFS_CONFIG.pinataApiKey}`,
+        'pinata_secret_key': IPFS_CONFIG.pinataSecret
+      },
+      body: formData
+    })
+    
+    if (!response.ok) {
+      console.error('IPFS upload failed:', response.statusText)
+      return null
+    }
+    
+    const result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error uploading to IPFS:', error)
+    return null
+  }
+}
+
+// 获取 IPFS 文件 URL
+export const getIPFSUrl = (cid: string): string => {
+  return `${IPFS_CONFIG.gateway}${cid}`
+}
+
+// 从 URL 获取 IPFS CID
+export const extractCIDFromIPFSUrl = (url: string): string | null => {
+  const match = url.match(/\/ipfs\/(Qm[a-zA-Z0-9]+)/)
+  return match ? match[1] : null
+}
+
 export interface User {
   id: string
   walletAddress: string
@@ -7,6 +67,7 @@ export interface User {
   twitterHandle?: string
   themeId: number
   avatarUrl?: string
+  ipfsAvatar?: string  // IPFS 头像 CID
   bio?: string
   createdAt: string
   updatedAt: string
@@ -301,6 +362,21 @@ export const getTwitterAvatarUrl = (handle: string): string => {
   const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle
   // 使用推特头像API，返回原始尺寸图片
   return `https://unavatar.io/twitter/${cleanHandle}`
+}
+
+// 获取用户头像URL (支持 IPFS)
+export const getUserAvatarUrl = (user: User): string => {
+  // 优先级：IPFS 头像 > 传统头像 > 推特头像
+  if (user.ipfsAvatar) {
+    return getIPFSUrl(user.ipfsAvatar)
+  }
+  if (user.avatarUrl) {
+    return user.avatarUrl
+  }
+  if (user.twitterHandle) {
+    return getTwitterAvatarUrl(user.twitterHandle)
+  }
+  return ''
 }
 
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
