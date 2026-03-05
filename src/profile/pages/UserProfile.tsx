@@ -249,25 +249,154 @@ export default function UserProfile({ username: propUsername }: { username?: str
           )}
         </div>
 
-        {/* 认证徽章 */}
+        {/* 认证徽章 - 绿色邮戳/印章风格 */}
         {user?.walletAddress && user.walletAddress !== '0x0000' && (
           <div style={{
+            position: 'relative',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 1rem',
-            background: 'rgba(255,255,255,0.15)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: '20px',
+            justifyContent: 'center',
             marginBottom: '2rem',
-            fontSize: '0.9rem',
-            color: 'rgba(255,255,255,0.9)'
+            transform: 'rotate(-8deg)',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
           }}>
-            <span style={{ fontSize: '1rem' }}>✓</span>
-            <span>
-              该页面由 {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)} 签名认证
-            </span>
+            {/* SVG 虚线边框背景 */}
+            <svg
+              width="280"
+              height="80"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%'
+              }}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <filter id="roughPaper">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" />
+                </filter>
+                <filter id="greenGlow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              
+              {/* 外层虚线圆 */}
+              <circle
+                cx="140"
+                cy="40"
+                r="35"
+                fill="none"
+                stroke="#2d5016"
+                strokeWidth="2"
+                strokeDasharray="8 4 3 6 5 3"
+                filter="url(#roughPaper)"
+                opacity="0.8"
+              />
+              
+              {/* 内层虚线圆 */}
+              <circle
+                cx="140"
+                cy="40"
+                r="30"
+                fill="none"
+                stroke="#4a7c28"
+                strokeWidth="1.5"
+                strokeDasharray="6 3 4 4"
+                filter="url(#roughPaper)"
+                opacity="0.6"
+              />
+              
+              {/* 点线装饰 */}
+              <circle
+                cx="140"
+                cy="40"
+                r="25"
+                fill="none"
+                stroke="#6b9e3a"
+                strokeWidth="1"
+                strokeDasharray="2 3"
+                opacity="0.4"
+              />
+            </svg>
+            
+            {/* 内容区域 */}
+            <div style={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1rem 1.5rem',
+              background: 'radial-gradient(circle, rgba(76, 175, 80, 0.15) 0%, rgba(46, 125, 50, 0.25) 100%)',
+              borderRadius: '50%',
+              border: '2px solid rgba(76, 175, 80, 0.3)',
+              boxShadow: `
+                inset 0 2px 4px rgba(0,0,0,0.2),
+                0 0 20px rgba(76, 175, 80, 0.3),
+                0 0 40px rgba(76, 175, 80, 0.1)
+              `
+            }}>
+              <div style={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: '#2e7d32',
+                marginBottom: '0.25rem',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                fontFamily: 'serif'
+              }}>
+                ✓
+              </div>
+              <div style={{
+                fontSize: '0.75rem',
+                color: '#388e3c',
+                textAlign: 'center',
+                lineHeight: 1.2,
+                fontFamily: 'serif',
+                fontWeight: '500'
+              }}>
+                该页面由<br/>
+                <span style={{ 
+                  fontFamily: 'monospace',
+                  fontSize: '0.7rem',
+                  letterSpacing: '0.5px'
+                }}>
+                  {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                </span>
+                <br/>
+                签名认证
+              </div>
+            </div>
+            
+            {/* 伪元素效果 - 通过额外div实现 */}
+            <div style={{
+              position: 'absolute',
+              top: '-2px',
+              left: '-2px',
+              right: '-2px',
+              bottom: '-2px',
+              border: '1px dashed rgba(76, 175, 80, 0.2)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }} />
+            
+            <div style={{
+              position: 'absolute',
+              top: '2px',
+              left: '2px',
+              right: '2px',
+              bottom: '2px',
+              border: '1px dotted rgba(139, 195, 74, 0.15)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }} />
           </div>
         )}
       </div>
@@ -348,6 +477,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 {groupLinks.map((link) => (
                   <div
                     key={link.id}
+                    onClick={() => !isEditing && link.url && window.open(link.url, '_blank')}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -361,7 +491,22 @@ export default function UserProfile({ username: propUsername }: { username?: str
                       fontSize: '1.1rem',
                       fontWeight: '500',
                       transition: 'all 0.3s ease',
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                      cursor: isEditing ? 'default' : link.url ? 'pointer' : 'default'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isEditing && link.url) {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.2)'
+                        e.currentTarget.style.transform = 'translateY(-2px)'
+                        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.2)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isEditing) {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+                        e.currentTarget.style.transform = 'translateY(0)'
+                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
+                      }
                     }}
                   >
                     <span style={{ fontSize: '1.5rem' }}>
