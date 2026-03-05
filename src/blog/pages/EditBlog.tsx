@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type Link, type User } from '../lib/api'
+import { api, type User, type Link, type LinkGroup } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
 // 主题配置
@@ -52,6 +52,7 @@ export default function EditBlog() {
   console.log('EditBlog initial state:', { user, address, isConnected })
   
   const [links, setLinks] = useState<Link[]>([])
+  const [groups, setGroups] = useState<LinkGroup[]>([])
   const [posts, setPosts] = useState<Post[]>([])
   const [userData, setUserData] = useState<User | null>(null)
   const [themeId, setThemeId] = useState<number>(1)
@@ -113,6 +114,7 @@ export default function EditBlog() {
       
       if (userData) {
         setLinks(userData.links || [])
+        setGroups(userData.groups || [])
         setUserData(userData.user)
         setThemeId(userData.user.themeId || 1)
         setTwitterHandle(userData.user.twitterHandle || '')
@@ -122,6 +124,7 @@ export default function EditBlog() {
         console.log('用户数据加载成功:', { 
           themeId: userData.user.themeId, 
           linksCount: userData.links?.length || 0,
+          groupsCount: userData.groups?.length || 0,
           twitterHandle: userData.user.twitterHandle,
           bio: userData.user.bio
         })
@@ -205,7 +208,9 @@ export default function EditBlog() {
       id: Date.now().toString(),
       label: '新链接',
       url: '',
-      order: links.length,
+      description: '',
+      group: '',
+      order: links.length + 1,
       userId: user!,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -221,6 +226,65 @@ export default function EditBlog() {
 
   const deleteLink = (id: string) => {
     setLinks(links.filter(link => link.id !== id))
+  }
+
+  // 分组管理函数
+  const addGroup = () => {
+    if (groups.length >= 8) {
+      setError('最多只能创建8个分组')
+      return
+    }
+    const newGroup: LinkGroup = {
+      id: Date.now().toString(),
+      userId: user!,
+      name: '新分组',
+      order: groups.length + 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+    setGroups([...groups, newGroup])
+  }
+
+  const updateGroup = (id: string, field: keyof LinkGroup, value: string | number) => {
+    setGroups(groups.map(group => 
+      group.id === id ? { ...group, [field]: value } : group
+    ))
+  }
+
+  const deleteGroup = (id: string) => {
+    setGroups(groups.filter(group => group.id !== id))
+  }
+
+  const moveGroup = (id: string, direction: 'up' | 'down') => {
+    const index = groups.findIndex(group => group.id === id)
+    if (index === -1) return
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= groups.length) return
+
+    const newGroups = [...groups]
+    const [movedGroup] = newGroups.splice(index, 1)
+    newGroups.splice(newIndex, 0, movedGroup)
+    
+    // 更新 order 字段
+    return newGroups.map((group, i) => ({ ...group, order: i + 1 }))
+  }
+
+  const saveGroups = async () => {
+    try {
+      setIsLoading(true)
+      setError('')
+      console.log('保存分组数据:', groups)
+      
+      await api.updateGroups(user!, groups)
+      console.log('分组保存成功')
+      setError('分组保存成功')
+    } catch (err) {
+      console.error('保存分组失败:', err)
+      setError('保存分组失败，请重试')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const moveLink = (id: string, direction: 'up' | 'down') => {
@@ -430,6 +494,103 @@ export default function EditBlog() {
         {/* 内容区域 */}
         {activeTab === 'links' && (
           <div>
+            {/* 分组管理 */}
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3>分组管理 (最多8个)</h3>
+                <button onClick={addGroup} className="btn-secondary" disabled={groups.length >= 8}>
+                  + 添加分组
+                </button>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {groups.map((group, index) => (
+                  <div 
+                    key={group.id}
+                    style={{
+                      padding: '0.75rem',
+                      background: 'var(--surface)',
+                      border: '1px solid #666',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={group.name}
+                      onChange={(e) => updateGroup(group.id, 'name', e.target.value)}
+                      placeholder="分组名称"
+                      style={{
+                        flex: 1,
+                        padding: '0.4rem',
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--fg)',
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                    <div style={{ display: 'flex', gap: '0.25rem' }}>
+                      <button 
+                        onClick={() => moveGroup(group.id, 'up')}
+                        disabled={index === 0}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: 'var(--muted)',
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'var(--fg)',
+                          cursor: index === 0 ? 'not-allowed' : 'pointer',
+                          opacity: index === 0 ? 0.5 : 1
+                        }}
+                      >
+                        ↑
+                      </button>
+                      <button 
+                        onClick={() => moveGroup(group.id, 'down')}
+                        disabled={index === groups.length - 1}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: 'var(--muted)',
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'var(--fg)',
+                          cursor: index === groups.length - 1 ? 'not-allowed' : 'pointer',
+                          opacity: index === groups.length - 1 ? 0.5 : 1
+                        }}
+                      >
+                        ↓
+                      </button>
+                      <button 
+                        onClick={() => deleteGroup(group.id)}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#ff4444',
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'white',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <button 
+                onClick={saveGroups}
+                disabled={isLoading}
+                className="btn-primary"
+                style={{ marginTop: '1rem' }}
+              >
+                {isLoading ? '保存中...' : '保存分组'}
+              </button>
+            </div>
+
+            {/* 链接管理 */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3>链接管理</h3>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -535,6 +696,44 @@ export default function EditBlog() {
                       borderRadius: '4px',
                       color: 'var(--fg)',
                       fontSize: '0.9rem'
+                    }}
+                  />
+                  <select
+                    value={link.group || ''}
+                    onChange={(e) => updateLink(link.id, 'group', e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      background: 'var(--surface)',
+                      border: '1px solid #666',
+                      borderRadius: '4px',
+                      color: 'var(--fg)',
+                      fontSize: '0.9rem',
+                      marginTop: '0.5rem'
+                    }}
+                  >
+                    <option value="">选择分组</option>
+                    {groups.map(group => (
+                      <option key={group.id} value={group.id}>
+                        {group.name}
+                      </option>
+                    ))}
+                  </select>
+                  <textarea
+                    value={link.description || ''}
+                    onChange={(e) => updateLink(link.id, 'description', e.target.value)}
+                    placeholder="链接说明（可选）"
+                    rows={2}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      background: 'var(--surface)',
+                      border: '1px solid #666',
+                      borderRadius: '4px',
+                      color: 'var(--fg)',
+                      fontSize: '0.9rem',
+                      marginTop: '0.5rem',
+                      resize: 'vertical'
                     }}
                   />
                 </div>
