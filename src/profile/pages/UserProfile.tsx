@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl, canChangeUsername, validateNickname } from '../lib/api'
 import { SettingsModal } from '../components/SettingsModal'
 
 // 推特时间线组件
@@ -127,6 +127,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [isOwner, setIsOwner] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showAvatarUpload, setShowAvatarUpload] = useState(false)
 
   useEffect(() => {
     if (!username) return
@@ -242,6 +243,22 @@ export default function UserProfile({ username: propUsername }: { username?: str
     } catch (error) {
       console.error('保存设置失败:', error)
       throw error
+    }
+  }
+
+  // 更新头像URL
+  const handleAvatarUrlUpdate = async (avatarUrl: string) => {
+    try {
+      const updatedUser = { 
+        ...user!, 
+        avatarUrl,
+        updatedAt: new Date().toISOString()
+      }
+      await api.updateUser(username!, updatedUser)
+      setUser(updatedUser)
+    } catch (error) {
+      console.error('更新头像失败:', error)
+      alert('更新头像失败，请重试')
     }
   }
 
@@ -877,8 +894,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 <button
                   onClick={() => {
                     setShowSettings(true)
-                  }}
-                  style={{
+                  }} style={{
                     color: 'white',
                     textDecoration: 'none',
                     fontSize: '0.9rem',

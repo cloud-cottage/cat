@@ -64,6 +64,9 @@ export interface User {
   id: string
   walletAddress: string
   username: string
+  nickname?: string  // 昵称，最多8个中文字符
+  usernameChangeCount?: number  // 用户名修改次数
+  lastUsernameChangeYear?: number  // 上次修改用户名的年份
   twitterHandle?: string
   themeId: number
   avatarUrl?: string
@@ -377,6 +380,34 @@ export const getUserAvatarUrl = (user: User): string => {
     return getTwitterAvatarUrl(user.twitterHandle)
   }
   return ''
+}
+
+// 检查用户名是否可以修改
+export const canChangeUsername = (user: User): boolean => {
+  const currentYear = new Date().getFullYear()
+  const lastChangeYear = user.lastUsernameChangeYear || 0
+  
+  // 如果今年没有修改过，或者从未修改过
+  if (lastChangeYear !== currentYear) {
+    return true
+  }
+  
+  // 如果今年已经修改过，检查修改次数
+  const changeCount = user.usernameChangeCount || 0
+  return changeCount < 1  // 每年只能修改一次
+}
+
+// 验证昵称长度（最多8个中文字符）
+export const validateNickname = (nickname: string): boolean => {
+  if (!nickname) return true  // 空昵称允许
+  
+  // 计算中文字符长度
+  const chineseCharCount = (nickname.match(/[\u4e00-\u9fa5]/g) || []).length
+  const otherCharCount = nickname.length - chineseCharCount
+  
+  // 中文字符算1个，其他字符算0.5个，总长度不超过8
+  const totalLength = chineseCharCount + (otherCharCount * 0.5)
+  return totalLength <= 8
 }
 
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)

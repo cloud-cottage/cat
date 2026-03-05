@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { type User } from '../lib/api'
+import { type User, canChangeUsername, validateNickname } from '../lib/api'
 
 interface SettingsModalProps {
   user: User
@@ -11,15 +11,37 @@ interface SettingsModalProps {
 export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalProps) => {
   const [formData, setFormData] = useState<User>({ ...user })
   const [saving, setSaving] = useState(false)
+  const [nicknameError, setNicknameError] = useState('')
 
   if (!isOpen) return null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // 验证昵称
+    if (!validateNickname(formData.nickname || '')) {
+      setNicknameError('昵称长度不能超过8个中文字符')
+      return
+    }
+    
+    // 检查用户名修改限制
+    if (formData.username !== user.username && !canChangeUsername(user)) {
+      alert('用户名每年只能修改一次，请明年再试')
+      return
+    }
+    
     setSaving(true)
     
     try {
-      await onSave(formData)
+      // 如果修改了用户名，更新修改次数和年份
+      let updatedUser = { ...formData }
+      if (formData.username !== user.username) {
+        const currentYear = new Date().getFullYear()
+        updatedUser.usernameChangeCount = (user.usernameChangeCount || 0) + 1
+        updatedUser.lastUsernameChangeYear = currentYear
+      }
+      
+      await onSave(updatedUser)
       onClose()
     } catch (error) {
       console.error('保存设置失败:', error)
@@ -35,7 +57,14 @@ export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalPr
       [field]: value,
       updatedAt: new Date().toISOString()
     }))
+    
+    // 清除昵称错误
+    if (field === 'nickname') {
+      setNicknameError('')
+    }
   }
+
+  const canEditUsername = canChangeUsername(user)
 
   return (
     <div style={{
@@ -104,7 +133,7 @@ export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalPr
 
         {/* 表单 */}
         <form onSubmit={handleSubmit}>
-          {/* 用户名 */}
+          {/* 网址 */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{
               display: 'block',
@@ -113,29 +142,110 @@ export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalPr
               fontWeight: '500',
               fontSize: '0.9rem'
             }}>
-              用户名
+              网址
+            </label>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <input
+                type="text"
+                value={formData.username}
+                onChange={(e) => handleChange('username', e.target.value)}
+                disabled={!canEditUsername}
+                placeholder="输入用户名"
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  fontSize: '1rem',
+                  background: canEditUsername ? 'rgba(255, 255, 255, 0.8)' : 'rgba(240, 240, 240, 0.8)',
+                  color: canEditUsername ? '#333' : '#999',
+                  transition: 'all 0.3s ease'
+                }}
+                onFocus={(e) => {
+                  if (canEditUsername) {
+                    e.currentTarget.style.borderColor = '#667eea'
+                    e.currentTarget.style.outline = 'none'
+                  }
+                }}
+                onBlur={(e) => {
+                  if (canEditUsername) {
+                    e.currentTarget.style.borderColor = '#ddd'
+                  }
+                }}
+              />
+              <span style={{
+                color: '#666',
+                fontSize: '0.9rem',
+                whiteSpace: 'nowrap'
+              }}>
+                .catcat.meme
+              </span>
+            </div>
+            {!canEditUsername && (
+              <div style={{
+                marginTop: '0.5rem',
+                fontSize: '0.8rem',
+                color: '#999'
+              }}>
+                用户名每年只能修改一次，请明年再试
+              </div>
+            )}
+          </div>
+
+          {/* 昵称 */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              color: '#333',
+              fontWeight: '500',
+              fontSize: '0.9rem'
+            }}>
+              昵称
             </label>
             <input
               type="text"
-              value={formData.username}
-              onChange={(e) => handleChange('username', e.target.value)}
+              value={formData.nickname || ''}
+              onChange={(e) => handleChange('nickname', e.target.value)}
+              placeholder="输入昵称（最多8个中文字符）"
+              maxLength={16}
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: '1px solid #ddd',
+                border: nicknameError ? '1px solid #ff6b6b' : '1px solid #ddd',
                 borderRadius: '10px',
                 fontSize: '1rem',
                 background: 'rgba(255, 255, 255, 0.8)',
                 transition: 'all 0.3s ease'
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#667eea'
+                e.currentTarget.style.borderColor = nicknameError ? '#ff6b6b' : '#667eea'
                 e.currentTarget.style.outline = 'none'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#ddd'
+                e.currentTarget.style.borderColor = nicknameError ? '#ff6b6b' : '#ddd'
               }}
             />
+            {nicknameError && (
+              <div style={{
+                marginTop: '0.5rem',
+                fontSize: '0.8rem',
+                color: '#ff6b6b'
+              }}>
+                {nicknameError}
+              </div>
+            )}
+            <div style={{
+              marginTop: '0.5rem',
+              fontSize: '0.8rem',
+              color: '#999'
+            }}>
+              当前长度：{formData.nickname ? formData.nickname.length : 0} 字符（中文字符算1个，其他字符算0.5个）
+            </div>
           </div>
 
           {/* 推特账号 */}
@@ -247,41 +357,6 @@ export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalPr
               <option value={4}>🌿 森林绿</option>
               <option value={5}>🌙 午夜紫</option>
             </select>
-          </div>
-
-          {/* 头像URL */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{
-              display: 'block',
-              marginBottom: '0.5rem',
-              color: '#333',
-              fontWeight: '500',
-              fontSize: '0.9rem'
-            }}>
-              头像URL（可选）
-            </label>
-            <input
-              type="url"
-              value={formData.avatarUrl || ''}
-              onChange={(e) => handleChange('avatarUrl', e.target.value)}
-              placeholder="输入头像图片链接"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                fontSize: '1rem',
-                background: 'rgba(255, 255, 255, 0.8)',
-                transition: 'all 0.3s ease'
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#667eea'
-                e.currentTarget.style.outline = 'none'
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#ddd'
-              }}
-            />
           </div>
 
           {/* 按钮 */}
