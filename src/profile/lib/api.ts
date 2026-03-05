@@ -37,7 +37,8 @@ export interface LinkGroup {
 export interface Icon {
   id: string
   name: string
-  emoji: string
+  emoji?: string
+  icoFile?: string
   category: string
 }
 
@@ -49,12 +50,18 @@ export const PREDEFINED_ICONS: Icon[] = [
   { id: 'discord', name: 'Discord', emoji: '💬', category: '社交媒体' },
   { id: 'instagram', name: 'Instagram', emoji: '📷', category: '社交媒体' },
   { id: 'facebook', name: 'Facebook', emoji: '📘', category: '社交媒体' },
+  { id: 'github', name: 'GitHub', emoji: '�', category: '社交媒体' },
   { id: 'youtube', name: 'YouTube', emoji: '📺', category: '社交媒体' },
-  { id: 'tiktok', name: 'TikTok', emoji: '🎵', category: '社交媒体' },
   { id: 'linkedin', name: 'LinkedIn', emoji: '💼', category: '社交媒体' },
   
+  // ICO 文件图标示例
+  { id: 'google', name: 'Google', icoFile: '/icons/google.ico', category: '工具网站' },
+  { id: 'apple', name: 'Apple', icoFile: '/icons/apple.ico', category: '工具网站' },
+  { id: 'microsoft', name: 'Microsoft', icoFile: '/icons/microsoft.ico', category: '工具网站' },
+  { id: 'amazon', name: 'Amazon', icoFile: '/icons/amazon.ico', category: '商务' },
+  { id: 'netflix', name: 'Netflix', icoFile: '/icons/netflix.ico', category: '内容平台' },
+  
   // 工具网站
-  { id: 'github', name: 'GitHub', emoji: '🐙', category: '工具网站' },
   { id: 'website', name: '网站', emoji: '🌐', category: '工具网站' },
   { id: 'app', name: '应用', emoji: '📱', category: '工具网站' },
   { id: 'tool', name: '工具', emoji: '🔧', category: '工具网站' },

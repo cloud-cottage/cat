@@ -17,10 +17,33 @@ const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
 }
 
 // 获取图标
-const getIconEmoji = (iconId?: string): string => {
+const getIconElement = (iconId?: string): React.ReactNode => {
   if (!iconId) return '🔗'
   const icon = PREDEFINED_ICONS.find(i => i.id === iconId)
-  return icon ? icon.emoji : '🔗'
+  
+  if (icon?.icoFile) {
+    return (
+      <img 
+        src={icon.icoFile} 
+        alt={icon.name}
+        style={{ 
+          width: '24px', 
+          height: '24px',
+          objectFit: 'contain'
+        }}
+        onError={(e) => {
+          // 如果 ico 文件加载失败，显示默认 emoji
+          const target = e.target as HTMLImageElement
+          target.style.display = 'none'
+          if (target.nextSibling) {
+            (target.nextSibling as HTMLElement).style.display = 'inline'
+          }
+        }}
+      />
+    )
+  }
+  
+  return icon?.emoji || '🔗'
 }
 
 export default function UserProfile({ username: propUsername }: { username?: string }) {
@@ -530,7 +553,19 @@ export default function UserProfile({ username: propUsername }: { username?: str
                           ))}
                         </select>
                       ) : (
-                        getIconEmoji(link.icon)
+                        <span style={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '24px',
+                          height: '24px'
+                        }}>
+                          {getIconElement(link.icon)}
+                          {/* 备用 emoji */}
+                          <span style={{ display: 'none' }}>
+                            {PREDEFINED_ICONS.find(i => i.id === link.icon)?.emoji || '🔗'}
+                          </span>
+                        </span>
                       )}
                     </span>
                     <div style={{ flex: 1, textAlign: 'left' }}>
