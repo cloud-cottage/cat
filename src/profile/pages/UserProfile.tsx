@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getTwitterAvatarUrl } from '../lib/api'
 
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
@@ -264,17 +264,24 @@ export default function UserProfile({ username: propUsername }: { username?: str
     }}>
       {/* 头像区域 */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        {user?.avatarUrl ? (
+        {(user?.avatarUrl || user?.twitterHandle) ? (
           <img 
-            src={user.avatarUrl} 
-            alt={user.username}
+            src={user?.avatarUrl || getTwitterAvatarUrl(user?.twitterHandle || '')} 
+            alt={user?.username}
             style={{ 
               width: '120px', 
               height: '120px', 
               borderRadius: '50%',
-              border: '4px solid white',
-              marginBottom: '1rem',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+              objectFit: 'cover',
+              border: '4px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+            }}
+            onError={(e) => {
+              // 如果推特头像加载失败，显示默认头像
+              const target = e.target as HTMLImageElement
+              if (user?.twitterHandle && !user?.avatarUrl) {
+                target.style.display = 'none'
+              }
             }}
           />
         ) : (
@@ -282,15 +289,17 @@ export default function UserProfile({ username: propUsername }: { username?: str
             width: '120px',
             height: '120px',
             borderRadius: '50%',
-            background: 'white',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 1rem',
-            fontSize: '3rem',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            color: 'white',
+            border: '4px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
           }}>
-            👤
+            {user?.username?.charAt(0)?.toUpperCase() || '?'}
           </div>
         )}
         

@@ -294,6 +294,15 @@ export const detectTitleFromUrl = (url: string): string => {
   }
 }
 
+// 根据推特handle获取头像URL
+export const getTwitterAvatarUrl = (handle: string): string => {
+  if (!handle) return ''
+  // 移除@符号（如果用户输入了）
+  const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle
+  // 使用推特头像API，返回原始尺寸图片
+  return `https://unavatar.io/twitter/${cleanHandle}`
+}
+
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
 
 // 临时使用 localStorage 作为后备方案
