@@ -3,6 +3,71 @@ import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl } from '../lib/api'
 
+// 推特时间线组件
+const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
+  useEffect(() => {
+    // 动态加载 Twitter widgets 脚本
+    const script = document.createElement('script')
+    script.src = 'https://platform.twitter.com/widgets.js'
+    script.charset = 'utf-8'
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      // 清理脚本
+      const existingScript = document.querySelector('script[src="https://platform.twitter.com/widgets.js"]')
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript)
+      }
+    }
+  }, [])
+
+  return (
+    <div style={{
+      marginTop: '2rem',
+      width: '100%',
+      maxWidth: '600px'
+    }}>
+      <div style={{
+        background: 'rgba(255,255,255,0.1)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.2)',
+        borderRadius: '16px',
+        padding: '1.5rem',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+      }}>
+        <h3 style={{
+          color: 'white',
+          margin: '0 0 1rem 0',
+          fontSize: '1.2rem',
+          fontWeight: '600',
+          textAlign: 'center'
+        }}>
+          🐦 推特动态
+        </h3>
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          minHeight: '400px'
+        }}>
+          <a
+            className="twitter-timeline"
+            href={`https://twitter.com/${twitterHandle}?ref_src=twsrc%5Etfw`}
+            style={{
+              display: 'block',
+              width: '100%',
+              height: '400px'
+            }}
+          >
+            Ta 的推特
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // 按分组组织链接的辅助函数
 const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
   if (groups.length === 0) {
@@ -730,6 +795,11 @@ export default function UserProfile({ username: propUsername }: { username?: str
           ))
         )}
       </div>
+
+      {/* 推特时间线 */}
+      {user?.twitterHandle && (
+        <TwitterTimeline twitterHandle={user.twitterHandle} />
+      )}
 
       {/* 底部编辑链接 */}
       <div style={{ marginTop: '3rem' }}>
