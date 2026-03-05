@@ -20,26 +20,36 @@ export default async function handler(req, res) {
   
   if (req.method === 'GET') {
     try {
+      console.log('Getting user data for:', username)
+      
       // 获取用户信息
       const userKey = `user:${username}`
       const linksKey = `links:${username}`
       
       const user = await redis.hgetall(userKey)
-      const links = await redis.lrange(linksKey, 0, -1)
+      const rawLinks = await redis.lrange(linksKey, 0, -1)
+      
+      console.log('Raw user data:', user)
+      console.log('Raw links data:', rawLinks)
       
       if (!user || Object.keys(user).length === 0) {
         return res.status(404).json({ error: 'User not found' })
       }
       
-      // 解析链接数据
-      const parsedLinks = links.map(link => {
-        try {
-          return JSON.parse(link)
-        } catch (e) {
-          console.error('Error parsing link:', link, e)
-          return null
-        }
-      }).filter(Boolean)
+      // 安全解析链接数据
+      let parsedLinks = []
+      if (rawLinks && rawLinks.length > 0) {
+        parsedLinks = rawLinks.map(link => {
+          try {
+            return typeof link === 'string' ? JSON.parse(link) : link
+          } catch (e) {
+            console.error('Error parsing link:', link, e)
+            return null
+          }
+        }).filter(Boolean)
+      }
+      
+      console.log('Parsed links:', parsedLinks)
       
       res.json({ user, links: parsedLinks })
     } catch (error) {
@@ -49,6 +59,10 @@ export default async function handler(req, res) {
   } else if (req.method === 'POST') {
     try {
       const { user, userLinks } = req.body
+      
+      console.log('Updating user data for:', username)
+      console.log('User update:', user)
+      console.log('Links update:', userLinks)
       
       if (user) {
         // 更新用户信息
@@ -63,6 +77,7 @@ export default async function handler(req, res) {
         
         // 使用 hash 存储用户信息
         await redis.hmset(userKey, user)
+        console.log('User data saved successfully')
       }
       
       if (userLinks) {
@@ -76,6 +91,7 @@ export default async function handler(req, res) {
         if (userLinks.length > 0) {
           const linkStrings = userLinks.map(link => JSON.stringify(link))
           await redis.lpush(linksKey, ...linkStrings)
+          console.log('Links data saved successfully')
         }
       }
       
