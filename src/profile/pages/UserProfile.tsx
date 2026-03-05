@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl, uploadToIPFS } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl } from '../lib/api'
 
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
@@ -125,7 +125,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [isEditing, setIsEditing] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   useEffect(() => {
     if (!username) return
@@ -233,47 +232,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
     setGroups([...groups, newGroup])
   }
 
-  // 处理头像上传到 IPFS
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    // 文件大小限制 5MB
-    if (file.size > 5 * 1024 * 1024) {
-      alert('头像文件大小不能超过 5MB')
-      return
-    }
-
-    setUploadingAvatar(true)
-    
-    try {
-      const result = await uploadToIPFS(file)
-      
-      if (result && result.IpfsHash) {
-        // 更新用户的 IPFS 头像 CID
-        const updatedUser = { 
-          ...user!, 
-          ipfsAvatar: result.IpfsHash,
-          updatedAt: new Date().toISOString()
-        }
-        
-        setUser(updatedUser)
-        
-        // 保存到后端
-        await api.updateUser(username!, updatedUser)
-        
-        alert('头像上传成功！')
-      } else {
-        alert('头像上传失败，请重试')
-      }
-    } catch (error) {
-      console.error('Avatar upload error:', error)
-      alert('头像上传失败，请重试')
-    } finally {
-      setUploadingAvatar(false)
-    }
-  }
-
   // 更新分组
   const updateGroup = (id: string, field: keyof LinkGroup, value: string | number) => {
     setGroups(groups.map(group => 
@@ -306,66 +264,24 @@ export default function UserProfile({ username: propUsername }: { username?: str
     }}>
       {/* 头像区域 */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        {(getUserAvatarUrl(user) || user?.twitterHandle) ? (
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <img 
-              src={getUserAvatarUrl(user!) || ''} 
-              alt={user?.username}
-              style={{ 
-                width: '120px', 
-                height: '120px', 
-                borderRadius: '50%',
-                objectFit: 'cover',
-                border: '4px solid rgba(255,255,255,0.2)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-              }}
-              onError={(e) => {
-                // 如果头像加载失败，显示默认头像
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-              }}
-            />
-            
-            {/* IPFS 头像上传按钮 (仅所有者可见) */}
-            {isOwner && (
-              <div style={{
-                position: 'absolute',
-                bottom: '0',
-                right: '0',
-                background: 'rgba(33, 150, 243, 0.9)',
-                color: 'white',
-                borderRadius: '50%',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                fontSize: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.background = 'rgba(33, 150, 243, 1)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.background = 'rgba(33, 150, 243, 0.9)'
-              }}
-              onClick={() => {
-                const input = document.createElement('input')
-                input.type = 'file'
-                input.accept = 'image/*'
-                input.onchange = (e: any) => handleAvatarUpload(e)
-                input.click()
-              }}
-              title={uploadingAvatar ? '上传中...' : '上传头像到 IPFS'}
-            >
-              {uploadingAvatar ? '⏳' : '📷'}
-            </div>
-            )}
-          </div>
+        {getUserAvatarUrl(user) ? (
+          <img 
+            src={getUserAvatarUrl(user!)} 
+            alt={user?.username}
+            style={{ 
+              width: '120px', 
+              height: '120px', 
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '4px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+            }}
+            onError={(e) => {
+              // 如果头像加载失败，显示默认头像
+              const target = e.target as HTMLImageElement
+              target.style.display = 'none'
+            }}
+          />
         ) : (
           <div style={{
             width: '120px',
