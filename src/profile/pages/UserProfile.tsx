@@ -843,24 +843,47 @@ export default function UserProfile({ username: propUsername }: { username?: str
             </button>
             
             {isEditing && (
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '20px',
-                  background: saving ? 'rgba(255,255,255,0.3)' : 'rgba(76, 175, 80, 0.8)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  transition: 'all 0.3s ease',
-                  cursor: saving ? 'not-allowed' : 'pointer'
-                }}
-              >
-                {saving ? '保存中...' : '保存更改'}
-              </button>
+              <>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '20px',
+                    background: saving ? 'rgba(255,255,255,0.3)' : 'rgba(76, 175, 80, 0.8)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    transition: 'all 0.3s ease',
+                    cursor: saving ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {saving ? '保存中...' : '保存更改'}
+                </button>
+                
+                <button
+                  onClick={() => {
+                    // 打开设置弹窗或跳转到设置页面
+                    alert('设置功能开发中...')
+                  }}
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '20px',
+                    background: 'rgba(33, 150, 243, 0.8)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⚙️ 设置
+                </button>
+              </>
             )}
           </div>
         ) : (
