@@ -60,6 +60,11 @@ export const PREDEFINED_ICONS: Icon[] = [
   { id: 'microsoft', name: 'Microsoft', icoFile: '/icons/microsoft.ico', category: '工具网站' },
   { id: 'amazon', name: 'Amazon', icoFile: '/icons/amazon.ico', category: '商务' },
   { id: 'netflix', name: 'Netflix', icoFile: '/icons/netflix.ico', category: '内容平台' },
+  { id: 'bitget', name: 'Bitget', icoFile: '/icons/bitget.ico', category: '商务' },
+  { id: 'binance', name: 'Binance', emoji: '🟡', category: '商务' },
+  { id: 'okx', name: 'OKX', emoji: '⚫', category: '商务' },
+  { id: 'coinbase', name: 'Coinbase', emoji: '🔵', category: '商务' },
+  { id: 'reddit', name: 'Reddit', emoji: '🤖', category: '社交媒体' },
   
   // 工具网站
   { id: 'website', name: '网站', emoji: '🌐', category: '工具网站' },
@@ -88,6 +93,105 @@ export const PREDEFINED_ICONS: Icon[] = [
   { id: 'fire', name: '热门', emoji: '🔥', category: '通用' },
   { id: 'rocket', name: '火箭', emoji: '🚀', category: '通用' },
 ]
+
+// 域名到图标的自动映射
+export const DOMAIN_ICON_MAPPING: Record<string, string> = {
+  // 社交媒体
+  'twitter.com': 'twitter',
+  'x.com': 'twitter',
+  'telegram.org': 'telegram',
+  't.me': 'telegram',
+  'discord.com': 'discord',
+  'discord.gg': 'discord',
+  'instagram.com': 'instagram',
+  'facebook.com': 'facebook',
+  'github.com': 'github',
+  'youtube.com': 'youtube',
+  'youtu.be': 'youtube',
+  'linkedin.com': 'linkedin',
+  
+  // 工具和科技公司
+  'google.com': 'google',
+  'google.cn': 'google',
+  'apple.com': 'apple',
+  'microsoft.com': 'microsoft',
+  'amazon.com': 'amazon',
+  'amazon.cn': 'amazon',
+  'netflix.com': 'netflix',
+  
+  // 加密货币和金融
+  'bitget.com': 'bitget',
+  'binance.com': 'binance',
+  'okx.com': 'okx',
+  'coinbase.com': 'coinbase',
+  'crypto.com': 'crypto',
+  'metamask.io': 'crypto',
+  
+  // 其他常见网站
+  'reddit.com': 'reddit',
+  'medium.com': 'article',
+  'substack.com': 'blog',
+  'wordpress.org': 'blog',
+  'blogger.com': 'blog',
+}
+
+// 根据URL自动检测图标
+export const detectIconFromUrl = (url: string): string => {
+  try {
+    if (!url) return 'link'
+    
+    // 解析URL获取域名
+    let domain: string
+    try {
+      const urlObj = new URL(url)
+      domain = urlObj.hostname.toLowerCase()
+    } catch {
+      // 如果URL解析失败，尝试简单处理
+      const match = url.match(/^(https?:\/\/)?([^\/]+)/i)
+      domain = match ? match[2].toLowerCase() : url.toLowerCase()
+    }
+    
+    // 移除 www. 前缀
+    if (domain.startsWith('www.')) {
+      domain = domain.substring(4)
+    }
+    
+    // 查找完全匹配的域名
+    if (DOMAIN_ICON_MAPPING[domain]) {
+      return DOMAIN_ICON_MAPPING[domain]
+    }
+    
+    // 查找部分匹配（例如，对于 subdomain.example.com，查找 example.com）
+    const parts = domain.split('.')
+    if (parts.length >= 2) {
+      const rootDomain = parts.slice(-2).join('.')
+      if (DOMAIN_ICON_MAPPING[rootDomain]) {
+        return DOMAIN_ICON_MAPPING[rootDomain]
+      }
+    }
+    
+    // 特殊模式匹配
+    if (domain.includes('github')) return 'github'
+    if (domain.includes('twitter') || domain.includes('x.com')) return 'twitter'
+    if (domain.includes('youtube')) return 'youtube'
+    if (domain.includes('google')) return 'google'
+    if (domain.includes('amazon')) return 'amazon'
+    if (domain.includes('netflix')) return 'netflix'
+    if (domain.includes('apple')) return 'apple'
+    if (domain.includes('microsoft')) return 'microsoft'
+    if (domain.includes('bitget')) return 'bitget'
+    if (domain.includes('binance')) return 'binance'
+    if (domain.includes('okx')) return 'okx'
+    if (domain.includes('coinbase')) return 'coinbase'
+    if (domain.includes('crypto')) return 'crypto'
+    
+    // 默认返回链接图标
+    return 'link'
+  } catch (error) {
+    console.warn('Error detecting icon from URL:', error)
+    return 'link'
+  }
+}
 
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl } from '../lib/api'
 
 // 按分组组织链接的辅助函数
 const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
@@ -131,9 +131,20 @@ export default function UserProfile({ username: propUsername }: { username?: str
 
   // 更新链接
   const updateLink = (id: string, field: keyof Link, value: string | number) => {
-    setLinks(links.map(link => 
-      link.id === id ? { ...link, [field]: value } : link
-    ))
+    setLinks(links.map(link => {
+      if (link.id === id) {
+        const updatedLink = { ...link, [field]: value }
+        
+        // 如果更新的是URL，自动检测图标
+        if (field === 'url' && typeof value === 'string') {
+          const detectedIcon = detectIconFromUrl(value)
+          updatedLink.icon = detectedIcon
+        }
+        
+        return updatedLink
+      }
+      return link
+    }))
   }
 
   // 删除链接
