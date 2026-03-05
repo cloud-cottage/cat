@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link } from '../lib/api'
+import { api, type User, type Link, type LinkGroup } from '../lib/api'
 
 // Twitter 组件
 function TwitterEmbed({ handle }: { handle: string }) {
@@ -99,6 +99,19 @@ function TwitterEmbed({ handle }: { handle: string }) {
   )
 }
 
+// 按分组组织链接的辅助函数
+const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
+  if (groups.length === 0) {
+    // 没有分组时，显示所有链接
+    return [{ group: null, links }]
+  }
+  
+  return groups.map(group => ({
+    group,
+    links: links.filter(link => link.group === group.id)
+  })).filter(group => group.links.length > 0) // 只显示有链接的分组
+}
+
 export default function UserProfile({ username: propUsername }: { username?: string }) {
   const { username: paramUsername } = useParams<{ username: string }>()
   const { address } = useAccount()
@@ -108,6 +121,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   
   const [user, setUser] = useState<User | null>(null)
   const [links, setLinks] = useState<Link[]>([])
+  const [groups, setGroups] = useState<LinkGroup[]>([])
   const [themeId, setThemeId] = useState<number>(1)
   const [loading, setLoading] = useState(true)
 
@@ -126,6 +140,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
         
         setUser(userData.user)
         setLinks(userData.links)
+        setGroups(userData.groups)
         setThemeId(userData.user.themeId || 1)
       } catch (error) {
         console.error('Error loading user data:', error)
@@ -193,13 +208,17 @@ export default function UserProfile({ username: propUsername }: { username?: str
         {/* Twitter 推文 */}
         {user.twitterHandle && <TwitterEmbed handle={user.twitterHandle} />}
         
-        {/* 外部链接 */}
+        {/* 外部链接按分组显示 */}
         {links.length > 0 && (
-          <div className="blog-card" style={{ marginTop: '1rem' }}>
-            <h3 style={{ margin: 0, marginBottom: '1rem' }}>外部链接</h3>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {links.map((link, index) => (
+          <div style={{ marginTop: '1rem' }}>
+            {getLinksByGroups(links, groups).map(({ group, links: groupLinks }) => (
+              <div key={group?.id || 'ungrouped'} className="blog-card" style={{ marginBottom: '1rem' }}>
+                <h3 style={{ margin: 0, marginBottom: '1rem' }}>
+                  {group ? group.name : '其他链接'}
+                </h3>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {groupLinks.map((link, index) => (
                 <div 
                   key={link.id}
                   style={{
@@ -263,6 +282,8 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 </div>
               ))}
             </div>
+          </div>
+            ))}
           </div>
         )}
       </div>
