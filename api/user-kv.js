@@ -21,6 +21,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       console.log('Getting user data for:', username)
+      console.log('API VERSION: 2.0 - WITH GROUPS SUPPORT')
       
       // 获取用户信息
       const userKey = `user:${username}`
