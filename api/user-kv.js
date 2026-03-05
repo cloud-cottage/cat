@@ -32,7 +32,14 @@ export default async function handler(req, res) {
       }
       
       // 解析链接数据
-      const parsedLinks = links.map(link => JSON.parse(link))
+      const parsedLinks = links.map(link => {
+        try {
+          return JSON.parse(link)
+        } catch (e) {
+          console.error('Error parsing link:', link, e)
+          return null
+        }
+      }).filter(Boolean)
       
       res.json({ user, links: parsedLinks })
     } catch (error) {
