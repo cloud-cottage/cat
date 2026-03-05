@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       console.log('User update:', user)
       console.log('Links update:', userLinks)
       
-      if (user) {
+      if (user && user !== undefined && user !== null) {
         // 更新用户信息
         const userKey = `user:${username}`
         
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
         console.log('User data saved successfully')
       }
       
-      if (userLinks) {
+      if (userLinks && userLinks !== undefined && userLinks !== null && userLinks.length > 0) {
         // 更新用户链接
         const linksKey = `links:${username}`
         
