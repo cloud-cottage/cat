@@ -62,7 +62,7 @@ export const PREDEFINED_ICONS: Icon[] = [
   { id: 'netflix', name: 'Netflix', icoFile: '/icons/netflix.ico', category: '内容平台' },
   { id: 'bitget', name: 'Bitget', icoFile: '/icons/bitget.ico', category: '商务' },
   { id: 'binance', name: 'Binance', emoji: '🟡', category: '商务' },
-  { id: 'okx', name: 'OKX', emoji: '⚫', category: '商务' },
+  { id: 'okx', name: 'OKX', icoFile: '/icons/okx.ico', category: '商务' },
   { id: 'coinbase', name: 'Coinbase', emoji: '🔵', category: '商务' },
   { id: 'reddit', name: 'Reddit', emoji: '🤖', category: '社交媒体' },
   
