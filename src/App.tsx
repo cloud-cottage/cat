@@ -2,17 +2,15 @@ import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import './index.css'
 import './i18n'
-import './blog/styles/globals.css'
+import './profile/styles/globals.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Stats from './components/Stats'
-import MouseGlow from './components/MouseGlow'
-import ValueProp from './components/ValueProp'
 import Partners from './components/Partners'
 import Footer from './components/Footer'
 import { useTranslation } from 'react-i18next'
-import { BlogHome, Setup, UserProfile } from './blog/pages'
-import EditBlog from './blog/pages/EditBlog'
+import { BlogHome, Setup, UserProfile } from './profile/pages'
+import EditBlog from './profile/pages/EditBlog'
 
 function HomePage() {
   const { t, i18n } = useTranslation()
@@ -23,11 +21,9 @@ function HomePage() {
 
   return (
     <div className="App">
-      <MouseGlow />
       <Navbar />
       <main>
         <Hero />
-        <ValueProp />
         <Stats />
       </main>
       <Partners />

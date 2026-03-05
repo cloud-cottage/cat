@@ -166,6 +166,28 @@ export default function UserProfile({ username: propUsername }: { username?: str
             </a>
           )}
         </div>
+
+        {/* 认证徽章 */}
+        {user?.walletAddress && user.walletAddress !== '0x0000' && (
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 1rem',
+            background: 'rgba(255,255,255,0.15)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '20px',
+            marginBottom: '2rem',
+            fontSize: '0.9rem',
+            color: 'rgba(255,255,255,0.9)'
+          }}>
+            <span style={{ fontSize: '1rem' }}>✓</span>
+            <span>
+              该页面由 {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)} 签名认证
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 链接列表 */}
