@@ -27,13 +27,17 @@ export default async function handler(req, res) {
       const userKey = `user:${username}`
       const linksKey = `links:${username}`
       const groupsKey = `groups:${username}`
+      const postsKey = `posts:${username}`
       
       const user = await redis.hgetall(userKey)
       const rawLinks = await redis.lrange(linksKey, 0, -1)
       const rawGroups = await redis.lrange(groupsKey, 0, -1)
+      const rawPosts = await redis.lrange(postsKey, 0, -1)
       
       console.log('Raw user data:', user)
       console.log('Raw links data:', rawLinks)
+      console.log('Raw groups data:', rawGroups)
+      console.log('Raw posts data:', rawPosts)
       
       if (!user || Object.keys(user).length === 0) {
         return res.status(404).json({ error: 'User not found' })
@@ -65,22 +69,37 @@ export default async function handler(req, res) {
         }).filter(Boolean)
       }
       
+      // 安全解析文章数据
+      let parsedPosts = []
+      if (rawPosts && rawPosts.length > 0) {
+        parsedPosts = rawPosts.map(post => {
+          try {
+            return typeof post === 'string' ? JSON.parse(post) : post
+          } catch (e) {
+            console.error('Error parsing post:', post, e)
+            return null
+          }
+        }).filter(Boolean)
+      }
+      
       console.log('Parsed links:', parsedLinks)
       console.log('Parsed groups:', parsedGroups)
+      console.log('Parsed posts:', parsedPosts)
       
-      res.json({ user, links: parsedLinks, groups: parsedGroups })
+      res.json({ user, links: parsedLinks, groups: parsedGroups, posts: parsedPosts })
     } catch (error) {
       console.error('Error fetching user:', error)
       res.status(500).json({ error: 'Internal server error' })
     }
   } else if (req.method === 'POST') {
     try {
-      const { user, userLinks, userGroups } = req.body
+      const { user, userLinks, userGroups, userPosts } = req.body
       
       console.log('Updating user data for:', username)
       console.log('User update:', user)
       console.log('Links update:', userLinks)
       console.log('Groups update:', userGroups)
+      console.log('Posts update:', userPosts)
       
       if (user && user !== undefined && user !== null) {
         // 更新用户信息
@@ -125,6 +144,21 @@ export default async function handler(req, res) {
           const groupStrings = userGroups.map(group => JSON.stringify(group))
           await redis.lpush(groupsKey, ...groupStrings)
           console.log('Groups data saved successfully')
+        }
+      }
+      
+      if (userPosts && userPosts !== undefined && userPosts !== null && userPosts.length > 0) {
+        // 更新用户文章
+        const postsKey = `posts:${username}`
+        
+        // 先删除旧的文章
+        await redis.del(postsKey)
+        
+        // 添加新的文章
+        if (userPosts.length > 0) {
+          const postStrings = userPosts.map(post => JSON.stringify(post))
+          await redis.lpush(postsKey, ...postStrings)
+          console.log('Posts data saved successfully')
         }
       }
       

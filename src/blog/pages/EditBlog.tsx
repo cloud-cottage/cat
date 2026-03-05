@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, type Post as ApiPost } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
 // 主题配置
@@ -16,13 +16,6 @@ const themes = [
   { id: 8, name: '深海蓝', description: '清新宁静，夏日气息' },
   { id: 9, name: '黄金橙', description: '活力满满，怀旧情怀' }
 ]
-
-interface Post {
-  id: string
-  title: string
-  content: string
-  order: number
-}
 
 export default function EditBlog() {
   console.log('EditBlog component mounted')
@@ -53,7 +46,9 @@ export default function EditBlog() {
   
   const [links, setLinks] = useState<Link[]>([])
   const [groups, setGroups] = useState<LinkGroup[]>([])
-  const [posts, setPosts] = useState<Post[]>([])
+  const [posts, setPosts] = useState<ApiPost[]>([])
+  const [newPostUrl, setNewPostUrl] = useState<string>('')
+  const [isParsingPost, setIsParsingPost] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
   const [themeId, setThemeId] = useState<number>(1)
   const [twitterHandle, setTwitterHandle] = useState<string>('')
@@ -115,16 +110,16 @@ export default function EditBlog() {
       if (userData) {
         setLinks(userData.links || [])
         setGroups(userData.groups || [])
+        setPosts(userData.posts || [])
         setUserData(userData.user)
         setThemeId(userData.user.themeId || 1)
         setTwitterHandle(userData.user.twitterHandle || '')
         setBio(userData.user.bio || '')
-        // 暂时没有 posts，使用空数组
-        setPosts([])
         console.log('用户数据加载成功:', { 
           themeId: userData.user.themeId, 
           linksCount: userData.links?.length || 0,
           groupsCount: userData.groups?.length || 0,
+          postsCount: userData.posts?.length || 0,
           twitterHandle: userData.user.twitterHandle,
           bio: userData.user.bio
         })
@@ -270,6 +265,65 @@ export default function EditBlog() {
     return newGroups.map((group, i) => ({ ...group, order: i + 1 }))
   }
 
+  // URL 解析函数
+  const parsePostFromUrl = async (url: string): Promise<ApiPost | null> => {
+    try {
+      setIsParsingPost(true)
+      setError('')
+      
+      // 检测平台类型
+      let platform = 'unknown'
+      if (url.includes('binance.com')) {
+        platform = 'binance'
+      } else if (url.includes('twitter.com') || url.includes('x.com')) {
+        platform = 'twitter'
+      } else if (url.includes('medium.com')) {
+        platform = 'medium'
+      }
+      
+      // 这里可以添加实际的爬虫逻辑来获取内容
+      // 现在先创建一个基本的文章对象
+      const newPost: ApiPost = {
+        id: Date.now().toString(),
+        userId: user!,
+        title: `来自 ${platform} 的文章`,
+        content: `文章链接: ${url}`,
+        url,
+        platform,
+        publishedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      
+      setPosts([newPost, ...posts])
+      setNewPostUrl('')
+      return newPost
+    } catch (error) {
+      console.error('解析文章失败:', error)
+      setError('解析文章失败，请重试')
+      return null
+    } finally {
+      setIsParsingPost(false)
+    }
+  }
+
+  const savePosts = async () => {
+    try {
+      setIsLoading(true)
+      setError('')
+      console.log('保存文章数据:', posts)
+      
+      await api.updatePosts(user!, posts)
+      console.log('文章保存成功')
+      setError('文章保存成功')
+    } catch (err) {
+      console.error('保存文章失败:', err)
+      setError('保存文章失败，请重试')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const saveGroups = async () => {
     try {
       setIsLoading(true)
@@ -303,16 +357,19 @@ export default function EditBlog() {
   }
 
   const addPost = () => {
-    const newPost: Post = {
+    const newPost: ApiPost = {
       id: Date.now().toString(),
       title: '新文章',
       content: '',
-      order: posts.length
+      userId: user!,
+      publishedAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
     setPosts([...posts, newPost])
   }
 
-  const updatePost = (id: string, field: keyof Post, value: string) => {
+  const updatePost = (id: string, field: keyof ApiPost, value: string) => {
     setPosts(posts.map(post => 
       post.id === id ? { ...post, [field]: value } : post
     ))
@@ -744,11 +801,53 @@ export default function EditBlog() {
 
         {activeTab === 'posts' && (
           <div>
+            {/* URL 输入区域 */}
+            <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--surface)', border: '1px solid #666', borderRadius: '8px' }}>
+              <h4 style={{ marginBottom: '1rem', color: 'var(--fg)' }}>添加文章链接</h4>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <input
+                  type="url"
+                  value={newPostUrl}
+                  onChange={(e) => setNewPostUrl(e.target.value)}
+                  placeholder="粘贴 Binance、Twitter 等平台的文章链接"
+                  disabled={isParsingPost}
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    background: 'var(--bg)',
+                    border: '1px solid #666',
+                    borderRadius: '6px',
+                    color: 'var(--fg)',
+                    fontSize: '0.9rem'
+                  }}
+                />
+                <button 
+                  onClick={() => newPostUrl && parsePostFromUrl(newPostUrl)}
+                  disabled={!newPostUrl || isParsingPost}
+                  className="btn-primary"
+                >
+                  {isParsingPost ? '解析中...' : '解析文章'}
+                </button>
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginTop: '0.5rem' }}>
+                支持 Binance Square、Twitter、Medium 等平台链接
+              </div>
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3>文章管理</h3>
-              <button onClick={addPost} className="btn-secondary">
-                + 添加文章
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={addPost} className="btn-secondary">
+                  + 手动添加
+                </button>
+                <button 
+                  onClick={savePosts}
+                  disabled={isLoading}
+                  className="btn-primary"
+                >
+                  {isLoading ? '保存中...' : '保存文章'}
+                </button>
+              </div>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
