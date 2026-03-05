@@ -121,7 +121,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
         if (!userData) {
           // 创建新用户，如果钱包已连接则使用钱包地址
           const newUser = await api.createUser(username, address)
-          userData = { user: newUser, links: [] }
+          userData = { user: newUser, links: [], groups: [] }
         }
         
         setUser(userData.user)
