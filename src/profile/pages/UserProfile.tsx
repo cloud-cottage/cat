@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl } from '../lib/api'
+import { SettingsModal } from '../components/SettingsModal'
 
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
@@ -125,6 +126,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [isEditing, setIsEditing] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     if (!username) return
@@ -230,6 +232,17 @@ export default function UserProfile({ username: propUsername }: { username?: str
       updatedAt: new Date().toISOString()
     }
     setGroups([...groups, newGroup])
+  }
+
+  // 保存设置
+  const handleSaveSettings = async (updatedUser: User) => {
+    try {
+      await api.updateUser(username!, updatedUser)
+      setUser(updatedUser)
+    } catch (error) {
+      console.error('保存设置失败:', error)
+      throw error
+    }
   }
 
   // 更新分组
@@ -863,8 +876,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 
                 <button
                   onClick={() => {
-                    // 打开设置弹窗或跳转到设置页面
-                    alert('设置功能开发中...')
+                    setShowSettings(true)
                   }}
                   style={{
                     color: 'white',
@@ -911,6 +923,16 @@ export default function UserProfile({ username: propUsername }: { username?: str
           </a>
         )}
       </div>
+      
+      {/* 设置模态框 */}
+      {user && (
+        <SettingsModal
+          user={user}
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          onSave={handleSaveSettings}
+        />
+      )}
     </div>
   )
 }
