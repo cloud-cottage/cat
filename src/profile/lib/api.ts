@@ -135,6 +135,47 @@ export const DOMAIN_ICON_MAPPING: Record<string, string> = {
   'blogger.com': 'blog',
 }
 
+// 域名到标题的自动映射
+export const DOMAIN_TITLE_MAPPING: Record<string, string> = {
+  // 社交媒体
+  'twitter.com': 'Twitter',
+  'x.com': 'X (Twitter)',
+  'telegram.org': 'Telegram',
+  't.me': 'Telegram',
+  'discord.com': 'Discord',
+  'discord.gg': 'Discord',
+  'instagram.com': 'Instagram',
+  'facebook.com': 'Facebook',
+  'github.com': 'GitHub',
+  'youtube.com': 'YouTube',
+  'youtu.be': 'YouTube',
+  'linkedin.com': 'LinkedIn',
+  
+  // 工具和科技公司
+  'google.com': 'Google',
+  'google.cn': 'Google',
+  'apple.com': 'Apple',
+  'microsoft.com': 'Microsoft',
+  'amazon.com': 'Amazon',
+  'amazon.cn': 'Amazon',
+  'netflix.com': 'Netflix',
+  
+  // 加密货币和金融
+  'bitget.com': 'Bitget',
+  'binance.com': 'Binance',
+  'okx.com': 'OKX',
+  'coinbase.com': 'Coinbase',
+  'crypto.com': 'Crypto.com',
+  'metamask.io': 'MetaMask',
+  
+  // 其他常见网站
+  'reddit.com': 'Reddit',
+  'medium.com': 'Medium',
+  'substack.com': 'Substack',
+  'wordpress.org': 'WordPress',
+  'blogger.com': 'Blogger',
+}
+
 // 根据URL自动检测图标
 export const detectIconFromUrl = (url: string): string => {
   try {
@@ -190,6 +231,66 @@ export const detectIconFromUrl = (url: string): string => {
   } catch (error) {
     console.warn('Error detecting icon from URL:', error)
     return 'link'
+  }
+}
+
+// 根据URL自动检测标题
+export const detectTitleFromUrl = (url: string): string => {
+  try {
+    if (!url) return '新链接'
+    
+    // 解析URL获取域名
+    let domain: string
+    try {
+      const urlObj = new URL(url)
+      domain = urlObj.hostname.toLowerCase()
+    } catch {
+      // 如果URL解析失败，尝试简单处理
+      const match = url.match(/^(https?:\/\/)?([^\/]+)/i)
+      domain = match ? match[2].toLowerCase() : url.toLowerCase()
+    }
+    
+    // 移除 www. 前缀
+    if (domain.startsWith('www.')) {
+      domain = domain.substring(4)
+    }
+    
+    // 查找完全匹配的域名
+    if (DOMAIN_TITLE_MAPPING[domain]) {
+      return DOMAIN_TITLE_MAPPING[domain]
+    }
+    
+    // 查找部分匹配（例如，对于 subdomain.example.com，查找 example.com）
+    const parts = domain.split('.')
+    if (parts.length >= 2) {
+      const rootDomain = parts.slice(-2).join('.')
+      if (DOMAIN_TITLE_MAPPING[rootDomain]) {
+        return DOMAIN_TITLE_MAPPING[rootDomain]
+      }
+    }
+    
+    // 特殊模式匹配
+    if (domain.includes('github')) return 'GitHub'
+    if (domain.includes('twitter') || domain.includes('x.com')) return 'X (Twitter)'
+    if (domain.includes('youtube')) return 'YouTube'
+    if (domain.includes('google')) return 'Google'
+    if (domain.includes('amazon')) return 'Amazon'
+    if (domain.includes('netflix')) return 'Netflix'
+    if (domain.includes('apple')) return 'Apple'
+    if (domain.includes('microsoft')) return 'Microsoft'
+    if (domain.includes('bitget')) return 'Bitget'
+    if (domain.includes('binance')) return 'Binance'
+    if (domain.includes('okx')) return 'OKX'
+    if (domain.includes('coinbase')) return 'Coinbase'
+    if (domain.includes('crypto')) return 'Crypto.com'
+    if (domain.includes('meta')) return 'MetaMask'
+    
+    // 默认返回域名首字母大写
+    const domainName = domain.split('.')[0]
+    return domainName.charAt(0).toUpperCase() + domainName.slice(1)
+  } catch (error) {
+    console.warn('Error detecting title from URL:', error)
+    return '新链接'
   }
 }
 

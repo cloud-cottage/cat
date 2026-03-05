@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl } from '../lib/api'
 
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
@@ -200,10 +200,12 @@ export default function UserProfile({ username: propUsername }: { username?: str
       if (link.id === id) {
         const updatedLink = { ...link, [field]: value }
         
-        // 如果更新的是URL，自动检测图标
+        // 如果更新的是URL，自动检测图标和标题
         if (field === 'url' && typeof value === 'string') {
           const detectedIcon = detectIconFromUrl(value)
+          const detectedTitle = detectTitleFromUrl(value)
           updatedLink.icon = detectedIcon
+          updatedLink.label = detectedTitle
         }
         
         return updatedLink
