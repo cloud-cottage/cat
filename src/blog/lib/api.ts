@@ -18,6 +18,16 @@ export interface Link {
   label: string
   url: string
   description?: string
+  group?: string
+  order: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface LinkGroup {
+  id: string
+  userId: string
+  name: string
   order: number
   createdAt: string
   updatedAt: string
@@ -28,7 +38,15 @@ const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().
 // 临时使用 localStorage 作为后备方案
 const localStorageKey = (username: string) => `catcat_blog_${username}`
 
-const getLocalData = (username: string) => {
+const setLocalData = (username: string, data: { user: User; links: Link[]; groups: LinkGroup[] }) => {
+  try {
+    localStorage.setItem(localStorageKey(username), JSON.stringify(data))
+  } catch (error) {
+    console.error('Failed to save to localStorage:', error)
+  }
+}
+
+const getLocalData = (username: string): { user: User; links: Link[]; groups: LinkGroup[] } | null => {
   try {
     const data = localStorage.getItem(localStorageKey(username))
     return data ? JSON.parse(data) : null
@@ -37,16 +55,8 @@ const getLocalData = (username: string) => {
   }
 }
 
-const setLocalData = (username: string, data: { user: User; links: Link[] }) => {
-  try {
-    localStorage.setItem(localStorageKey(username), JSON.stringify(data))
-  } catch (error) {
-    console.error('Failed to save to localStorage:', error)
-  }
-}
-
 export const api = {
-  getUserByUsername: async (username: string): Promise<{ user: User; links: Link[] } | null> => {
+  getUserByUsername: async (username: string): Promise<{ user: User; links: Link[]; groups: LinkGroup[] } | null> => {
     try {
       console.log('尝试从 API 获取用户数据:', username)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`)
@@ -98,7 +108,7 @@ export const api = {
 
       if (!response.ok) {
         console.log('API 创建用户失败，保存到 localStorage')
-        const data = { user: newUser, links: [] }
+        const data = { user: newUser, links: [], groups: [] }
         setLocalData(username, data)
         return newUser
       }
@@ -108,7 +118,7 @@ export const api = {
       return result.user
     } catch (error) {
       console.error('API 创建用户出错，保存到 localStorage:', error)
-      const data = { user: newUser, links: [] }
+      const data = { user: newUser, links: [], groups: [] }
       setLocalData(username, data)
       return newUser
     }
@@ -133,7 +143,7 @@ export const api = {
         const localData = getLocalData(username)
         if (localData) {
           const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
-          setLocalData(username, { user: updatedUser, links: localData.links })
+          setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups })
           return updatedUser
         }
         throw new Error('Failed to update user')
@@ -147,7 +157,7 @@ export const api = {
       const localData = getLocalData(username)
       if (localData) {
         const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
-        setLocalData(username, { user: updatedUser, links: localData.links })
+        setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups })
         return updatedUser
       }
       throw error
@@ -172,7 +182,7 @@ export const api = {
         console.log('API 更新链接失败，更新 localStorage')
         const localData = getLocalData(username)
         if (localData) {
-          setLocalData(username, { user: localData.user, links: userLinks })
+          setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups })
         }
         return
       }
@@ -182,7 +192,41 @@ export const api = {
       console.error('API 更新链接出错，更新 localStorage:', error)
       const localData = getLocalData(username)
       if (localData) {
-        setLocalData(username, { user: localData.user, links: userLinks })
+        setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups })
+      }
+    }
+  },
+
+  updateGroups: async (username: string, userGroups: LinkGroup[]): Promise<void> => {
+    try {
+      console.log('尝试更新分组:', username, userGroups)
+      const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: undefined,
+          userLinks: undefined,
+          userGroups
+        })
+      })
+
+      if (!response.ok) {
+        console.log('API 更新分组失败，更新 localStorage')
+        const localData = getLocalData(username)
+        if (localData) {
+          setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups })
+        }
+        return
+      }
+
+      console.log('API 更新分组成功')
+    } catch (error) {
+      console.error('API 更新分组出错，更新 localStorage:', error)
+      const localData = getLocalData(username)
+      if (localData) {
+        setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups })
       }
     }
   }

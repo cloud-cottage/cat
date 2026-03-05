@@ -25,9 +25,11 @@ export default async function handler(req, res) {
       // 获取用户信息
       const userKey = `user:${username}`
       const linksKey = `links:${username}`
+      const groupsKey = `groups:${username}`
       
       const user = await redis.hgetall(userKey)
       const rawLinks = await redis.lrange(linksKey, 0, -1)
+      const rawGroups = await redis.lrange(groupsKey, 0, -1)
       
       console.log('Raw user data:', user)
       console.log('Raw links data:', rawLinks)
@@ -49,20 +51,35 @@ export default async function handler(req, res) {
         }).filter(Boolean)
       }
       
-      console.log('Parsed links:', parsedLinks)
+      // 安全解析分组数据
+      let parsedGroups = []
+      if (rawGroups && rawGroups.length > 0) {
+        parsedGroups = rawGroups.map(group => {
+          try {
+            return typeof group === 'string' ? JSON.parse(group) : group
+          } catch (e) {
+            console.error('Error parsing group:', group, e)
+            return null
+          }
+        }).filter(Boolean)
+      }
       
-      res.json({ user, links: parsedLinks })
+      console.log('Parsed links:', parsedLinks)
+      console.log('Parsed groups:', parsedGroups)
+      
+      res.json({ user, links: parsedLinks, groups: parsedGroups })
     } catch (error) {
       console.error('Error fetching user:', error)
       res.status(500).json({ error: 'Internal server error' })
     }
   } else if (req.method === 'POST') {
     try {
-      const { user, userLinks } = req.body
+      const { user, userLinks, userGroups } = req.body
       
       console.log('Updating user data for:', username)
       console.log('User update:', user)
       console.log('Links update:', userLinks)
+      console.log('Groups update:', userGroups)
       
       if (user && user !== undefined && user !== null) {
         // 更新用户信息
@@ -92,6 +109,21 @@ export default async function handler(req, res) {
           const linkStrings = userLinks.map(link => JSON.stringify(link))
           await redis.lpush(linksKey, ...linkStrings)
           console.log('Links data saved successfully')
+        }
+      }
+      
+      if (userGroups && userGroups !== undefined && userGroups !== null && userGroups.length > 0) {
+        // 更新用户分组
+        const groupsKey = `groups:${username}`
+        
+        // 先删除旧的分组
+        await redis.del(groupsKey)
+        
+        // 添加新的分组
+        if (userGroups.length > 0) {
+          const groupStrings = userGroups.map(group => JSON.stringify(group))
+          await redis.lpush(groupsKey, ...groupStrings)
+          console.log('Groups data saved successfully')
         }
       }
       
