@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, type Post as ApiPost } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
 // 主题配置
@@ -46,16 +46,13 @@ export default function EditBlog() {
   
   const [links, setLinks] = useState<Link[]>([])
   const [groups, setGroups] = useState<LinkGroup[]>([])
-  const [posts, setPosts] = useState<ApiPost[]>([])
-  const [newPostUrl, setNewPostUrl] = useState<string>('')
-  const [isParsingPost, setIsParsingPost] = useState<boolean>(false)
   const [userData, setUserData] = useState<User | null>(null)
   const [themeId, setThemeId] = useState<number>(1)
   const [twitterHandle, setTwitterHandle] = useState<string>('')
   const [bio, setBio] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(true) // 初始设为 true
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'links' | 'posts' | 'settings'>('links')
+  const [activeTab, setActiveTab] = useState<'links' | 'settings'>('links')
 
   useEffect(() => {
     console.log('EditBlog useEffect:', { user, isConnected, address })
@@ -66,29 +63,42 @@ export default function EditBlog() {
       return
     }
 
-    if (!isConnected || !address) {
-      console.log('Wallet not connected, stopping loading')
-      setIsLoading(false)
-      return
+    const loadUserData = async () => {
+      try {
+        setIsLoading(true)
+        console.log('开始加载用户数据，用户名:', user)
+        const userData = await api.getUserByUsername(user!)
+        console.log('获取到的用户数据:', userData)
+        
+        if (userData) {
+          setLinks(userData.links || [])
+          setGroups(userData.groups || [])
+          setUserData(userData.user)
+          setThemeId(userData.user.themeId || 1)
+          setTwitterHandle(userData.user.twitterHandle || '')
+          setBio(userData.user.bio || '')
+          console.log('用户数据加载成功:', { 
+            themeId: userData.user.themeId, 
+            linksCount: userData.links?.length || 0,
+            groupsCount: userData.groups?.length || 0,
+            twitterHandle: userData.user.twitterHandle,
+            bio: userData.user.bio
+          })
+        } else {
+          console.log('用户不存在，将创建新用户')
+        }
+      } catch (err) {
+        console.error('Failed to load user data:', err)
+        setError('加载数据失败')
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    console.log('All conditions met, loading user data')
     loadUserData()
-  }, [user, isConnected, address, navigate])
+  }, [user, address])
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('selectedTheme')
-    if (savedTheme) {
-      setThemeId(Number(savedTheme))
-    }
-  }, [])
-
-  useEffect(() => {
-    document.body.className = document.body.className.replace(/theme-\d+/g, '')
-    document.body.classList.add(`theme-${themeId}`)
-    localStorage.setItem('selectedTheme', themeId.toString())
-  }, [themeId])
-
+  // 超时处理
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isLoading) {
@@ -100,99 +110,18 @@ export default function EditBlog() {
     return () => clearTimeout(timer)
   }, [isLoading])
 
-  const loadUserData = async () => {
-    try {
-      setIsLoading(true)
-      console.log('开始加载用户数据，用户名:', user)
-      const userData = await api.getUserByUsername(user!)
-      console.log('获取到的用户数据:', userData)
-      
-      if (userData) {
-        setLinks(userData.links || [])
-        setGroups(userData.groups || [])
-        setPosts(userData.posts || [])
-        setUserData(userData.user)
-        setThemeId(userData.user.themeId || 1)
-        setTwitterHandle(userData.user.twitterHandle || '')
-        setBio(userData.user.bio || '')
-        console.log('用户数据加载成功:', { 
-          themeId: userData.user.themeId, 
-          linksCount: userData.links?.length || 0,
-          groupsCount: userData.groups?.length || 0,
-          postsCount: userData.posts?.length || 0,
-          twitterHandle: userData.user.twitterHandle,
-          bio: userData.user.bio
-        })
-      } else {
-        console.log('用户不存在，将创建新用户')
-      }
-    } catch (err) {
-      console.error('Failed to load user data:', err)
-      setError('加载数据失败')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const saveUserData = async () => {
-    try {
-      setIsLoading(true)
-      setError('')
-      
-      console.log('开始保存用户数据:', { user, themeId, twitterHandle, bio, linksCount: links.length })
-      
-      // 先更新链接
-      if (links.length > 0) {
-        console.log('保存链接数据...')
-        await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
-        console.log('链接保存成功')
-      }
-      
-      // 更新用户信息（包括主题、个人简介、Twitter）
-      if (userData) {
-        console.log('保存用户信息...')
-        const updateData = { 
-          themeId,
-          bio: bio.trim() || undefined,
-          twitterHandle: twitterHandle.trim() || undefined
-        }
-        console.log('用户更新数据:', updateData)
-        await api.updateUser(user!, updateData)
-        console.log('用户信息保存成功')
-      }
-      
-      // 保存成功后跳转到展示页面
-      console.log('所有数据保存成功，准备跳转')
-      window.location.href = `https://${user}.catcat.meme/`
-    } catch (err) {
-      console.error('Failed to save user data:', err)
-      const errorMessage = err instanceof Error ? err.message : '未知错误'
-      console.error('详细错误信息:', errorMessage)
-      setError(`保存失败: ${errorMessage}`)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const saveLinks = async () => {
     try {
       setIsLoading(true)
       setError('')
+      console.log('保存链接数据:', links)
       
-      console.log('开始保存链接数据:', { user, linksCount: links.length })
-      
-      // 只更新链接
-      await api.updateLinks(user!, links.sort((a, b) => a.order - b.order))
-      
+      await api.updateLinks(user!, links)
       console.log('链接保存成功')
-      // 保存成功提示
-      setError('')
-      // 可以添加成功提示，但不跳转
+      setError('链接保存成功')
     } catch (err) {
-      console.error('Failed to save links:', err)
-      const errorMessage = err instanceof Error ? err.message : '未知错误'
-      console.error('详细错误信息:', errorMessage)
-      setError(`保存链接失败: ${errorMessage}`)
+      console.error('保存链接失败:', err)
+      setError('保存链接失败，请重试')
     } finally {
       setIsLoading(false)
     }
@@ -205,6 +134,7 @@ export default function EditBlog() {
       url: '',
       description: '',
       group: '',
+      icon: 'link',
       order: links.length + 1,
       userId: user!,
       createdAt: new Date().toISOString(),
@@ -221,6 +151,21 @@ export default function EditBlog() {
 
   const deleteLink = (id: string) => {
     setLinks(links.filter(link => link.id !== id))
+  }
+
+  const moveLink = (id: string, direction: 'up' | 'down') => {
+    const index = links.findIndex(link => link.id === id)
+    if (index === -1) return
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= links.length) return
+
+    const newLinks = [...links]
+    const [movedLink] = newLinks.splice(index, 1)
+    newLinks.splice(newIndex, 0, movedLink)
+    
+    // 更新 order 字段
+    return newLinks.map((link, i) => ({ ...link, order: i }))
   }
 
   // 分组管理函数
@@ -265,65 +210,6 @@ export default function EditBlog() {
     return newGroups.map((group, i) => ({ ...group, order: i + 1 }))
   }
 
-  // URL 解析函数
-  const parsePostFromUrl = async (url: string): Promise<ApiPost | null> => {
-    try {
-      setIsParsingPost(true)
-      setError('')
-      
-      // 检测平台类型
-      let platform = 'unknown'
-      if (url.includes('binance.com')) {
-        platform = 'binance'
-      } else if (url.includes('twitter.com') || url.includes('x.com')) {
-        platform = 'twitter'
-      } else if (url.includes('medium.com')) {
-        platform = 'medium'
-      }
-      
-      // 这里可以添加实际的爬虫逻辑来获取内容
-      // 现在先创建一个基本的文章对象
-      const newPost: ApiPost = {
-        id: Date.now().toString(),
-        userId: user!,
-        title: `来自 ${platform} 的文章`,
-        content: `文章链接: ${url}`,
-        url,
-        platform,
-        publishedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-      
-      setPosts([newPost, ...posts])
-      setNewPostUrl('')
-      return newPost
-    } catch (error) {
-      console.error('解析文章失败:', error)
-      setError('解析文章失败，请重试')
-      return null
-    } finally {
-      setIsParsingPost(false)
-    }
-  }
-
-  const savePosts = async () => {
-    try {
-      setIsLoading(true)
-      setError('')
-      console.log('保存文章数据:', posts)
-      
-      await api.updatePosts(user!, posts)
-      console.log('文章保存成功')
-      setError('文章保存成功')
-    } catch (err) {
-      console.error('保存文章失败:', err)
-      setError('保存文章失败，请重试')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const saveGroups = async () => {
     try {
       setIsLoading(true)
@@ -341,57 +227,29 @@ export default function EditBlog() {
     }
   }
 
-  const moveLink = (id: string, direction: 'up' | 'down') => {
-    const index = links.findIndex(link => link.id === id)
-    if (index === -1) return
-
-    const newIndex = direction === 'up' ? index - 1 : index + 1
-    if (newIndex < 0 || newIndex >= links.length) return
-
-    const newLinks = [...links]
-    const [movedLink] = newLinks.splice(index, 1)
-    newLinks.splice(newIndex, 0, movedLink)
-    
-    // 更新 order 字段
-    return newLinks.map((link, i) => ({ ...link, order: i }))
-  }
-
-  const addPost = () => {
-    const newPost: ApiPost = {
-      id: Date.now().toString(),
-      title: '新文章',
-      content: '',
-      userId: user!,
-      publishedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+  const saveSettings = async () => {
+    try {
+      setIsLoading(true)
+      setError('')
+      
+      const updatedUser = {
+        ...userData!,
+        twitterHandle,
+        bio,
+        themeId,
+        updatedAt: new Date().toISOString()
+      }
+      
+      await api.updateUser(user!, updatedUser)
+      setUserData(updatedUser)
+      console.log('设置保存成功')
+      setError('设置保存成功')
+    } catch (err) {
+      console.error('保存设置失败:', err)
+      setError('保存设置失败，请重试')
+    } finally {
+      setIsLoading(false)
     }
-    setPosts([...posts, newPost])
-  }
-
-  const updatePost = (id: string, field: keyof ApiPost, value: string) => {
-    setPosts(posts.map(post => 
-      post.id === id ? { ...post, [field]: value } : post
-    ))
-  }
-
-  const deletePost = (id: string) => {
-    setPosts(posts.filter(post => post.id !== id))
-  }
-
-  const movePost = (id: string, direction: 'up' | 'down') => {
-    const index = posts.findIndex(post => post.id === id)
-    if (index === -1) return
-
-    const newIndex = direction === 'up' ? index - 1 : index + 1
-    if (newIndex < 0 || newIndex >= posts.length) return
-
-    const newPosts = [...posts]
-    const [movedPost] = newPosts.splice(index, 1)
-    newPosts.splice(newIndex, 0, movedPost)
-    
-    // 更新 order 字段
-    return newPosts.map((post, i) => ({ ...post, order: i }))
   }
 
   if (isLoading) {
@@ -433,93 +291,26 @@ export default function EditBlog() {
   return (
     <div className="blog-container">
       <div className="blog-card">
-        {/* 头部 */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '2rem',
-          paddingBottom: '1rem',
-          borderBottom: '1px solid #444'
-        }}>
-          <h1 className="blog-title">编辑博客</h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* 主题选择下拉框 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.9rem', color: 'var(--fg)' }}>主题:</span>
-              <select
-                value={themeId}
-                onChange={(e) => setThemeId(Number(e.target.value))}
-                style={{
-                  padding: '0.5rem',
-                  background: 'var(--surface)',
-                  border: '1px solid #666',
-                  borderRadius: '6px',
-                  color: 'var(--fg)',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {themes.map((theme) => (
-                  <option key={theme.id} value={theme.id}>
-                    {theme.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            {/* 设置图标 */}
-            <button
-              onClick={() => setActiveTab('settings')}
-              style={{
-                width: '40px',
-                height: '40px',
-                background: 'var(--surface)',
-                border: '1px solid #666',
-                borderRadius: '8px',
-                color: 'var(--fg)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s'
-              }}
-              title="博客设置"
-            >
-              ⚙️
-            </button>
-            
-            <button 
-              onClick={() => window.location.href = `https://${user}.catcat.meme/`}
-              className="btn-secondary"
-            >
-              预览
-            </button>
-          </div>
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ margin: 0, marginBottom: '0.5rem' }}>编辑博客</h1>
+          <p style={{ margin: 0, color: 'var(--muted)' }}>用户: {user}</p>
         </div>
 
-        {/* 错误提示 */}
         {error && (
-          <div style={{ 
-            marginBottom: '1rem', 
-            padding: '0.75rem', 
-            background: 'rgba(239, 68, 68, 0.1)', 
-            border: '1px solid rgba(239, 68, 68, 0.3)', 
+          <div style={{
+            padding: '1rem',
+            background: 'var(--error-bg)',
+            border: '1px solid var(--error)',
             borderRadius: '6px',
-            color: '#ef4444',
-            fontSize: '0.9rem'
+            color: 'var(--error)',
+            marginBottom: '1rem'
           }}>
             {error}
           </div>
         )}
 
-        {/* 标签页 */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '1rem', 
-          marginBottom: '2rem',
-          borderBottom: '1px solid #444'
-        }}>
+        {/* 标签页切换 */}
+        <div style={{ display: 'flex', marginBottom: '2rem', borderBottom: '1px solid #444' }}>
           <button 
             onClick={() => setActiveTab('links')}
             style={{
@@ -534,17 +325,17 @@ export default function EditBlog() {
             链接管理
           </button>
           <button 
-            onClick={() => setActiveTab('posts')}
+            onClick={() => setActiveTab('settings')}
             style={{
               padding: '0.5rem 1rem',
-              background: activeTab === 'posts' ? 'var(--accent)' : 'transparent',
-              color: activeTab === 'posts' ? 'var(--bg)' : 'var(--fg)',
+              background: activeTab === 'settings' ? 'var(--accent)' : 'transparent',
+              color: activeTab === 'settings' ? 'var(--bg)' : 'var(--fg)',
               border: '1px solid var(--accent)',
               borderRadius: '6px 6px 0 0',
               cursor: 'pointer'
             }}
           >
-            文章管理
+            设置
           </button>
         </div>
 
@@ -776,6 +567,26 @@ export default function EditBlog() {
                       </option>
                     ))}
                   </select>
+                  <select
+                    value={link.icon || 'link'}
+                    onChange={(e) => updateLink(link.id, 'icon', e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      background: 'var(--surface)',
+                      border: '1px solid #666',
+                      borderRadius: '4px',
+                      color: 'var(--fg)',
+                      fontSize: '0.9rem',
+                      marginTop: '0.5rem'
+                    }}
+                  >
+                    {PREDEFINED_ICONS.map(icon => (
+                      <option key={icon.id} value={icon.id}>
+                        {icon.emoji} {icon.name}
+                      </option>
+                    ))}
+                  </select>
                   <textarea
                     value={link.description || ''}
                     onChange={(e) => updateLink(link.id, 'description', e.target.value)}
@@ -799,271 +610,98 @@ export default function EditBlog() {
           </div>
         )}
 
-        {activeTab === 'posts' && (
-          <div>
-            {/* URL 输入区域 */}
-            <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--surface)', border: '1px solid #666', borderRadius: '8px' }}>
-              <h4 style={{ marginBottom: '1rem', color: 'var(--fg)' }}>添加文章链接</h4>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <input
-                  type="url"
-                  value={newPostUrl}
-                  onChange={(e) => setNewPostUrl(e.target.value)}
-                  placeholder="粘贴 Binance、Twitter 等平台的文章链接"
-                  disabled={isParsingPost}
-                  style={{
-                    flex: 1,
-                    padding: '0.75rem',
-                    background: 'var(--bg)',
-                    border: '1px solid #666',
-                    borderRadius: '6px',
-                    color: 'var(--fg)',
-                    fontSize: '0.9rem'
-                  }}
-                />
-                <button 
-                  onClick={() => newPostUrl && parsePostFromUrl(newPostUrl)}
-                  disabled={!newPostUrl || isParsingPost}
-                  className="btn-primary"
-                >
-                  {isParsingPost ? '解析中...' : '解析文章'}
-                </button>
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginTop: '0.5rem' }}>
-                支持 Binance Square、Twitter、Medium 等平台链接
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3>文章管理</h3>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button onClick={addPost} className="btn-secondary">
-                  + 手动添加
-                </button>
-                <button 
-                  onClick={savePosts}
-                  disabled={isLoading}
-                  className="btn-primary"
-                >
-                  {isLoading ? '保存中...' : '保存文章'}
-                </button>
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {posts.map((post, index) => (
-                <div 
-                  key={post.id}
-                  style={{
-                    padding: '1rem',
-                    background: 'var(--bg)',
-                    border: '1px solid #444',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <input
-                      type="text"
-                      value={post.title}
-                      onChange={(e) => updatePost(post.id, 'title', e.target.value)}
-                      placeholder="文章标题"
-                      style={{
-                        flex: 1,
-                        padding: '0.5rem',
-                        background: 'var(--surface)',
-                        border: '1px solid #666',
-                        borderRadius: '4px',
-                        color: 'var(--fg)',
-                        fontSize: '0.9rem'
-                      }}
-                    />
-                    <div style={{ display: 'flex', gap: '0.25rem' }}>
-                      <button
-                        onClick={() => movePost(post.id, 'up')}
-                        disabled={index === 0}
-                        style={{
-                          padding: '0.25rem 0.5rem',
-                          background: '#666',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: index === 0 ? 'not-allowed' : 'pointer',
-                          opacity: index === 0 ? 0.5 : 1
-                        }}
-                      >
-                        ↑
-                      </button>
-                      <button
-                        onClick={() => movePost(post.id, 'down')}
-                        disabled={index === posts.length - 1}
-                        style={{
-                          padding: '0.25rem 0.5rem',
-                          background: '#666',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: index === posts.length - 1 ? 'not-allowed' : 'pointer',
-                          opacity: index === posts.length - 1 ? 0.5 : 1
-                        }}
-                      >
-                        ↓
-                      </button>
-                      <button
-                        onClick={() => deletePost(post.id)}
-                        style={{
-                          padding: '0.25rem 0.5rem',
-                          background: '#dc2626',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        删除
-                      </button>
-                    </div>
-                  </div>
-                  <textarea
-                    value={post.content}
-                    onChange={(e) => updatePost(post.id, 'content', e.target.value)}
-                    placeholder="文章内容（支持 Markdown）"
-                    rows={6}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      background: 'var(--surface)',
-                      border: '1px solid #666',
-                      borderRadius: '4px',
-                      color: 'var(--fg)',
-                      fontSize: '0.9rem',
-                      resize: 'vertical',
-                      fontFamily: 'monospace'
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {activeTab === 'settings' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3>博客设置</h3>
-              <button 
-                onClick={saveUserData}
-                disabled={isLoading}
-                className="btn-primary"
-              >
-                {isLoading ? '保存中...' : '保存设置'}
-              </button>
-            </div>
+            <h3 style={{ marginBottom: '1rem' }}>博客设置</h3>
             
-            <div style={{ 
-              padding: '1rem', 
-              background: 'var(--bg)', 
-              border: '1px solid #444', 
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.5rem'
-            }}>
-              {/* Twitter 设置 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--fg)' }}>
+                  个人简介
+                </label>
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="介绍一下自己..."
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: 'var(--surface)',
+                    border: '1px solid #666',
+                    borderRadius: '4px',
+                    color: 'var(--fg)',
+                    fontSize: '0.9rem',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--fg)' }}>
                   Twitter 用户名
                 </label>
                 <input
                   type="text"
                   value={twitterHandle}
                   onChange={(e) => setTwitterHandle(e.target.value)}
-                  placeholder="输入你的 Twitter 用户名（不包含 @）"
+                  placeholder="username (不含@)"
                   style={{
                     width: '100%',
-                    padding: '0.75rem',
+                    padding: '0.5rem',
                     background: 'var(--surface)',
                     border: '1px solid #666',
-                    borderRadius: '6px',
+                    borderRadius: '4px',
                     color: 'var(--fg)',
                     fontSize: '0.9rem'
                   }}
                 />
               </div>
 
-              {/* 个人简介 */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  个人简介
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--fg)' }}>
+                  主题风格
                 </label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="介绍一下你自己..."
-                  rows={4}
+                <select
+                  value={themeId}
+                  onChange={(e) => setThemeId(Number(e.target.value))}
                   style={{
                     width: '100%',
-                    padding: '0.75rem',
+                    padding: '0.5rem',
                     background: 'var(--surface)',
                     border: '1px solid #666',
-                    borderRadius: '6px',
+                    borderRadius: '4px',
                     color: 'var(--fg)',
-                    fontSize: '0.9rem',
-                    resize: 'vertical',
-                    fontFamily: 'inherit'
+                    fontSize: '0.9rem'
                   }}
-                />
+                >
+                  {themes.map(theme => (
+                    <option key={theme.id} value={theme.id}>
+                      {theme.name} - {theme.description}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* 主题选择 */}
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                  博客主题
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                  {themes.map((theme) => (
-                    <button
-                      key={theme.id}
-                      onClick={() => setThemeId(theme.id)}
-                      style={{
-                        padding: '0.75rem',
-                        background: themeId === theme.id ? 'var(--accent)' : 'var(--surface)',
-                        color: themeId === theme.id ? 'var(--bg)' : 'var(--fg)',
-                        border: '1px solid #666',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        textAlign: 'left',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.25rem'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-                        {theme.name}
-                      </div>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                        {theme.description}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div style={{ 
-                padding: '0.75rem', 
-                background: 'rgba(255, 255, 255, 0.05)', 
-                borderRadius: '6px',
-                fontSize: '0.9rem',
-                color: 'var(--muted)'
-              }}>
-                💡 这些信息将在你的博客页面显示给访问者
-              </div>
+              <button 
+                onClick={saveSettings}
+                disabled={isLoading}
+                className="btn-primary"
+              >
+                {isLoading ? '保存中...' : '保存设置'}
+              </button>
             </div>
           </div>
         )}
+
+        <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #444' }}>
+          <button 
+            onClick={() => window.location.href = `https://${user}.catcat.meme/`}
+            className="btn-secondary"
+          >
+            返回博客
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -19,6 +19,7 @@ export interface Link {
   url: string
   description?: string
   group?: string
+  icon?: string
   order: number
   createdAt: string
   updatedAt: string
@@ -33,25 +34,60 @@ export interface LinkGroup {
   updatedAt: string
 }
 
-export interface Post {
+export interface Icon {
   id: string
-  userId: string
-  title: string
-  content: string
-  url?: string
-  platform?: string
-  image?: string
-  publishedAt: string
-  createdAt: string
-  updatedAt: string
+  name: string
+  emoji: string
+  category: string
 }
+
+// 预定义图标列表
+export const PREDEFINED_ICONS: Icon[] = [
+  // 社交媒体
+  { id: 'twitter', name: 'Twitter', emoji: '🐦', category: '社交媒体' },
+  { id: 'telegram', name: 'Telegram', emoji: '✈️', category: '社交媒体' },
+  { id: 'discord', name: 'Discord', emoji: '💬', category: '社交媒体' },
+  { id: 'instagram', name: 'Instagram', emoji: '📷', category: '社交媒体' },
+  { id: 'facebook', name: 'Facebook', emoji: '📘', category: '社交媒体' },
+  { id: 'youtube', name: 'YouTube', emoji: '📺', category: '社交媒体' },
+  { id: 'tiktok', name: 'TikTok', emoji: '🎵', category: '社交媒体' },
+  { id: 'linkedin', name: 'LinkedIn', emoji: '💼', category: '社交媒体' },
+  
+  // 工具网站
+  { id: 'github', name: 'GitHub', emoji: '🐙', category: '工具网站' },
+  { id: 'website', name: '网站', emoji: '🌐', category: '工具网站' },
+  { id: 'app', name: '应用', emoji: '📱', category: '工具网站' },
+  { id: 'tool', name: '工具', emoji: '🔧', category: '工具网站' },
+  { id: 'code', name: '代码', emoji: '💻', category: '工具网站' },
+  { id: 'docs', name: '文档', emoji: '📄', category: '工具网站' },
+  
+  // 内容平台
+  { id: 'blog', name: '博客', emoji: '📝', category: '内容平台' },
+  { id: 'video', name: '视频', emoji: '🎥', category: '内容平台' },
+  { id: 'music', name: '音乐', emoji: '🎵', category: '内容平台' },
+  { id: 'photo', name: '图片', emoji: '🖼️', category: '内容平台' },
+  { id: 'article', name: '文章', emoji: '📖', category: '内容平台' },
+  
+  // 商务
+  { id: 'shop', name: '商店', emoji: '🛒', category: '商务' },
+  { id: 'payment', name: '支付', emoji: '💳', category: '商务' },
+  { id: 'bank', name: '银行', emoji: '🏦', category: '商务' },
+  { id: 'crypto', name: '加密货币', emoji: '₿', category: '商务' },
+  
+  // 通用
+  { id: 'link', name: '链接', emoji: '🔗', category: '通用' },
+  { id: 'star', name: '收藏', emoji: '⭐', category: '通用' },
+  { id: 'heart', name: '喜欢', emoji: '❤️', category: '通用' },
+  { id: 'fire', name: '热门', emoji: '🔥', category: '通用' },
+  { id: 'rocket', name: '火箭', emoji: '🚀', category: '通用' },
+]
 
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
 
 // 临时使用 localStorage 作为后备方案
 const localStorageKey = (username: string) => `catcat_blog_${username}`
 
-const setLocalData = (username: string, data: { user: User; links: Link[]; groups: LinkGroup[]; posts: Post[] }) => {
+const setLocalData = (username: string, data: { user: User; links: Link[]; groups: LinkGroup[] }) => {
   try {
     localStorage.setItem(localStorageKey(username), JSON.stringify(data))
   } catch (error) {
@@ -59,7 +95,7 @@ const setLocalData = (username: string, data: { user: User; links: Link[]; group
   }
 }
 
-const getLocalData = (username: string): { user: User; links: Link[]; groups: LinkGroup[]; posts: Post[] } | null => {
+const getLocalData = (username: string): { user: User; links: Link[]; groups: LinkGroup[] } | null => {
   try {
     const data = localStorage.getItem(localStorageKey(username))
     return data ? JSON.parse(data) : null
@@ -69,7 +105,7 @@ const getLocalData = (username: string): { user: User; links: Link[]; groups: Li
 }
 
 export const api = {
-  getUserByUsername: async (username: string): Promise<{ user: User; links: Link[]; groups: LinkGroup[]; posts: Post[] } | null> => {
+  getUserByUsername: async (username: string): Promise<{ user: User; links: Link[]; groups: LinkGroup[] } | null> => {
     try {
       console.log('尝试从 API 获取用户数据:', username)
       const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`)
@@ -121,7 +157,7 @@ export const api = {
 
       if (!response.ok) {
         console.log('API 创建用户失败，保存到 localStorage')
-        const data = { user: newUser, links: [], groups: [], posts: [] }
+        const data = { user: newUser, links: [], groups: [] }
         setLocalData(username, data)
         return newUser
       }
@@ -131,7 +167,7 @@ export const api = {
       return result.user
     } catch (error) {
       console.error('API 创建用户出错，保存到 localStorage:', error)
-      const data = { user: newUser, links: [], groups: [], posts: [] }
+      const data = { user: newUser, links: [], groups: [] }
       setLocalData(username, data)
       return newUser
     }
@@ -156,7 +192,7 @@ export const api = {
         const localData = getLocalData(username)
         if (localData) {
           const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
-          setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups, posts: localData.posts })
+          setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups })
           return updatedUser
         }
         throw new Error('Failed to update user')
@@ -170,7 +206,7 @@ export const api = {
       const localData = getLocalData(username)
       if (localData) {
         const updatedUser = { ...localData.user, ...user, updatedAt: new Date().toISOString() }
-        setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups, posts: localData.posts })
+        setLocalData(username, { user: updatedUser, links: localData.links, groups: localData.groups })
         return updatedUser
       }
       throw error
@@ -195,7 +231,7 @@ export const api = {
         console.log('API 更新链接失败，更新 localStorage')
         const localData = getLocalData(username)
         if (localData) {
-          setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups, posts: localData.posts })
+          setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups })
         }
         return
       }
@@ -205,7 +241,7 @@ export const api = {
       console.error('API 更新链接出错，更新 localStorage:', error)
       const localData = getLocalData(username)
       if (localData) {
-        setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups, posts: localData.posts })
+        setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups })
       }
     }
   },
@@ -229,7 +265,7 @@ export const api = {
         console.log('API 更新分组失败，更新 localStorage')
         const localData = getLocalData(username)
         if (localData) {
-          setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups, posts: localData.posts })
+          setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups })
         }
         return
       }
@@ -239,42 +275,7 @@ export const api = {
       console.error('API 更新分组出错，更新 localStorage:', error)
       const localData = getLocalData(username)
       if (localData) {
-        setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups, posts: localData.posts })
-      }
-    }
-  },
-
-  updatePosts: async (username: string, userPosts: Post[]): Promise<void> => {
-    try {
-      console.log('尝试更新文章:', username, userPosts)
-      const response = await fetch(`${API_BASE}/user?username=${encodeURIComponent(username)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user: undefined,
-          userLinks: undefined,
-          userGroups: undefined,
-          userPosts
-        })
-      })
-
-      if (!response.ok) {
-        console.log('API 更新文章失败，更新 localStorage')
-        const localData = getLocalData(username)
-        if (localData) {
-          setLocalData(username, { user: localData.user, links: localData.links, groups: localData.groups, posts: userPosts })
-        }
-        return
-      }
-
-      console.log('API 更新文章成功')
-    } catch (error) {
-      console.error('API 更新文章出错，更新 localStorage:', error)
-      const localData = getLocalData(username)
-      if (localData) {
-        setLocalData(username, { user: localData.user, links: localData.links, groups: localData.groups, posts: userPosts })
+        setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups })
       }
     }
   }
