@@ -4,6 +4,90 @@ import { useAccount } from 'wagmi'
 import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl } from '../lib/api'
 import { SettingsModal } from '../components/SettingsModal'
 
+// 主题配置 - 从 admin 面板导入相同的主题
+const THEMES = [
+  {
+    id: 1,
+    name: '钻石手',
+    colors: {
+      primary: '#FF8C42',
+      secondary: '#1C6E9C',
+      bg: '#F8F9FA',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 2,
+    name: 'HODL蓝',
+    colors: {
+      primary: '#1C6E9C',
+      secondary: '#FF8C42',
+      bg: '#EBF8FF',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 3,
+    name: '草莓熊',
+    colors: {
+      primary: '#FF6B9D',
+      secondary: '#C66FBC',
+      bg: '#FFF0F5',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 4,
+    name: '赛博橙',
+    colors: {
+      primary: '#FF6B35',
+      secondary: '#00D9FF',
+      bg: '#0A0E27',
+      surface: '#1A1F3A'
+    }
+  },
+  {
+    id: 5,
+    name: '韭菜绿',
+    colors: {
+      primary: '#52C41A',
+      secondary: '#52C41A',
+      bg: '#F6FFED',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 6,
+    name: '拿铁棕',
+    colors: {
+      primary: '#8B4513',
+      secondary: '#D2691E',
+      bg: '#FFF8DC',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 7,
+    name: '神秘紫',
+    colors: {
+      primary: '#6B46C1',
+      secondary: '#9F7AEA',
+      bg: '#F7FAFC',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 8,
+    name: '深海蓝',
+    colors: {
+      primary: '#0891B2',
+      secondary: '#06B6D4',
+      bg: '#F0F9FF',
+      surface: '#FFFFFF'
+    }
+  }
+]
+
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
   useEffect(() => {
@@ -127,7 +211,9 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
+  const [showWalletAddress, setShowWalletAddress] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [currentTheme, setCurrentTheme] = useState(THEMES[0]) // 默认主题
 
   useEffect(() => {
     if (!username) return
@@ -151,6 +237,15 @@ export default function UserProfile({ username: propUsername }: { username?: str
         setUser(userData.user)
         setLinks(userData.links)
         setGroups(userData.groups)
+        
+        // 设置主题
+        if (userData.user.layout) {
+          const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
+          if (theme) setCurrentTheme(theme)
+        } else {
+          // 如果用户没有设置布局，使用第一个主题
+          setCurrentTheme(THEMES[0])
+        }
         
         // 设置页面标题：昵称｜CAT｜Your Web3 Paws
         const displayName = userData.user.nickname || userData.user.username
@@ -321,7 +416,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: currentTheme.colors.bg,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -368,18 +463,18 @@ export default function UserProfile({ username: propUsername }: { username?: str
         )}
         
         <h1 style={{ 
-          color: 'white', 
+          color: currentTheme.colors.primary, 
           margin: '0 0 0.5rem 0',
           fontSize: '2rem',
           fontWeight: 'bold',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          textShadow: currentTheme.id === 4 ? '0 2px 4px rgba(0,0,0,0.3)' : 'none'
         }}>
           {user?.username}
         </h1>
         
         {user?.bio && (
           <p style={{ 
-            color: 'rgba(255,255,255,0.9)', 
+            color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
             margin: '0 0 1rem 0',
             fontSize: '1.1rem',
             maxWidth: '600px',
@@ -389,39 +484,37 @@ export default function UserProfile({ username: propUsername }: { username?: str
           </p>
         )}
         
-        {/* 社交媒体链接 */}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '2rem' }}>
-          {user?.twitterHandle && (
-            <a
-              href={`https://twitter.com/${user.twitterHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
+        {/* 钱包地址 */}
+        {user?.walletAddress && user.walletAddress !== '0x0000' && (
+          <div style={{ marginBottom: '1rem' }}>
+            <button
+              onClick={() => setShowWalletAddress(!showWalletAddress)}
               style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.2)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                textDecoration: 'none',
-                fontSize: '1.2rem',
+                gap: '0.5rem',
+                background: currentTheme.colors.surface + '20',
+                border: `1px solid ${currentTheme.colors.primary}30`,
+                borderRadius: '20px',
+                padding: '0.5rem 1rem',
+                color: currentTheme.id === 4 ? 'white' : currentTheme.colors.primary,
+                cursor: 'pointer',
+                fontSize: '0.9rem',
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.3s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.3)'
-                e.currentTarget.style.transform = 'scale(1.1)'
+                e.currentTarget.style.background = currentTheme.colors.surface + '40'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.2)'
-                e.currentTarget.style.transform = 'scale(1)'
+                e.currentTarget.style.background = currentTheme.colors.surface + '20'
               }}
             >
-              🐦
-            </a>
-          )}
-        </div>
+              <span style={{ fontSize: '1.2rem' }}>💼</span>
+              {showWalletAddress ? user.walletAddress : `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}
+            </button>
+          </div>
+        )}
 
         {/* 认证徽章 - 绿色邮戳/印章风格 */}
         {user?.walletAddress && user.walletAddress !== '0x0000' && (
@@ -575,300 +668,170 @@ export default function UserProfile({ username: propUsername }: { username?: str
         )}
       </div>
 
-      {/* 链接列表 */}
+      {/* 注册链接 */}
       <div style={{ width: '100%', maxWidth: '600px' }}>
-        {links.length === 0 ? (
-          <div style={{
-            background: 'rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '16px',
-            padding: '3rem',
-            textAlign: 'center',
-            border: '1px solid rgba(255,255,255,0.2)'
+        <div style={{
+          background: currentTheme.colors.surface + '10',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          marginBottom: '2rem',
+          border: `1px solid ${currentTheme.colors.primary}20`
+        }}>
+          <h3 style={{ 
+            color: currentTheme.colors.primary, 
+            margin: '0 0 1rem 0',
+            fontSize: '1.3rem',
+            fontWeight: '600',
+            textShadow: currentTheme.id === 4 ? '0 2px 4px rgba(0,0,0,0.3)' : 'none'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
-            <p style={{ 
-              color: 'white', 
-              margin: 0,
-              fontSize: '1.2rem',
-              fontWeight: '500'
-            }}>
-              暂无链接
-            </p>
-          </div>
-        ) : (
-          getLinksByGroups(links, groups).map(({ group, links: groupLinks }) => (
-            <div key={group?.id || 'ungrouped'} style={{ marginBottom: '2rem' }}>
-              {group && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={group.name}
-                      onChange={(e) => updateGroup(group.id, 'name', e.target.value)}
-                      style={{
-                        flex: 1,
-                        background: 'rgba(255,255,255,0.2)',
-                        border: '1px solid rgba(255,255,255,0.3)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        padding: '0.5rem',
-                        fontSize: '1.3rem',
-                        fontWeight: '600'
-                      }}
-                    />
-                  ) : (
-                    <h3 style={{ 
-                      color: 'white', 
-                      margin: 0,
-                      fontSize: '1.3rem',
-                      fontWeight: '600',
-                      textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                    }}>
-                      {group.name}
-                    </h3>
-                  )}
-                  {isEditing && (
-                    <button
-                      onClick={() => deleteGroup(group.id)}
-                      style={{
-                        padding: '0.5rem',
-                        background: 'rgba(255,255,255,0.2)',
-                        border: '1px solid rgba(255,255,255,0.3)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem'
-                      }}
-                    >
-                      删除分组
-                    </button>
-                  )}
-                </div>
-              )}
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {groupLinks.map((link) => (
-                  <div
-                    key={link.id}
-                    onClick={() => !isEditing && link.url && window.open(link.url, '_blank')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      padding: '1rem 1.5rem',
-                      background: 'rgba(255,255,255,0.1)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                      borderRadius: '16px',
-                      color: 'white',
-                      fontSize: '1.1rem',
-                      fontWeight: '500',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                      cursor: isEditing ? 'default' : link.url ? 'pointer' : 'default'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isEditing && link.url) {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.2)'
-                        e.currentTarget.style.transform = 'translateY(-2px)'
-                        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.2)'
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isEditing) {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
-                        e.currentTarget.style.transform = 'translateY(0)'
-                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
-                      }
-                    }}
-                  >
-                    <span style={{ fontSize: '1.5rem' }}>
-                      {isEditing ? (
-                        <select
-                          value={link.icon || 'link'}
-                          onChange={(e) => updateLink(link.id, 'icon', e.target.value)}
-                          style={{
-                            background: 'rgba(255,255,255,0.2)',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            padding: '0.25rem',
-                            fontSize: '1rem'
-                          }}
-                        >
-                          {PREDEFINED_ICONS.map(icon => (
-                            <option key={icon.id} value={icon.id}>
-                              {icon.emoji} {icon.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span style={{ 
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '24px',
-                          height: '24px'
-                        }}>
-                          {getIconElement(link.icon)}
-                          {/* 备用 emoji */}
-                          <span style={{ display: 'none' }}>
-                            {PREDEFINED_ICONS.find(i => i.id === link.icon)?.emoji || '🔗'}
-                          </span>
-                        </span>
-                      )}
-                    </span>
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          value={link.label}
-                          onChange={(e) => updateLink(link.id, 'label', e.target.value)}
-                          style={{
-                            width: '100%',
-                            background: 'rgba(255,255,255,0.2)',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            padding: '0.5rem',
-                            fontSize: '1rem',
-                            fontWeight: '600',
-                            marginBottom: '0.5rem'
-                          }}
-                        />
-                      ) : (
-                        <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
-                          {link.label}
-                        </div>
-                      )}
-                      
-                      {isEditing ? (
-                        <textarea
-                          value={link.description || ''}
-                          onChange={(e) => updateLink(link.id, 'description', e.target.value)}
-                          placeholder="链接说明（可选）"
-                          rows={2}
-                          style={{
-                            width: '100%',
-                            background: 'rgba(255,255,255,0.2)',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            padding: '0.5rem',
-                            fontSize: '0.9rem',
-                            marginBottom: '0.5rem',
-                            resize: 'vertical'
-                          }}
-                        />
-                      ) : (
-                        link.description && (
-                          <div style={{ 
-                            fontSize: '0.9rem', 
-                            opacity: 0.8,
-                            lineHeight: 1.3,
-                            marginBottom: '0.25rem'
-                          }}>
-                            {link.description}
-                          </div>
-                        )
-                      )}
-                      
-                      {isEditing ? (
-                        <input
-                          type="url"
-                          value={link.url}
-                          onChange={(e) => updateLink(link.id, 'url', e.target.value)}
-                          placeholder="https://example.com"
-                          style={{
-                            width: '100%',
-                            background: 'rgba(255,255,255,0.2)',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            borderRadius: '8px',
-                            color: 'white',
-                            padding: '0.5rem',
-                            fontSize: '0.8rem',
-                            fontFamily: 'monospace'
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          fontSize: '0.8rem',
-                          opacity: 0.6,
-                          fontFamily: 'monospace',
-                          wordBreak: 'break-all'
-                        }}>
-                          {link.url}
-                        </div>
-                      )}
+            🔗 注册链接
+          </h3>
+          {links.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
+              <p style={{ 
+                color: currentTheme.id === 4 ? 'white' : '#666', 
+                margin: 0,
+                fontSize: '1.1rem',
+                fontWeight: '500'
+              }}>
+                暂无链接
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {links.map((link) => (
+                <div
+                  key={link.id}
+                  onClick={() => !isEditing && link.url && window.open(link.url, '_blank')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    padding: '1rem 1.5rem',
+                    background: currentTheme.colors.surface + '05',
+                    backdropFilter: 'blur(10px)',
+                    border: `1px solid ${currentTheme.colors.primary}10`,
+                    borderRadius: '12px',
+                    color: currentTheme.id === 4 ? 'white' : '#333',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease',
+                    cursor: isEditing ? 'default' : link.url ? 'pointer' : 'default'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isEditing && link.url) {
+                      e.currentTarget.style.background = currentTheme.colors.surface + '10'
+                      e.currentTarget.style.transform = 'translateY(-1px)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isEditing) {
+                      e.currentTarget.style.background = currentTheme.colors.surface + '05'
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }
+                  }}
+                >
+                  <span style={{ fontSize: '1.3rem' }}>
+                    {getIconElement(link.icon)}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                      {link.label}
                     </div>
-                    
-                    {isEditing ? (
-                      <button
-                        onClick={() => deleteLink(link.id)}
-                        style={{
-                          padding: '0.5rem',
-                          background: 'rgba(255,255,255,0.2)',
-                          border: '1px solid rgba(255,255,255,0.3)',
-                          borderRadius: '8px',
-                          color: 'white',
-                          cursor: 'pointer',
-                          fontSize: '0.8rem'
-                        }}
-                      >
-                        删除
-                      </button>
-                    ) : (
-                      <span style={{ fontSize: '1.2rem', opacity: 0.7 }}>
-                        →
-                      </span>
+                    {link.description && (
+                      <div style={{ 
+                        fontSize: '0.85rem', 
+                        opacity: 0.8,
+                        lineHeight: 1.3
+                      }}>
+                        {link.description}
+                      </div>
                     )}
                   </div>
-                ))}
-                
-                {isEditing && (
-                  <button
-                    onClick={addLink}
-                    style={{
-                      width: '100%',
-                      padding: '1rem',
-                      background: 'rgba(76, 175, 80, 0.8)',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      borderRadius: '16px',
-                      color: 'white',
-                      cursor: 'pointer',
-                      fontSize: '1rem',
-                      fontWeight: '500',
-                      marginTop: '1rem'
-                    }}
-                  >
-                    + 添加新链接
-                  </button>
-                )}
-                
-                {isEditing && (
-                  <button
-                    onClick={addGroup}
-                    style={{
-                      width: '100%',
-                      padding: '1rem',
-                      background: 'rgba(33, 150, 243, 0.8)',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      borderRadius: '16px',
-                      color: 'white',
-                      cursor: 'pointer',
-                      fontSize: '1rem',
-                      fontWeight: '500',
-                      marginTop: '0.5rem'
-                    }}
-                  >
-                    + 添加新分组
-                  </button>
-                )}
-              </div>
+                  {!isEditing && (
+                    <span style={{ fontSize: '1rem', opacity: 0.7 }}>
+                      →
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))
-        )}
+          )}
+        </div>
+      </div>
+
+      {/* 社交媒体 */}
+      <div style={{ width: '100%', maxWidth: '600px' }}>
+        <div style={{
+          background: currentTheme.colors.surface + '10',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          marginBottom: '2rem',
+          border: `1px solid ${currentTheme.colors.primary}20`
+        }}>
+          <h3 style={{ 
+            color: currentTheme.colors.primary, 
+            margin: '0 0 1rem 0',
+            fontSize: '1.3rem',
+            fontWeight: '600',
+            textShadow: currentTheme.id === 4 ? '0 2px 4px rgba(0,0,0,0.3)' : 'none'
+          }}>
+            📱 社交媒体
+          </h3>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            {user?.twitterHandle && (
+              <a
+                href={`https://twitter.com/${user.twitterHandle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '50%',
+                  background: currentTheme.colors.surface + '20',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  fontSize: '1.5rem',
+                  backdropFilter: 'blur(10px)',
+                  transition: 'all 0.3s ease',
+                  border: `1px solid ${currentTheme.colors.primary}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = currentTheme.colors.surface + '40'
+                  e.currentTarget.style.transform = 'scale(1.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = currentTheme.colors.surface + '20'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+              >
+                🐦
+              </a>
+            )}
+            {/* 可以在这里添加更多社交媒体图标 */}
+            <div
+              style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.05)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem',
+                border: '1px dashed rgba(255,255,255,0.2)',
+                color: 'rgba(255,255,255,0.5)'
+              }}
+            >
+              +
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 推特时间线 */}

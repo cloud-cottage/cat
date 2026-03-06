@@ -5,7 +5,7 @@ import { api, type User } from '../../profile/lib/api'
 interface Module {
   id: string
   name: string
-  component: 'profile' | 'links' | 'twitter'
+  component: 'profile' | 'links' | 'twitter' | 'social'
   position: { x: number; y: number }
   size: { width: number; height: number }
 }
@@ -47,15 +47,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 3, y: 0 },
         size: { width: 3, height: 4 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 0, y: 3 },
         size: { width: 6, height: 3 }
       }
@@ -82,15 +82,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 0, y: 2 },
         size: { width: 3, height: 4 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 4 }
       }
@@ -117,15 +117,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 2, y: 0 },
         size: { width: 4, height: 3 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 0, y: 2 },
         size: { width: 6, height: 4 }
       }
@@ -152,15 +152,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 0, y: 2 },
         size: { width: 3, height: 3 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 3 }
       }
@@ -187,15 +187,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 2, y: 0 },
         size: { width: 4, height: 2 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 2, y: 2 },
         size: { width: 4, height: 3 }
       }
@@ -222,15 +222,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 0, y: 2 },
         size: { width: 3, height: 3 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 3 }
       }
@@ -257,15 +257,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 0, y: 2 },
         size: { width: 2, height: 4 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 2, y: 2 },
         size: { width: 4, height: 4 }
       }
@@ -292,15 +292,15 @@ const THEMES: Theme[] = [
       },
       {
         id: 'links',
-        name: '链接列表',
+        name: '注册链接',
         component: 'links',
         position: { x: 2, y: 0 },
         size: { width: 4, height: 2 }
       },
       {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
+        id: 'social',
+        name: '社交媒体',
+        component: 'social',
         position: { x: 0, y: 2 },
         size: { width: 6, height: 4 }
       }
@@ -364,10 +364,21 @@ export const Dashboard: React.FC = () => {
             setModules(userData.user.layout.modules)
             const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
             if (theme) setSelectedTheme(theme)
+          } else {
+            // 如果用户未设置布局，使用第一个主题作为默认
+            setSelectedTheme(THEMES[0])
+            setModules(THEMES[0].modules)
           }
+        } else {
+          // 如果用户不存在，使用第一个主题作为默认
+          setSelectedTheme(THEMES[0])
+          setModules(THEMES[0].modules)
         }
       } catch (error) {
         console.error('加载用户数据失败:', error)
+        // 出错时也使用第一个主题作为默认
+        setSelectedTheme(THEMES[0])
+        setModules(THEMES[0].modules)
       }
     }
 
@@ -745,7 +756,8 @@ export const Dashboard: React.FC = () => {
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
                       {module.component === 'profile' ? '👤' : 
-                       module.component === 'links' ? '🔗' : '🐦'}
+                       module.component === 'links' ? '🔗' : 
+                       module.component === 'social' ? '📱' : '🐦'}
                     </div>
                     <div style={{ fontSize: '0.9rem' }}>
                       {module.name}
@@ -846,7 +858,7 @@ export const Dashboard: React.FC = () => {
                     handleThemeChange(selectedTheme)
                   }}
                   style={{
-                    background: selectedTheme.colors.primary,
+                    background: '#6B7280',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
