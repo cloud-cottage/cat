@@ -37,6 +37,58 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
           }}
           onClick={onAvatarClick}
         />
+        
+        {/* 签名认证印章 - 像邮戳压在邮票上 */}
+        <div style={{
+          position: 'absolute',
+          bottom: '5px',
+          right: '5px',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
+          border: '2px solid rgba(255,255,255,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          color: 'white',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+          transform: 'rotate(-15deg)',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          zIndex: 10
+        }}
+        title="Web3 签名认证"
+        onClick={() => {
+          // 这里可以添加签名验证逻辑
+          console.log('验证签名认证')
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'rotate(-15deg) scale(1.1)'
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.4)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'rotate(-15deg) scale(1)'
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)'
+        }}
+        >
+          ✓
+        </div>
+        
+        {/* 印章装饰环 */}
+        <div style={{
+          position: 'absolute',
+          bottom: '3px',
+          right: '3px',
+          width: '44px',
+          height: '44px',
+          borderRadius: '50%',
+          border: '1px dashed rgba(255,255,255,0.4)',
+          pointerEvents: 'none',
+          transform: 'rotate(-15deg)'
+        }} />
       </div>
 
       {/* 用户名 */}

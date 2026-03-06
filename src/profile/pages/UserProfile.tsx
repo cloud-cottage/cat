@@ -169,6 +169,64 @@ export default function UserProfile({ username: propUsername }: { username?: str
     loadUserData()
   }, [username, address])
 
+  // 检测是否有未保存的更改
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+
+  // 离开页面自动保存功能
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isEditing && hasUnsavedChanges) {
+        e.preventDefault()
+        e.returnValue = '您有未保存的更改，确定要离开吗？'
+        
+        // 自动保存
+        autoSave()
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && isEditing && hasUnsavedChanges) {
+        // 页面隐藏时自动保存
+        autoSave()
+      }
+    }
+
+    const handlePageHide = () => {
+      if (isEditing && hasUnsavedChanges) {
+        // 页面隐藏时自动保存
+        autoSave()
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('pagehide', handlePageHide)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('pagehide', handlePageHide)
+    }
+  }, [isEditing, hasUnsavedChanges])
+
+  // 自动保存功能
+  const autoSave = async () => {
+    if (!user || !isEditing) return
+    
+    try {
+      setSaving(true)
+      await api.updateUser(username!, user)
+      await api.updateLinks(username!, links)
+      await api.updateGroups(username!, groups)
+      setHasUnsavedChanges(false)
+      console.log('自动保存成功')
+    } catch (error) {
+      console.error('自动保存失败:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   // 保存函数
   const handleSave = async () => {
     if (!user || !username) return
@@ -182,14 +240,24 @@ export default function UserProfile({ username: propUsername }: { username?: str
         api.updateGroups(username, groups)
       ])
       
-      setIsEditing(false)
-      console.log('保存成功')
+      setHasUnsavedChanges(false)
+      alert('保存成功！')
     } catch (error) {
       console.error('保存失败:', error)
+      alert('保存失败，请重试')
     } finally {
       setSaving(false)
     }
   }
+
+  // 检测链接和分组变化
+  useEffect(() => {
+    if (!isEditing) return
+    
+    // 这里可以添加更复杂的变化检测逻辑
+    // 简单起见，只要在编辑模式下就认为有未保存的更改
+    setHasUnsavedChanges(true)
+  }, [links, groups, isEditing])
 
   // 添加新链接
   const addLink = () => {
@@ -862,7 +930,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 e.currentTarget.style.color = 'rgba(255,255,255,0.9)'
               }}
             >
-              {isEditing ? '取消编辑' : '编辑我的链接'}
+              {isEditing ? '完成编辑' : '进入编辑模式'}
             </button>
             
             {isEditing && (
