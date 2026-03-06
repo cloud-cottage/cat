@@ -315,6 +315,33 @@ export const Dashboard: React.FC = () => {
   const [modules, setModules] = useState<Module[]>(THEMES[0].modules)
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  
+  // CSS 编辑器状态
+  const [cssContent, setCssContent] = useState(`:root {
+  /* 品牌色彩 */
+  --color-primary: ${THEMES[0].colors.primary};
+  --color-secondary: ${THEMES[0].colors.secondary};
+  
+  /* 背景色 */
+  --color-bg: ${THEMES[0].colors.bg};
+  --color-surface: ${THEMES[0].colors.surface};
+  
+  /* 文字颜色 */
+  --color-text-dark: #2D3748;
+  --color-text-light: #718096;
+  --color-white: #FFFFFF;
+  --color-black: #1A202C;
+  
+  /* 阴影和圆角 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --radius: 8px;
+  
+  /* 字体 */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}`)
 
   // 网格配置
   const gridSize = {
@@ -380,6 +407,34 @@ export const Dashboard: React.FC = () => {
   const handleThemeChange = (theme: Theme) => {
     setSelectedTheme(theme)
     setModules(theme.modules)
+    
+    // 更新 CSS 内容
+    const newCssContent = `:root {
+  /* 品牌色彩 */
+  --color-primary: ${theme.colors.primary};
+  --color-secondary: ${theme.colors.secondary};
+  
+  /* 背景色 */
+  --color-bg: ${theme.colors.bg};
+  --color-surface: ${theme.colors.surface};
+  
+  /* 文字颜色 */
+  --color-text-dark: #2D3748;
+  --color-text-light: #718096;
+  --color-white: #FFFFFF;
+  --color-black: #1A202C;
+  
+  /* 阴影和圆角 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --radius: 8px;
+  
+  /* 字体 */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}`
+    setCssContent(newCssContent)
   }
 
   const handleSaveLayout = async () => {
@@ -709,6 +764,92 @@ export const Dashboard: React.FC = () => {
                 <li>模块会自动对齐到网格</li>
                 <li>选择不同的主题模板来快速切换布局</li>
                 <li>点击"保存设置"来应用更改</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* CSS 编辑器 */}
+          <div style={{
+            background: selectedTheme.colors.surface,
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${selectedTheme.colors.primary}20`,
+            borderRadius: '16px',
+            padding: '1.5rem'
+          }}>
+            <h2 style={{ 
+              color: selectedTheme.colors.primary,
+              margin: '0 0 1rem 0',
+              fontSize: '1.2rem',
+              fontWeight: '600'
+            }}>
+              🎨 修改 CSS 文件
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr auto',
+              gap: '1rem',
+              alignItems: 'start'
+            }}>
+              <div>
+                <textarea
+                  value={cssContent}
+                  onChange={(e) => setCssContent(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '400px',
+                    background: 'rgba(0,0,0,0.3)',
+                    border: `1px solid ${selectedTheme.colors.primary}30`,
+                    borderRadius: '8px',
+                    padding: '1rem',
+                    color: 'white',
+                    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.5',
+                    resize: 'vertical'
+                  }}
+                  placeholder="在这里输入 CSS 代码..."
+                />
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
+              }}>
+                <button
+                  onClick={() => {
+                    // 重置为当前主题的默认 CSS
+                    handleThemeChange(selectedTheme)
+                  }}
+                  style={{
+                    background: selectedTheme.colors.primary,
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1.5rem',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  🔄 重置 CSS
+                </button>
+              </div>
+            </div>
+            <div style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '8px',
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '0.9rem'
+            }}>
+              💡 <strong>使用提示：</strong>
+              <ul style={{ margin: '0.5rem 0 0 1rem', paddingLeft: '1.5rem' }}>
+                <li>修改 CSS 变量来自定义配色方案</li>
+                <li>支持所有标准 CSS 属性和语法</li>
+                <li>点击"重置 CSS"恢复当前主题的默认样式</li>
+                <li>主题切换时会自动更新 CSS 内容</li>
               </ul>
             </div>
           </div>
