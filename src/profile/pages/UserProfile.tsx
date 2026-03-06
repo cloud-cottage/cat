@@ -52,17 +52,19 @@ const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
           overflow: 'hidden',
           minHeight: '400px'
         }}>
-          <a
-            className="twitter-timeline"
-            href={`https://twitter.com/${twitterHandle}?ref_src=twsrc%5Etfw`}
-            style={{
-              display: 'block',
-              width: '100%',
-              height: '400px'
-            }}
+          <blockquote 
+            className="twitter-tweet" 
+            data-width="500"
+            data-theme="light"
           >
-            Ta 的推特
-          </a>
+            <a 
+              href={`https://twitter.com/${twitterHandle}?ref_src=twsrc%5Etfw`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @{twitterHandle} 的推文
+            </a>
+          </blockquote>
         </div>
       </div>
     </div>
@@ -137,18 +139,28 @@ export default function UserProfile({ username: propUsername }: { username?: str
         
         if (!userData) {
           // 创建新用户，如果钱包已连接则使用钱包地址
-          const newUser = await api.createUser(username, address)
-          userData = { user: newUser, links: [], groups: [] }
+          if (address) {
+            const newUser = await api.createUser(username, address)
+            userData = { user: newUser, links: [], groups: [] }
+          } else {
+            // 如果没有钱包连接，显示提示
+            setLoading(false)
+            return
+          }
         }
         
         setUser(userData.user)
         setLinks(userData.links)
         setGroups(userData.groups)
         
+        // 设置页面标题：昵称｜CAT｜Your Web3 Paws
+        const displayName = userData.user.nickname || userData.user.username
+        document.title = `${displayName}｜CAT｜Your Web3 Paws`
+        
         // 检查是否为所有者
-        setIsOwner(!!(address && userData.user.walletAddress === address))
+        setIsOwner(!!(address && address.toLowerCase() === userData.user.walletAddress.toLowerCase()))
       } catch (error) {
-        console.error('Error loading user data:', error)
+        console.error('Error loading user:', error)
       } finally {
         setLoading(false)
       }
