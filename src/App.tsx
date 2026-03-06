@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import { useTranslation } from 'react-i18next'
 import { BlogHome, Setup, UserProfile } from './profile/pages'
 import EditBlog from './profile/pages/EditBlog'
+import { Dashboard } from './dashboard/pages/Dashboard'
 
 function HomePage() {
   const { t, i18n } = useTranslation()
@@ -33,7 +34,7 @@ function HomePage() {
 }
 
 function SubdomainRouter() {
-  const [page, setPage] = useState<'home' | 'blog' | 'user' | 'edit'>('home')
+  const [page, setPage] = useState<'home' | 'blog' | 'user' | 'edit' | 'admin'>('home')
   const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
@@ -43,8 +44,13 @@ function SubdomainRouter() {
 
     console.log('SubdomainRouter:', { hostname, pathname })
 
+    // 检查是否访问 admin 页面
+    if (pathname === '/admin' || pathname === '/dashboard') {
+      console.log('SubdomainRouter: detected /admin or /dashboard path, using admin page')
+      setPage('admin')
+    }
     // 检查是否访问 setup 页面
-    if (pathname === '/setup') {
+    else if (pathname === '/setup') {
       console.log('SubdomainRouter: detected /setup path, using Routes')
       setPage('home') // 让 Routes 处理 setup
     } else if (pathname.endsWith('/edit')) {
@@ -93,12 +99,19 @@ function SubdomainRouter() {
     return <EditBlog />
   }
 
+  if (page === 'admin') {
+    // 管理面板：直接显示管理面板
+    return <Dashboard />
+  }
+
   // 只有在主页或博客页面时才使用 Routes
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/i" element={<BlogHome />} />
       <Route path="/setup" element={<Setup />} />
+      <Route path="/admin" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/:user/edit" element={<EditBlog />} />
       <Route path="/:user" element={<UserProfile />} />
     </Routes>
