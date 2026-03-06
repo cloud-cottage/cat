@@ -70,8 +70,17 @@ export interface User {
   twitterHandle?: string
   themeId: number
   avatarUrl?: string
-  ipfsAvatar?: string  // IPFS 头像 CID
   bio?: string
+  layout?: {
+    themeId: number
+    modules: Array<{
+      id: string
+      name: string
+      component: 'profile' | 'links' | 'twitter'
+      position: { x: number; y: number }
+      size: { width: number; height: number }
+    }>
+  }
   createdAt: string
   updatedAt: string
 }
@@ -370,11 +379,8 @@ export const getTwitterAvatarUrl = (handle: string): string => {
 // 获取用户头像URL (支持 IPFS)
 export const getUserAvatarUrl = (user: User): string => {
   // 优先级：IPFS 头像 > 传统头像 > 推特头像
-  if (user.ipfsAvatar) {
-    return getIPFSUrl(user.ipfsAvatar)
-  }
   if (user.avatarUrl) {
-    return user.avatarUrl
+    return user.avatarUrl.startsWith('http') ? user.avatarUrl : `https://ipfs.io/ipfs/${user.avatarUrl}`
   }
   if (user.twitterHandle) {
     return getTwitterAvatarUrl(user.twitterHandle)
