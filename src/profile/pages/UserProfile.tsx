@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, detectIconFromUrl, detectTitleFromUrl, getUserAvatarUrl } from '../lib/api'
+import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, getUserAvatarUrl } from '../lib/api'
 import { SettingsModal } from '../components/SettingsModal'
 
 // 主题配置 - 从 admin 面板导入相同的主题
@@ -155,18 +155,6 @@ const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
   )
 }
 
-// 按分组组织链接的辅助函数
-const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
-  if (groups.length === 0) {
-    // 没有分组时，显示所有链接
-    return [{ group: null, links }]
-  }
-  
-  return groups.map(group => ({
-    group,
-    links: links.filter(link => link.group === group.id)
-  })).filter(group => group.links.length > 0) // 只显示有链接的分组
-}
 
 // 获取图标
 const getIconElement = (iconId?: string): React.ReactNode => {
@@ -327,60 +315,9 @@ export default function UserProfile({ username: propUsername }: { username?: str
     setHasUnsavedChanges(true)
   }, [links, groups, isEditing])
 
-  // 添加新链接
-  const addLink = () => {
-    const newLink: Link = {
-      id: Date.now().toString(),
-      label: '新链接',
-      url: '',
-      description: '',
-      group: '',
-      icon: 'link',
-      order: links.length + 1,
-      userId: username!,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-    setLinks([...links, newLink])
-  }
 
-  // 更新链接
-  const updateLink = (id: string, field: keyof Link, value: string | number) => {
-    setLinks(links.map(link => {
-      if (link.id === id) {
-        const updatedLink = { ...link, [field]: value }
-        
-        // 如果更新的是URL，自动检测图标和标题
-        if (field === 'url' && typeof value === 'string') {
-          const detectedIcon = detectIconFromUrl(value)
-          const detectedTitle = detectTitleFromUrl(value)
-          updatedLink.icon = detectedIcon
-          updatedLink.label = detectedTitle
-        }
-        
-        return updatedLink
-      }
-      return link
-    }))
-  }
 
-  // 删除链接
-  const deleteLink = (id: string) => {
-    setLinks(links.filter(link => link.id !== id))
-  }
 
-  // 添加新分组
-  const addGroup = () => {
-    const newGroup: LinkGroup = {
-      id: Date.now().toString(),
-      userId: username!,
-      name: '新分组',
-      order: groups.length + 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-    setGroups([...groups, newGroup])
-  }
 
   // 保存设置
   const handleSaveSettings = async (updatedUser: User) => {
@@ -393,17 +330,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
     }
   }
 
-  // 更新分组
-  const updateGroup = (id: string, field: keyof LinkGroup, value: string | number) => {
-    setGroups(groups.map(group => 
-      group.id === id ? { ...group, [field]: value } : group
-    ))
-  }
 
-  // 删除分组
-  const deleteGroup = (id: string) => {
-    setGroups(groups.filter(group => group.id !== id))
-  }
 
   if (loading) {
     return <div className="blog-container">加载中...</div>
