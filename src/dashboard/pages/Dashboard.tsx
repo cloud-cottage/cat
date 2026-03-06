@@ -58,6 +58,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 0, y: 3 },
         size: { width: 6, height: 3 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 6 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -93,6 +100,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 4 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 6 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -127,6 +141,13 @@ const THEMES: Theme[] = [
         name: '社交媒体',
         component: 'social',
         position: { x: 0, y: 2 },
+        size: { width: 6, height: 4 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 6 },
         size: { width: 6, height: 4 }
       }
     ]
@@ -163,6 +184,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 3 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 5 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -198,6 +226,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 2, y: 2 },
         size: { width: 4, height: 3 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 5 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -233,6 +268,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 3, y: 2 },
         size: { width: 3, height: 3 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 5 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -268,6 +310,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 2, y: 2 },
         size: { width: 4, height: 4 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 6 },
+        size: { width: 6, height: 4 }
       }
     ]
   },
@@ -303,6 +352,13 @@ const THEMES: Theme[] = [
         component: 'social',
         position: { x: 0, y: 2 },
         size: { width: 6, height: 4 }
+      },
+      {
+        id: 'twitter',
+        name: '推特动态',
+        component: 'twitter',
+        position: { x: 0, y: 6 },
+        size: { width: 6, height: 4 }
       }
     ]
   }
@@ -314,6 +370,7 @@ export const Dashboard: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0])
   const [modules, setModules] = useState<Module[]>(THEMES[0].modules)
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
+  const [resizingModule, setResizingModule] = useState<{ module: Module; direction: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   
   // CSS 编辑器状态
@@ -385,6 +442,31 @@ export const Dashboard: React.FC = () => {
     loadUser()
   }, [address])
 
+  // 处理调整大小的全局事件
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (resizingModule) {
+        handleResize(e as any)
+      }
+    }
+
+    const handleMouseUp = () => {
+      if (resizingModule) {
+        handleResizeEnd()
+      }
+    }
+
+    if (resizingModule) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [resizingModule])
+
   const handleDragStart = (module: Module) => {
     setDraggedModule(module)
   }
@@ -413,6 +495,41 @@ export const Dashboard: React.FC = () => {
         : m
     ))
     setDraggedModule(null)
+  }
+
+  const handleResizeStart = (module: Module, direction: string) => {
+    setResizingModule({ module, direction })
+  }
+
+  const handleResizeEnd = () => {
+    setResizingModule(null)
+  }
+
+  const handleResize = (e: React.MouseEvent) => {
+    if (!resizingModule || !gridRef.current) return
+
+    const rect = gridRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    const cellWidth = rect.width / gridSize.cols
+    const cellHeight = rect.height / gridSize.rows
+
+    let newWidth = resizingModule.module.size.width
+    let newHeight = resizingModule.module.size.height
+
+    if (resizingModule.direction.includes('right')) {
+      newWidth = Math.max(1, Math.min(gridSize.cols - resizingModule.module.position.x, Math.ceil(x / cellWidth)))
+    }
+    if (resizingModule.direction.includes('bottom')) {
+      newHeight = Math.max(1, Math.min(gridSize.rows - resizingModule.module.position.y, Math.ceil(y / cellHeight)))
+    }
+
+    setModules(prev => prev.map(m => 
+      m.id === resizingModule.module.id 
+        ? { ...m, size: { width: newWidth, height: newHeight } }
+        : m
+    ))
   }
 
   const handleThemeChange = (theme: Theme) => {
@@ -762,6 +879,35 @@ export const Dashboard: React.FC = () => {
                     <div style={{ fontSize: '0.9rem' }}>
                       {module.name}
                     </div>
+                  </div>
+                  
+                  {/* 调整大小的手柄 */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '0',
+                      bottom: '0',
+                      width: '16px',
+                      height: '16px',
+                      background: 'rgba(255,255,255,0.8)',
+                      border: '2px solid ' + selectedTheme.colors.primary,
+                      borderRadius: '0 0 6px 0',
+                      cursor: 'se-resize',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation()
+                      handleResizeStart(module, 'right-bottom')
+                    }}
+                  >
+                    <div style={{
+                      width: '4px',
+                      height: '4px',
+                      background: selectedTheme.colors.primary,
+                      borderRadius: '50%'
+                    }} />
                   </div>
                 </div>
               ))}

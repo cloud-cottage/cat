@@ -330,6 +330,39 @@ export default function UserProfile({ username: propUsername }: { username?: str
     }
   }
 
+  // 添加新链接
+  const addLink = () => {
+    const newLink: Link = {
+      id: Date.now().toString(),
+      label: '新链接',
+      url: '',
+      description: '',
+      group: '',
+      icon: 'link',
+      order: links.length + 1,
+      userId: username!,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+    setLinks([...links, newLink])
+  }
+
+  // 更新链接
+  const updateLink = (id: string, field: keyof Link, value: string | number) => {
+    setLinks(links.map(link => {
+      if (link.id === id) {
+        const updatedLink = { ...link, [field]: value }
+        return updatedLink
+      }
+      return link
+    }))
+  }
+
+  // 删除链接
+  const deleteLink = (id: string) => {
+    setLinks(links.filter(link => link.id !== id))
+  }
+
 
 
   if (loading) {
@@ -625,6 +658,31 @@ export default function UserProfile({ username: propUsername }: { username?: str
               }}>
                 暂无链接
               </p>
+              {isEditing && (
+                <button
+                  onClick={addLink}
+                  style={{
+                    marginTop: '1rem',
+                    padding: '0.75rem 1.5rem',
+                    background: currentTheme.colors.primary + '20',
+                    border: `1px solid ${currentTheme.colors.primary}40`,
+                    borderRadius: '8px',
+                    color: currentTheme.colors.primary,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = currentTheme.colors.primary + '30'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = currentTheme.colors.primary + '20'
+                  }}
+                >
+                  + 添加第一个链接
+                </button>
+              )}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -661,29 +719,163 @@ export default function UserProfile({ username: propUsername }: { username?: str
                   }}
                 >
                   <span style={{ fontSize: '1.3rem' }}>
-                    {getIconElement(link.icon)}
+                    {isEditing ? (
+                      <select
+                        value={link.icon || 'link'}
+                        onChange={(e) => updateLink(link.id, 'icon', e.target.value)}
+                        style={{
+                          background: currentTheme.colors.surface + '20',
+                          border: `1px solid ${currentTheme.colors.primary}30`,
+                          borderRadius: '6px',
+                          color: currentTheme.id === 4 ? 'white' : currentTheme.colors.primary,
+                          padding: '0.25rem',
+                          fontSize: '1rem'
+                        }}
+                      >
+                        {PREDEFINED_ICONS.map(icon => (
+                          <option key={icon.id} value={icon.id}>
+                            {icon.emoji} {icon.name}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      getIconElement(link.icon)
+                    )}
                   </span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
-                      {link.label}
-                    </div>
-                    {link.description && (
-                      <div style={{ 
-                        fontSize: '0.85rem', 
-                        opacity: 0.8,
-                        lineHeight: 1.3
-                      }}>
-                        {link.description}
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={link.label}
+                        onChange={(e) => updateLink(link.id, 'label', e.target.value)}
+                        style={{
+                          width: '100%',
+                          background: currentTheme.colors.surface + '20',
+                          border: `1px solid ${currentTheme.colors.primary}30`,
+                          borderRadius: '6px',
+                          color: currentTheme.id === 4 ? 'white' : '#333',
+                          padding: '0.5rem',
+                          fontSize: '1rem',
+                          fontWeight: '600',
+                          marginBottom: '0.5rem'
+                        }}
+                      />
+                    ) : (
+                      <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                        {link.label}
                       </div>
                     )}
+                    
+                    {isEditing ? (
+                      <textarea
+                        value={link.description || ''}
+                        onChange={(e) => updateLink(link.id, 'description', e.target.value)}
+                        placeholder="链接说明（可选）"
+                        rows={2}
+                        style={{
+                          width: '100%',
+                          background: currentTheme.colors.surface + '20',
+                          border: `1px solid ${currentTheme.colors.primary}30`,
+                          borderRadius: '6px',
+                          color: currentTheme.id === 4 ? 'white' : '#333',
+                          padding: '0.5rem',
+                          fontSize: '0.9rem',
+                          marginBottom: '0.5rem',
+                          resize: 'vertical'
+                        }}
+                      />
+                    ) : (
+                      link.description && (
+                        <div style={{ 
+                          fontSize: '0.85rem', 
+                          opacity: 0.8,
+                          lineHeight: 1.3
+                        }}>
+                          {link.description}
+                        </div>
+                      )
+                    )}
+                    
+                    {isEditing ? (
+                      <input
+                        type="url"
+                        value={link.url}
+                        onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                        placeholder="https://example.com"
+                        style={{
+                          width: '100%',
+                          background: currentTheme.colors.surface + '20',
+                          border: `1px solid ${currentTheme.colors.primary}30`,
+                          borderRadius: '6px',
+                          color: currentTheme.id === 4 ? 'white' : '#333',
+                          padding: '0.5rem',
+                          fontSize: '0.8rem',
+                          fontFamily: 'monospace'
+                        }}
+                      />
+                    ) : (
+                      link.url && (
+                        <div style={{
+                          fontSize: '0.8rem',
+                          opacity: 0.6,
+                          fontFamily: 'monospace',
+                          wordBreak: 'break-all'
+                        }}>
+                          {link.url}
+                        </div>
+                      )
+                    )}
                   </div>
-                  {!isEditing && (
+                  
+                  {isEditing ? (
+                    <button
+                      onClick={() => deleteLink(link.id)}
+                      style={{
+                        padding: '0.5rem',
+                        background: 'rgba(244, 67, 54, 0.8)',
+                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        borderRadius: '6px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem'
+                      }}
+                    >
+                      删除
+                    </button>
+                  ) : (
                     <span style={{ fontSize: '1rem', opacity: 0.7 }}>
                       →
                     </span>
                   )}
                 </div>
               ))}
+              
+              {isEditing && (
+                <button
+                  onClick={addLink}
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    background: currentTheme.colors.primary + '20',
+                    border: `1px solid ${currentTheme.colors.primary}40`,
+                    borderRadius: '12px',
+                    color: currentTheme.colors.primary,
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    marginTop: '1rem',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = currentTheme.colors.primary + '30'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = currentTheme.colors.primary + '20'
+                  }}
+                >
+                  + 添加新链接
+                </button>
+              )}
             </div>
           )}
         </div>
