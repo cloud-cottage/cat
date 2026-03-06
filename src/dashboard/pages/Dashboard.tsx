@@ -373,6 +373,15 @@ export const Dashboard: React.FC = () => {
   const [resizingModule, setResizingModule] = useState<{ module: Module; direction: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   
+  // 被禁止的用户名管理状态
+  const [newForbiddenUsername, setNewForbiddenUsername] = useState('')
+  const [forbiddenUsernames, setForbiddenUsernames] = useState<string[]>([
+    'admin', 'administrator', 'root', 'system', 'api', 'www', 'mail', 'ftp',
+    'i', 'username', 'user', 'users', 'profile', 'profiles', 'edit', 'editor',
+    'setup', 'config', 'configuration', 'settings', 'dashboard', 'admin',
+    'test', 'demo', 'example', 'sample', 'temp', 'temporary'
+  ])
+  
   // CSS 编辑器状态
   const [cssContent, setCssContent] = useState(`:root {
   /* 品牌色彩 */
@@ -567,20 +576,25 @@ export const Dashboard: React.FC = () => {
 
   const handleApplyLayout = async () => {
     if (!user) return
-
+    
     setIsSaving(true)
     try {
+      // 创建用户布局配置
+      const userLayout = {
+        themeId: selectedTheme.id,
+        modules: modules,
+        updatedAt: new Date().toISOString()
+      }
+      
       const updatedUser = {
         ...user,
-        layout: {
-          themeId: selectedTheme.id,
-          modules: modules
-        }
+        layout: userLayout
       }
+      
       await api.updateUser('admin', updatedUser)
       setUser(updatedUser)
       console.log('布局应用成功')
-      alert('布局已应用！')
+      alert('布局已应用并保存！')
     } catch (error) {
       console.error('应用布局失败:', error)
       alert('应用布局失败，请重试')
@@ -599,6 +613,29 @@ export const Dashboard: React.FC = () => {
     document.head.appendChild(styleElement)
     
     alert('CSS 文件已应用！')
+  }
+
+  // 处理被禁止的用户名
+  const handleAddForbiddenUsername = () => {
+    if (!newForbiddenUsername.trim()) {
+      alert('请输入用户名')
+      return
+    }
+    
+    if (forbiddenUsernames.includes(newForbiddenUsername.trim())) {
+      alert('该用户名已在禁止名单中')
+      return
+    }
+    
+    setForbiddenUsernames([...forbiddenUsernames, newForbiddenUsername.trim()])
+    setNewForbiddenUsername('')
+    alert('用户名已添加到禁止名单')
+  }
+
+  const handleRemoveForbiddenUsername = (index: number) => {
+    const updatedList = forbiddenUsernames.filter((_, i) => i !== index)
+    setForbiddenUsernames(updatedList)
+    alert('用户名已从禁止名单中移除')
   }
 
   const renderGridLines = () => {
@@ -711,7 +748,7 @@ export const Dashboard: React.FC = () => {
             fontSize: '1.5rem',
             fontWeight: '700'
           }}>
-            🎨 布局管理面板
+            🎨 管理面板
           </h1>
         </div>
       </div>
@@ -724,7 +761,7 @@ export const Dashboard: React.FC = () => {
         gridTemplateColumns: '280px 1fr',
         gap: '2rem'
       }}>
-        {/* 左侧侧边栏 - 主题选择 */}
+        {/* 左侧侧边栏 - 主题选择和管理功能 */}
         <div>
           <div style={{
             background: selectedTheme.colors.surface,
@@ -764,13 +801,13 @@ export const Dashboard: React.FC = () => {
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem'
+                    gap: '1rem'
                   }}>
                     <div style={{
                       width: '40px',
                       height: '40px',
                       borderRadius: '8px',
-                      background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+                      background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -801,6 +838,112 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* 被禁止的用户名管理 */}
+          <div style={{
+            background: selectedTheme.colors.surface,
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${selectedTheme.colors.primary}20`,
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginTop: '1.5rem'
+          }}>
+            <h2 style={{ 
+              color: selectedTheme.colors.primary,
+              margin: '0 0 1rem 0',
+              fontSize: '1.2rem',
+              fontWeight: '600'
+            }}>
+              🚫 被禁止的用户名
+            </h2>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem'
+            }}>
+              {/* 添加新禁用用户名 */}
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem'
+              }}>
+                <input
+                  type="text"
+                  value={newForbiddenUsername}
+                  onChange={(e) => setNewForbiddenUsername(e.target.value)}
+                  placeholder="输入要禁止的用户名"
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${selectedTheme.colors.primary}30`,
+                    borderRadius: '8px',
+                    color: selectedTheme.colors.primary,
+                    fontSize: '0.9rem'
+                  }}
+                />
+                <button
+                  onClick={handleAddForbiddenUsername}
+                  style={{
+                    padding: '0.75rem 1rem',
+                    background: selectedTheme.colors.primary + '20',
+                    border: `1px solid ${selectedTheme.colors.primary}40`,
+                    borderRadius: '8px',
+                    color: selectedTheme.colors.primary,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                  }}
+                >
+                  添加
+                </button>
+              </div>
+              
+              {/* 禁用用户名列表 */}
+              <div style={{
+                maxHeight: '200px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
+              }}>
+                {forbiddenUsernames.map((username, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.5rem 0.75rem',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: `1px solid ${selectedTheme.colors.primary}20`,
+                      borderRadius: '6px'
+                    }}
+                  >
+                    <span style={{
+                      color: selectedTheme.colors.primary,
+                      fontSize: '0.9rem'
+                    }}>
+                      {username}
+                    </span>
+                    <button
+                      onClick={() => handleRemoveForbiddenUsername(index)}
+                      style={{
+                        padding: '0.25rem 0.5rem',
+                        background: 'rgba(244, 67, 54, 0.8)',
+                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        borderRadius: '4px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem'
+                      }}
+                    >
+                      删除
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
