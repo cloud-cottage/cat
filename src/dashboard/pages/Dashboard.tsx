@@ -110,8 +110,21 @@ export const Dashboard: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0])
   const [modules, setModules] = useState<Module[]>(THEMES[0].modules)
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
-  const [gridSize] = useState({ cols: 4, rows: 10 })
+  const [resizingModule, setResizingModule] = useState<{
+    module: Module
+    direction: 'left' | 'right' | 'top' | 'bottom'
+    startX: number
+    startY: number
+    startWidth: number
+    startHeight: number
+  } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+
+  // 网格配置
+  const gridSize = {
+    cols: 6,  // 改为 6 列
+    rows: 9   // 改为 9 行
+  }
 
   const gridRef = useRef<HTMLDivElement>(null)
 
@@ -144,6 +157,59 @@ export const Dashboard: React.FC = () => {
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
+  }
+
+  // 调整大小处理函数
+  const handleResizeStart = (e: React.MouseEvent, module: Module, direction: 'left' | 'right' | 'top' | 'bottom') => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    setResizingModule({
+      module,
+      direction,
+      startX: e.clientX,
+      startY: e.clientY,
+      startWidth: module.size.width,
+      startHeight: module.size.height
+    })
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!resizingModule) return
+
+      const deltaX = moveEvent.clientX - resizingModule.startX
+      const deltaY = moveEvent.clientY - resizingModule.startY
+
+      const cellWidth = gridRef.current ? gridRef.current.offsetWidth / gridSize.cols : 0
+      const cellHeight = gridRef.current ? gridRef.current.offsetHeight / gridSize.rows : 0
+
+      let newWidth = resizingModule.startWidth
+      let newHeight = resizingModule.startHeight
+
+      if (direction === 'right') {
+        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(resizingModule.startWidth + deltaX / cellWidth)))
+      } else if (direction === 'bottom') {
+        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(resizingModule.startHeight + deltaY / cellHeight)))
+      } else if (direction === 'left') {
+        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(resizingModule.startWidth - deltaX / cellWidth)))
+      } else if (direction === 'top') {
+        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(resizingModule.startHeight - deltaY / cellHeight)))
+      }
+
+      setModules(prev => prev.map(m => 
+        m.id === module.id 
+          ? { ...m, size: { width: newWidth, height: newHeight } }
+          : m
+      ))
+    }
+
+    const handleMouseUp = () => {
+      setResizingModule(null)
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   const handleThemeChange = (theme: Theme) => {
@@ -412,6 +478,126 @@ export const Dashboard: React.FC = () => {
                     {module.name}
                   </div>
                 </div>
+
+                {/* 调整大小手柄 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '4px',
+                    right: '4px',
+                    height: '4px',
+                    background: 'transparent',
+                    cursor: 'ns-resize'
+                  }}
+                  onMouseDown={(e) => handleResizeStart(e, module, 'top')}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '4px',
+                    right: '4px',
+                    height: '4px',
+                    background: 'transparent',
+                    cursor: 'ns-resize'
+                  }}
+                  onMouseDown={(e) => handleResizeStart(e, module, 'bottom')}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: '4px',
+                    bottom: '4px',
+                    width: '4px',
+                    background: 'transparent',
+                    cursor: 'ew-resize'
+                  }}
+                  onMouseDown={(e) => handleResizeStart(e, module, 'left')}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '4px',
+                    bottom: '4px',
+                    width: '4px',
+                    background: 'transparent',
+                    cursor: 'ew-resize'
+                  }}
+                  onMouseDown={(e) => handleResizeStart(e, module, 'right')}
+                />
+
+                {/* 角落调整手柄 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '8px',
+                    height: '8px',
+                    background: 'rgba(255,255,255,0.5)',
+                    cursor: 'nw-resize',
+                    borderRadius: '2px 0 0 0'
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleResizeStart(e, module, 'top')
+                    handleResizeStart(e, module, 'left')
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    background: 'rgba(255,255,255,0.5)',
+                    cursor: 'ne-resize',
+                    borderRadius: '0 2px 0 0'
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleResizeStart(e, module, 'top')
+                    handleResizeStart(e, module, 'right')
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '8px',
+                    height: '8px',
+                    background: 'rgba(255,255,255,0.5)',
+                    cursor: 'sw-resize',
+                    borderRadius: '0 0 0 2px'
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleResizeStart(e, module, 'bottom')
+                    handleResizeStart(e, module, 'left')
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    background: 'rgba(255,255,255,0.5)',
+                    cursor: 'se-resize',
+                    borderRadius: '0 0 2px 0'
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleResizeStart(e, module, 'bottom')
+                    handleResizeStart(e, module, 'right')
+                  }}
+                />
               </div>
             ))}
           </div>

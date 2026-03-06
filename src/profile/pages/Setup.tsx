@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { api } from '../lib/api'
+import { api, validateUsername } from '../lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
 export default function Setup() {
@@ -13,19 +13,21 @@ export default function Setup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('handleSubmit called:', { username, isConnected, address })
-    
-    if (!username) {
-      setError('请设置用户名')
-      return
-    }
-    if (/^\d/.test(username)) {
-      setError('用户名不能以数字开头')
-      return
-    }
     
     if (!isConnected || !address) {
       setError('请先连接钱包')
+      return
+    }
+    
+    if (!username.trim()) {
+      setError('请输入用户名')
+      return
+    }
+    
+    // 验证用户名
+    const validation = validateUsername(username.trim())
+    if (!validation.valid) {
+      setError(validation.reason || '用户名无效')
       return
     }
     
@@ -34,19 +36,19 @@ export default function Setup() {
     try {
       console.log('Creating user:', { username, address })
       // 检查用户是否已存在
-      const existingUser = await api.getUserByUsername(username)
+      const existingUser = await api.getUserByUsername(username.trim())
       if (existingUser) {
-        localStorage.setItem('current_username', username)
+        localStorage.setItem('current_username', username.trim())
         // 跳转到用户子域名
-        window.location.href = `https://${username}.catcat.meme/`
+        window.location.href = `https://${username.trim()}.catcat.meme/`
         return
       }
       
       // 创建新用户，使用钱包地址
-      await api.createUser(username, address)
-      localStorage.setItem('current_username', username)
+      await api.createUser(username.trim(), address)
+      localStorage.setItem('current_username', username.trim())
       // 跳转到用户子域名
-      window.location.href = `https://${username}.catcat.meme/`
+      window.location.href = `https://${username.trim()}.catcat.meme/`
     } catch (err) {
       console.error('Setup error:', err)
       setError('保存失败，请重试')

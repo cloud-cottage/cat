@@ -416,6 +416,79 @@ export const validateNickname = (nickname: string): boolean => {
   return totalLength <= 8
 }
 
+// 用户名禁止词库
+const FORBIDDEN_USERNAMES = [
+  // 敏感词汇
+  'fuck', 'shit', 'damn', 'hell', 'bitch', 'bastard', 'asshole',
+  '操', '妈', '逼', '傻', '逼', '死', '滚', '草', '尼玛',
+  
+  // 系统保留词
+  'admin', 'administrator', 'root', 'system', 'api', 'www', 'mail', 'ftp',
+  'i', 'username', 'user', 'users', 'profile', 'profiles', 'edit', 'editor',
+  'setup', 'config', 'configuration', 'settings', 'dashboard', 'admin',
+  'test', 'demo', 'example', 'sample', 'temp', 'temporary',
+  'null', 'undefined', 'false', 'true', 'void', 'empty',
+  
+  // 常见攻击词汇
+  'xss', 'csrf', 'sql', 'injection', 'hack', 'hacker', 'exploit',
+  
+  // 常见垃圾词汇
+  'spam', 'ad', 'advertisement', 'promo', 'promotion', 'marketing',
+  
+  // 保留的子域名
+  'catcat', 'www', 'mail', 'ftp', 'api', 'cdn', 'static', 'assets',
+  'img', 'image', 'images', 'js', 'css', 'font', 'fonts',
+  
+  // 数字和特殊字符组合
+  '123', '123456', 'admin123', 'test123', 'user123'
+]
+
+// 验证用户名是否可用
+export const validateUsername = (username: string): { valid: boolean; reason?: string } => {
+  if (!username) {
+    return { valid: false, reason: '用户名不能为空' }
+  }
+  
+  // 长度检查
+  if (username.length < 3) {
+    return { valid: false, reason: '用户名长度至少3个字符' }
+  }
+  
+  if (username.length > 20) {
+    return { valid: false, reason: '用户名长度不能超过20个字符' }
+  }
+  
+  // 字符检查：只允许字母、数字、下划线、连字符
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    return { valid: false, reason: '用户名只能包含字母、数字、下划线和连字符' }
+  }
+  
+  // 不能以数字或特殊字符开头
+  if (/^[0-9_-]/.test(username)) {
+    return { valid: false, reason: '用户名必须以字母开头' }
+  }
+  
+  // 检查禁止词
+  const lowerUsername = username.toLowerCase()
+  for (const forbidden of FORBIDDEN_USERNAMES) {
+    if (lowerUsername.includes(forbidden)) {
+      return { valid: false, reason: `用户名包含禁止使用的词汇: ${forbidden}` }
+    }
+  }
+  
+  // 检查是否全为数字
+  if (/^\d+$/.test(username)) {
+    return { valid: false, reason: '用户名不能全为数字' }
+  }
+  
+  // 检查连续字符
+  if (/(.)\1{2,}/.test(username)) {
+    return { valid: false, reason: '用户名不能包含连续重复的字符' }
+  }
+  
+  return { valid: true }
+}
+
 const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36)
 
 // 临时使用 localStorage 作为后备方案

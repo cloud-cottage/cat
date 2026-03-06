@@ -174,6 +174,19 @@ window.location.href = `https://${username}.catcat.meme/`
 console.log('SubdomainRouter:', { hostname, pathname })
 ```
 
+### 📝 Git 提交规范
+
+**重要规则**：
+- Git commit 信息要简洁
+- 设定字数上限：不超过 100 字符
+- 避免详细描述，用代码注释说明
+
+**示例**：
+```
+✅ 好的：Add username validation and resize handles
+❌ 不好的：Implement comprehensive username filtering system with forbidden words and add interactive resize functionality to dashboard modules with edge and corner handles
+```
+
 ### API 接口
 
 - `GET /api/user-kv.js?username={username}` - 获取用户信息
