@@ -437,7 +437,7 @@ export const Dashboard: React.FC = () => {
     setCssContent(newCssContent)
   }
 
-  const handleSaveLayout = async () => {
+  const handleApplyLayout = async () => {
     if (!user) return
 
     setIsSaving(true)
@@ -451,16 +451,37 @@ export const Dashboard: React.FC = () => {
       }
       await api.updateUser('admin', updatedUser)
       setUser(updatedUser)
-      console.log('布局保存成功')
+      console.log('布局应用成功')
+      alert('布局已应用！')
     } catch (error) {
-      console.error('保存布局失败:', error)
+      console.error('应用布局失败:', error)
+      alert('应用布局失败，请重试')
     } finally {
       setIsSaving(false)
     }
   }
 
+  const handleApplyCSS = async () => {
+    // 保存 CSS 到 localStorage
+    localStorage.setItem('custom-css', cssContent)
+    
+    // 动态应用 CSS
+    const styleElement = document.createElement('style')
+    styleElement.textContent = cssContent
+    document.head.appendChild(styleElement)
+    
+    alert('CSS 文件已应用！')
+  }
+
   const renderGridLines = () => {
     const lines = []
+    
+    // 计算互补色
+    const hexColor = selectedTheme.colors.bg.replace('#', '')
+    const r = parseInt(hexColor.substr(0, 2), 16)
+    const g = parseInt(hexColor.substr(2, 2), 16)
+    const b = parseInt(hexColor.substr(4, 2), 16)
+    const complementColor = `rgb(${255 - r}, ${255 - g}, ${255 - b})`
     
     // 垂直线
     for (let i = 0; i <= gridSize.cols; i++) {
@@ -473,7 +494,8 @@ export const Dashboard: React.FC = () => {
             top: 0,
             bottom: 0,
             width: '1px',
-            background: 'rgba(255,255,255,0.1)',
+            background: complementColor,
+            opacity: 0.3,
             pointerEvents: 'none'
           }}
         />
@@ -491,7 +513,8 @@ export const Dashboard: React.FC = () => {
             left: 0,
             right: 0,
             height: '1px',
-            background: 'rgba(255,255,255,0.1)',
+            background: complementColor,
+            opacity: 0.3,
             pointerEvents: 'none'
           }}
         />
@@ -562,24 +585,6 @@ export const Dashboard: React.FC = () => {
           }}>
             🎨 布局管理面板
           </h1>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button
-              onClick={handleSaveLayout}
-              disabled={isSaving}
-              style={{
-                background: isSaving ? 'rgba(255,255,255,0.3)' : selectedTheme.colors.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.75rem 1.5rem',
-                cursor: isSaving ? 'not-allowed' : 'pointer',
-                fontSize: '1rem',
-                fontWeight: '500'
-              }}
-            >
-              {isSaving ? '保存中...' : '保存设置'}
-            </button>
-          </div>
         </div>
       </div>
 
@@ -758,12 +763,32 @@ export const Dashboard: React.FC = () => {
               color: 'rgba(255,255,255,0.8)',
               fontSize: '0.9rem'
             }}>
-              💡 <strong>使用提示：</strong>
-              <ul style={{ margin: '0.5rem 0 0 1rem', paddingLeft: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div>
+                  💡 <strong>使用提示：</strong>
+                </div>
+                <button
+                  onClick={handleApplyLayout}
+                  disabled={isSaving}
+                  style={{
+                    background: isSaving ? 'rgba(255,255,255,0.3)' : selectedTheme.colors.primary,
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.5rem 1rem',
+                    cursor: isSaving ? 'not-allowed' : 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                  }}
+                >
+                  {isSaving ? '应用中...' : '应用布局'}
+                </button>
+              </div>
+              <ul style={{ margin: '0', paddingLeft: '1.5rem' }}>
                 <li>拖拽模块到新位置来调整布局</li>
                 <li>模块会自动对齐到网格</li>
                 <li>选择不同的主题模板来快速切换布局</li>
-                <li>点击"保存设置"来应用更改</li>
+                <li>点击"应用布局"来应用更改</li>
               </ul>
             </div>
           </div>
@@ -834,6 +859,22 @@ export const Dashboard: React.FC = () => {
                 >
                   🔄 重置 CSS
                 </button>
+                <button
+                  onClick={handleApplyCSS}
+                  style={{
+                    background: selectedTheme.colors.secondary,
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1.5rem',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  📝 应用 CSS 文件
+                </button>
               </div>
             </div>
             <div style={{
@@ -849,6 +890,7 @@ export const Dashboard: React.FC = () => {
                 <li>修改 CSS 变量来自定义配色方案</li>
                 <li>支持所有标准 CSS 属性和语法</li>
                 <li>点击"重置 CSS"恢复当前主题的默认样式</li>
+                <li>点击"应用 CSS 文件"来应用自定义样式</li>
                 <li>主题切换时会自动更新 CSS 内容</li>
               </ul>
             </div>
