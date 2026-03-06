@@ -10,7 +10,6 @@ import Partners from './components/Partners'
 import Footer from './components/Footer'
 import { useTranslation } from 'react-i18next'
 import { BlogHome, Setup, UserProfile } from './profile/pages'
-import EditBlog from './profile/pages/EditBlog'
 import { Dashboard } from './dashboard/pages/Dashboard'
 
 function HomePage() {
@@ -34,7 +33,7 @@ function HomePage() {
 }
 
 function SubdomainRouter() {
-  const [page, setPage] = useState<'home' | 'blog' | 'user' | 'edit' | 'admin'>('home')
+  const [page, setPage] = useState<'home' | 'blog' | 'user' | 'admin'>('home')
   const [username, setUsername] = useState<string>('')
   const [ready, setReady] = useState(false)
 
@@ -45,17 +44,14 @@ function SubdomainRouter() {
     console.log('SubdomainRouter:', { hostname, pathname })
 
     // 检查是否访问 admin 页面
-    if (pathname === '/admin' || pathname === '/dashboard') {
-      console.log('SubdomainRouter: detected /admin or /dashboard path, using admin page')
+    if (pathname === '/admin') {
+      console.log('SubdomainRouter: detected /admin path, using admin page')
       setPage('admin')
     }
     // 检查是否访问 setup 页面
     else if (pathname === '/setup') {
       console.log('SubdomainRouter: detected /setup path, using Routes')
       setPage('home') // 让 Routes 处理 setup
-    } else if (pathname.endsWith('/edit')) {
-      console.log('SubdomainRouter: detected /edit path, setting edit page')
-      setPage('edit') // 设置为编辑页面
     } else if (hostname === 'i.catcat.meme') {
       console.log('SubdomainRouter: detected i.catcat.meme, showing BlogHome')
       setPage('blog')
@@ -94,11 +90,6 @@ function SubdomainRouter() {
     return <UserProfile username={username} />
   }
 
-  if (page === 'edit') {
-    // 编辑页面：直接显示编辑页面，传递用户名
-    return <EditBlog />
-  }
-
   if (page === 'admin') {
     // 管理面板：直接显示管理面板
     return <Dashboard />
@@ -111,8 +102,6 @@ function SubdomainRouter() {
       <Route path="/i" element={<BlogHome />} />
       <Route path="/setup" element={<Setup />} />
       <Route path="/admin" element={<Dashboard />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/:user/edit" element={<EditBlog />} />
       <Route path="/:user" element={<UserProfile />} />
     </Routes>
   )
