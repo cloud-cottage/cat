@@ -110,14 +110,6 @@ export const Dashboard: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0])
   const [modules, setModules] = useState<Module[]>(THEMES[0].modules)
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
-  const [resizingModule, setResizingModule] = useState<{
-    module: Module
-    direction: 'left' | 'right' | 'top' | 'bottom'
-    startX: number
-    startY: number
-    startWidth: number
-    startHeight: number
-  } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
   // 网格配置
@@ -159,40 +151,58 @@ export const Dashboard: React.FC = () => {
     e.preventDefault()
   }
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!draggedModule || !gridRef.current) return
+
+    const rect = gridRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+
+    const cellWidth = rect.width / gridSize.cols
+    const cellHeight = rect.height / gridSize.rows
+
+    const newCol = Math.max(0, Math.min(gridSize.cols - draggedModule.size.width, Math.floor(x / cellWidth)))
+    const newRow = Math.max(0, Math.min(gridSize.rows - draggedModule.size.height, Math.floor(y / cellHeight)))
+
+    setModules(prev => prev.map(m => 
+      m.id === draggedModule.id 
+        ? { ...m, position: { x: newCol, y: newRow } }
+        : m
+    ))
+    setDraggedModule(null)
+  }
+
   // 调整大小处理函数
   const handleResizeStart = (e: React.MouseEvent, module: Module, direction: 'left' | 'right' | 'top' | 'bottom') => {
     e.preventDefault()
     e.stopPropagation()
     
-    setResizingModule({
-      module,
-      direction,
-      startX: e.clientX,
-      startY: e.clientY,
-      startWidth: module.size.width,
-      startHeight: module.size.height
-    })
+    const startX = e.clientX
+    const startY = e.clientY
+    const startWidth = module.size.width
+    const startHeight = module.size.height
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!resizingModule) return
+      if (!gridRef.current) return
 
-      const deltaX = moveEvent.clientX - resizingModule.startX
-      const deltaY = moveEvent.clientY - resizingModule.startY
+      const deltaX = moveEvent.clientX - startX
+      const deltaY = moveEvent.clientY - startY
 
-      const cellWidth = gridRef.current ? gridRef.current.offsetWidth / gridSize.cols : 0
-      const cellHeight = gridRef.current ? gridRef.current.offsetHeight / gridSize.rows : 0
+      const cellWidth = gridRef.current.offsetWidth / gridSize.cols
+      const cellHeight = gridRef.current.offsetHeight / gridSize.rows
 
-      let newWidth = resizingModule.startWidth
-      let newHeight = resizingModule.startHeight
+      let newWidth = startWidth
+      let newHeight = startHeight
 
       if (direction === 'right') {
-        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(resizingModule.startWidth + deltaX / cellWidth)))
+        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(startWidth + deltaX / cellWidth)))
       } else if (direction === 'bottom') {
-        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(resizingModule.startHeight + deltaY / cellHeight)))
+        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(startHeight + deltaY / cellHeight)))
       } else if (direction === 'left') {
-        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(resizingModule.startWidth - deltaX / cellWidth)))
+        newWidth = Math.max(1, Math.min(gridSize.cols, Math.round(startWidth - deltaX / cellWidth)))
       } else if (direction === 'top') {
-        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(resizingModule.startHeight - deltaY / cellHeight)))
+        newHeight = Math.max(1, Math.min(gridSize.rows, Math.round(startHeight - deltaY / cellHeight)))
       }
 
       setModules(prev => prev.map(m => 
@@ -203,7 +213,6 @@ export const Dashboard: React.FC = () => {
     }
 
     const handleMouseUp = () => {
-      setResizingModule(null)
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
@@ -438,6 +447,7 @@ export const Dashboard: React.FC = () => {
               border: '2px dashed rgba(255,255,255,0.2)'
             }}
             onDragOver={handleDragOver}
+            onDrop={handleDrop}
           >
             {/* 网格线 */}
             {renderGridLines()}
