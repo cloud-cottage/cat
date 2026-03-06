@@ -79,6 +79,33 @@ https://username.catcat.meme # 个人博客
 - **Web3 签名**: 所有重要操作都需要钱包签名验证
 - **去中心化存储**: 用户数据存储在分布式网络中
 - **无中心化日志**: 不收集用户行为数据和访问日志
+- **隐式自动保存**: 采用 Implicit Autosave 技术，用户无需手动保存，系统在页面切换、标签页关闭、浏览器退出时自动保存所有更改
+
+## 🔧 技术特性
+
+### 隐式自动保存 (Implicit Autosave)
+
+本项目采用先进的**隐式自动保存**技术，为用户提供无缝的编辑体验：
+
+- **无感保存**: 用户无需手动点击保存按钮，系统自动检测并保存更改
+- **智能触发**: 监听页面生命周期事件，在适当时机自动保存
+- **数据保护**: 防止用户因意外操作丢失编辑内容
+- **性能优化**: 后台静默保存，不打断用户操作流程
+
+**触发场景**：
+- 页面切换或刷新
+- 标签页关闭
+- 浏览器退出
+- 页面失去焦点
+- 导航离开
+
+**技术实现**：
+```javascript
+// 监听多种页面生命周期事件
+window.addEventListener('beforeunload', handleAutoSave)
+window.addEventListener('visibilitychange', handleAutoSave)
+window.addEventListener('pagehide', handleAutoSave)
+```
 
 ## ⚙️ 环境配置
 

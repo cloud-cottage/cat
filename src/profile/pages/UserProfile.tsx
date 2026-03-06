@@ -127,7 +127,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
-  const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
@@ -214,7 +213,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
     if (!user || !isEditing) return
     
     try {
-      setSaving(true)
       await api.updateUser(username!, user)
       await api.updateLinks(username!, links)
       await api.updateGroups(username!, groups)
@@ -222,31 +220,6 @@ export default function UserProfile({ username: propUsername }: { username?: str
       console.log('自动保存成功')
     } catch (error) {
       console.error('自动保存失败:', error)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  // 保存函数
-  const handleSave = async () => {
-    if (!user || !username) return
-    
-    try {
-      setSaving(true)
-      
-      // 保存链接和分组
-      await Promise.all([
-        api.updateLinks(username, links),
-        api.updateGroups(username, groups)
-      ])
-      
-      setHasUnsavedChanges(false)
-      alert('保存成功！')
-    } catch (error) {
-      console.error('保存失败:', error)
-      alert('保存失败，请重试')
-    } finally {
-      setSaving(false)
     }
   }
 
@@ -908,72 +881,39 @@ export default function UserProfile({ username: propUsername }: { username?: str
         {isOwner ? (
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <button
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => {
+                if (isEditing) {
+                  // 完成编辑时自动保存
+                  autoSave()
+                  setIsEditing(false)
+                  setHasUnsavedChanges(false)
+                } else {
+                  setIsEditing(true)
+                }
+              }}
               style={{
                 color: 'rgba(255,255,255,0.9)',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
                 padding: '0.5rem 1rem',
                 borderRadius: '20px',
-                background: 'rgba(255,255,255,0.1)',
+                background: isEditing ? 'rgba(244, 67, 54, 0.8)' : 'rgba(76, 175, 80, 0.8)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255,255,255,0.2)',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.2)'
+                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 1)' : 'rgba(76, 175, 80, 1)'
                 e.currentTarget.style.color = 'white'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 0.8)' : 'rgba(76, 175, 80, 0.8)'
                 e.currentTarget.style.color = 'rgba(255,255,255,0.9)'
               }}
             >
               {isEditing ? '完成编辑' : '进入编辑模式'}
             </button>
-            
-            {isEditing && (
-              <>
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  style={{
-                    color: 'white',
-                    textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '20px',
-                    background: saving ? 'rgba(255,255,255,0.3)' : 'rgba(76, 175, 80, 0.8)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    transition: 'all 0.3s ease',
-                    cursor: saving ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  {saving ? '保存中...' : '保存更改'}
-                </button>
-                
-                <button
-                  onClick={() => {
-                    setShowSettings(true)
-                  }} style={{
-                    color: 'white',
-                    textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '20px',
-                    background: 'rgba(33, 150, 243, 0.8)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer'
-                  }}
-                >
-                  ⚙️ 设置
-                </button>
-              </>
-            )}
           </div>
         ) : (
           <a

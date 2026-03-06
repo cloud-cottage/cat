@@ -417,7 +417,7 @@ export const SettingsModal = ({ user, isOpen, onClose, onSave }: SettingsModalPr
                 }
               }}
             >
-              {saving ? '保存中...' : '保存设置'}
+              {saving ? '保存中...' : '完成设置'}
             </button>
           </div>
         </form>
