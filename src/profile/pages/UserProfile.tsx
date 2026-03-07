@@ -203,6 +203,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [showSettings, setShowSettings] = useState(false)
   const [currentTheme, setCurrentTheme] = useState(THEMES[0]) // 默认主题
   const [showThemeSelector, setShowThemeSelector] = useState(false)
+  const [layoutModules, setLayoutModules] = useState<any[]>([]) // 布局模块
 
   useEffect(() => {
     if (!username) return
@@ -227,13 +228,22 @@ export default function UserProfile({ username: propUsername }: { username?: str
         setLinks(userData.links)
         setGroups(userData.groups)
         
-        // 设置主题
+        // 设置主题和布局
         if (userData.user.layout) {
           const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
-          if (theme) setCurrentTheme(theme)
+          if (theme) {
+            setCurrentTheme(theme)
+            setLayoutModules(userData.user.layout.modules || [])
+          }
         } else {
-          // 如果用户没有设置布局，使用第一个主题
+          // 如果用户没有设置布局，使用第一个主题的默认布局
           setCurrentTheme(THEMES[0])
+          setLayoutModules([
+            { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 3 } },
+            { id: 'links', name: '注册链接', component: 'links', position: { x: 3, y: 0 }, size: { width: 3, height: 4 } },
+            { id: 'social', name: '社交媒体', component: 'social', position: { x: 0, y: 3 }, size: { width: 3, height: 3 } },
+            { id: 'twitter', name: '推特时间线', component: 'twitter', position: { x: 3, y: 4 }, size: { width: 3, height: 4 } }
+          ])
         }
         
         // 设置页面标题：昵称｜CAT｜Your Web3 Paws
