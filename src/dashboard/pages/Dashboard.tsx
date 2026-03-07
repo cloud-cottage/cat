@@ -619,8 +619,8 @@ export const Dashboard: React.FC = () => {
       
       console.log('准备更新的用户数据:', updatedUser)
       
-      // 使用test用户而不是admin
-      const result = await api.updateUser('test', updatedUser)
+      // 使用当前登录的用户而不是硬编码的test
+      const result = await api.updateUser(user.username, updatedUser)
       console.log('API更新结果:', result)
       setUser(updatedUser)
       console.log('布局应用成功')
@@ -1214,25 +1214,6 @@ export const Dashboard: React.FC = () => {
                 justifyContent: 'center',
                 gap: '1rem'
               }}>
-                <button
-                  onClick={() => {
-                    console.log('手动重新加载用户数据...')
-                    loadUser()
-                  }}
-                  style={{
-                    padding: '1rem 2rem',
-                    background: '#6B7280',
-                    border: '2px solid #4B5563',
-                    borderRadius: '12px',
-                    color: 'white',
-                    cursor: 'pointer',
-                    fontSize: '1.1rem',
-                    fontWeight: '600',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  🔄 重新加载数据
-                </button>
                 <button
                   onClick={handleApplyLayout}
                   disabled={isSaving}

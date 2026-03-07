@@ -392,12 +392,55 @@ export default function UserProfile({ username: propUsername }: { username?: str
     <div style={{ 
       minHeight: '100vh',
       background: currentTheme.colors.bg,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
+      {/* 1800像素宽的格子布局容器 */}
+      <div style={{
+        width: '1800px',
+        maxWidth: '100%',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(6, 300px)',
+        gridTemplateRows: 'repeat(9, 300px)',
+        gap: '1rem',
+        minHeight: '900px'
+      }}>
+        {/* 临时显示布局信息 */}
+        <div style={{
+          gridColumn: '1 / span 6',
+          gridRow: '1 / span 1',
+          background: currentTheme.colors.surface + '10',
+          borderRadius: '16px',
+          padding: '1rem',
+          border: `1px solid ${currentTheme.colors.primary}20`,
+          textAlign: 'center'
+        }}>
+          <h3 style={{ 
+            color: currentTheme.colors.primary, 
+            margin: '0 0 0.5rem 0',
+            fontSize: '1.2rem',
+            fontWeight: '600'
+          }}>
+            🌐 布局系统已启用
+          </h3>
+          <p style={{ 
+            color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+            margin: 0,
+            fontSize: '0.9rem'
+          }}>
+            容器宽度: 1800px | 格子尺寸: 300px × 300px | 网格: 6×9
+          </p>
+          <p style={{ 
+            color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+            margin: '0.5rem 0',
+            fontSize: '0.8rem',
+            opacity: 0.7
+          }}>
+            当前布局模块数量: {layoutModules.length}
+          </p>
+        </div>
+      </div>
       {/* 头像区域 */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         {getUserAvatarUrl(user) ? (
