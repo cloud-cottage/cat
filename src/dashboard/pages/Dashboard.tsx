@@ -385,9 +385,6 @@ export const Dashboard: React.FC = () => {
   // 当前选中的侧边栏菜单项
   const [activeSidebarItem, setActiveSidebarItem] = useState<'theme' | 'forbidden'>('theme')
   
-  // 当前选中的主题二级菜单项
-  const [activeThemeSubItem, setActiveThemeSubItem] = useState<'details' | 'layout' | 'css'>('layout')
-  
   // CSS 编辑器状态
   const [cssContent, setCssContent] = useState(`:root {
   /* 品牌色彩 */
@@ -597,6 +594,7 @@ export const Dashboard: React.FC = () => {
         layout: userLayout
       }
       
+      // 使用正确的API端点
       await api.updateUser('admin', updatedUser)
       setUser(updatedUser)
       console.log('布局应用成功')
@@ -842,7 +840,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* 主题二级菜单 */}
+                {/* 主题选择列表 */}
                 {activeSidebarItem === 'theme' && (
                   <div style={{
                     marginTop: '0.75rem',
@@ -850,35 +848,53 @@ export const Dashboard: React.FC = () => {
                     flexDirection: 'column',
                     gap: '0.5rem'
                   }}>
-                    {[
-                      { id: 'details', name: '主题详情', icon: '🎨' },
-                      { id: 'layout', name: '拖拽调整布局', icon: '🎯' },
-                      { id: 'css', name: '修改 CSS 文件', icon: '📝' }
-                    ].map(item => (
+                    <div style={{
+                      padding: '0.5rem',
+                      color: selectedTheme.colors.primary,
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      marginBottom: '0.5rem'
+                    }}>
+                      选择主题：
+                    </div>
+                    {THEMES.map(theme => (
                       <div
-                        key={item.id}
+                        key={theme.id}
                         onClick={(e) => {
                           e.stopPropagation()
-                          setActiveThemeSubItem(item.id as any)
+                          handleThemeChange(theme)
                         }}
                         style={{
-                          background: activeThemeSubItem === item.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
+                          background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
                           borderRadius: '8px',
                           padding: '0.75rem',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '0.5rem'
+                          gap: '0.75rem'
                         }}
                       >
-                        <span style={{ fontSize: '1rem' }}>{item.icon}</span>
+                        <div style={{
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: '6px',
+                          background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold'
+                        }}>
+                          {theme.name.charAt(0)}
+                        </div>
                         <span style={{
                           color: selectedTheme.colors.primary,
                           fontSize: '0.85rem',
                           fontWeight: '500'
                         }}>
-                          {item.name}
+                          {theme.name}
                         </span>
                       </div>
                     ))}
@@ -949,276 +965,166 @@ export const Dashboard: React.FC = () => {
         }}>
           {activeSidebarItem === 'theme' ? (
             <>
-              {activeThemeSubItem === 'details' && (
-                /* 主题选择详情 */
-                <div style={{
-                  background: selectedTheme.colors.surface,
-                  backdropFilter: 'blur(10px)',
-                  border: `1px solid ${selectedTheme.colors.primary}20`,
-                  borderRadius: '16px',
-                  padding: '1.5rem'
+              {/* 布局编辑器 */}
+              <div style={{
+                background: selectedTheme.colors.surface,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${selectedTheme.colors.primary}20`,
+                borderRadius: '16px',
+                padding: '1.5rem'
+              }}>
+                <h2 style={{ 
+                  color: selectedTheme.colors.primary,
+                  margin: '0 0 1rem 0',
+                  fontSize: '1.2rem',
+                  fontWeight: '600'
                 }}>
-                  <h2 style={{ 
-                    color: selectedTheme.colors.primary,
-                    margin: '0 0 1rem 0',
-                    fontSize: '1.2rem',
-                    fontWeight: '600'
-                  }}>
-                    🎨 主题详情
-                  </h2>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem'
-                  }}>
-                    {THEMES.map(theme => (
+                  🎯 拖拽调整布局
+                </h2>
+                <div
+                  ref={gridRef}
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '600px',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '12px',
+                    border: '2px dashed rgba(255,255,255,0.2)'
+                  }}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  {/* 网格线 */}
+                  {renderGridLines()}
+
+                  {/* 模块 */}
+                  {modules.map(module => (
+                    <div
+                      key={module.id}
+                      draggable
+                      onDragStart={() => handleDragStart(module)}
+                      onDragEnd={() => setDraggedModule(null)}
+                      style={{
+                        position: 'absolute',
+                        left: `${(module.position.x / gridSize.cols) * 100}%`,
+                        top: `${(module.position.y / gridSize.rows) * 100}%`,
+                        width: `${(module.size.width / gridSize.cols) * 100}%`,
+                        height: `${(module.size.height / gridSize.rows) * 100}%`,
+                        background: selectedTheme.colors.primary + 'CC',
+                        border: `2px solid ${selectedTheme.colors.primary}`,
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '1.2rem',
+                        fontWeight: '600',
+                        cursor: 'move',
+                        transition: 'all 0.3s ease',
+                        zIndex: draggedModule?.id === module.id ? 1000 : 1
+                      }}
+                    >
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                          {module.component === 'profile' ? '👤' : 
+                           module.component === 'links' ? '🔗' : 
+                           module.component === 'social' ? '📱' : '🐦'}
+                        </div>
+                        <div style={{ fontSize: '0.9rem' }}>
+                          {module.name}
+                        </div>
+                      </div>
+                      
+                      {/* 调整大小的手柄 */}
                       <div
-                        key={theme.id}
-                        onClick={() => handleThemeChange(theme)}
                         style={{
-                          background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}20` : 'rgba(255,255,255,0.05)',
-                          border: selectedTheme.id === theme.id ? `2px solid ${selectedTheme.colors.primary}` : `1px solid ${selectedTheme.colors.primary}30`,
-                          borderRadius: '12px',
-                          padding: '1rem',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
+                          position: 'absolute',
+                          right: '0',
+                          bottom: '0',
+                          width: '16px',
+                          height: '16px',
+                          background: 'rgba(255,255,255,0.8)',
+                          border: '2px solid ' + selectedTheme.colors.primary,
+                          borderRadius: '0 0 6px 0',
+                          cursor: 'se-resize',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        onMouseDown={(e) => {
+                          e.stopPropagation()
+                          handleResizeStart(module, 'right-bottom')
                         }}
                       >
                         <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '1rem'
-                        }}>
-                          <div style={{
-                            width: '60px',
-                            height: '60px',
-                            borderRadius: '12px',
-                            background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            fontSize: '1.5rem',
-                            fontWeight: 'bold'
-                          }}>
-                            {theme.name.charAt(0)}
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <h3 style={{ 
-                              color: selectedTheme.colors.primary,
-                              margin: '0 0 0.25rem 0', 
-                              fontSize: '1.2rem',
-                              fontWeight: '600'
-                            }}>
-                              {theme.name}
-                            </h3>
-                            <p style={{ 
-                              color: '#666',
-                              margin: '0 0 0.5rem 0', 
-                              fontSize: '0.9rem',
-                              lineHeight: '1.3'
-                            }}>
-                              {theme.description}
-                            </p>
-                            <div style={{
-                              display: 'flex',
-                              gap: '0.5rem',
-                              flexWrap: 'wrap'
-                            }}>
-                              <div style={{
-                                padding: '0.25rem 0.5rem',
-                                background: theme.colors.primary + '20',
-                                border: `1px solid ${theme.colors.primary}40`,
-                                borderRadius: '4px',
-                                color: theme.colors.primary,
-                                fontSize: '0.75rem',
-                                fontWeight: '500'
-                              }}>
-                                主色: {theme.colors.primary}
-                              </div>
-                              <div style={{
-                                padding: '0.25rem 0.5rem',
-                                background: theme.colors.secondary + '20',
-                                border: `1px solid ${theme.colors.secondary}40`,
-                                borderRadius: '4px',
-                                color: theme.colors.secondary,
-                                fontSize: '0.75rem',
-                                fontWeight: '500'
-                              }}>
-                                辅色: {theme.colors.secondary}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                          width: '4px',
+                          height: '4px',
+                          background: selectedTheme.colors.primary,
+                          borderRadius: '50%'
+                        }} />
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              )}
 
-              {activeThemeSubItem === 'layout' && (
-                /* 布局编辑器 */
                 <div style={{
-                  background: selectedTheme.colors.surface,
-                  backdropFilter: 'blur(10px)',
-                  border: `1px solid ${selectedTheme.colors.primary}20`,
-                  borderRadius: '16px',
-                  padding: '1.5rem'
+                  marginTop: '1rem',
+                  padding: '1rem',
+                  background: 'rgba(255,255,255,0.1)',
+                  borderRadius: '8px',
+                  color: 'rgba(255,255,255,0.8)',
+                  fontSize: '0.9rem'
                 }}>
-                  <h2 style={{ 
-                    color: selectedTheme.colors.primary,
-                    margin: '0 0 1rem 0',
-                    fontSize: '1.2rem',
-                    fontWeight: '600'
-                  }}>
-                    🎯 拖拽调整布局
-                  </h2>
-                  <div
-                    ref={gridRef}
+                  💡 提示：拖拽模块可以调整位置，拖拽右下角可以调整大小。调整完成后点击【应用布局】保存。
+                </div>
+              </div>
+
+              {/* CSS 编辑器 */}
+              <div style={{
+                background: selectedTheme.colors.surface,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${selectedTheme.colors.primary}20`,
+                borderRadius: '16px',
+                padding: '1.5rem'
+              }}>
+                <h2 style={{ 
+                  color: selectedTheme.colors.primary,
+                  margin: '0 0 1rem 0',
+                  fontSize: '1.2rem',
+                  fontWeight: '600'
+                }}>
+                  📝 修改 CSS 文件
+                </h2>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem'
+                }}>
+                  <textarea
+                    value={cssContent}
+                    onChange={(e) => setCssContent(e.target.value)}
                     style={{
-                      position: 'relative',
                       width: '100%',
-                      height: '600px',
+                      height: '400px',
                       background: 'rgba(255,255,255,0.05)',
-                      borderRadius: '12px',
-                      border: '2px dashed rgba(255,255,255,0.2)'
+                      border: `1px solid ${selectedTheme.colors.primary}30`,
+                      borderRadius: '8px',
+                      color: selectedTheme.colors.primary,
+                      padding: '1rem',
+                      fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+                      fontSize: '0.9rem',
+                      lineHeight: '1.5',
+                      resize: 'vertical'
                     }}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                  >
-                    {/* 网格线 */}
-                    {renderGridLines()}
-
-                    {/* 模块 */}
-                    {modules.map(module => (
-                      <div
-                        key={module.id}
-                        draggable
-                        onDragStart={() => handleDragStart(module)}
-                        onDragEnd={() => setDraggedModule(null)}
-                        style={{
-                          position: 'absolute',
-                          left: `${(module.position.x / gridSize.cols) * 100}%`,
-                          top: `${(module.position.y / gridSize.rows) * 100}%`,
-                          width: `${(module.size.width / gridSize.cols) * 100}%`,
-                          height: `${(module.size.height / gridSize.rows) * 100}%`,
-                          background: selectedTheme.colors.primary + 'CC',
-                          border: `2px solid ${selectedTheme.colors.primary}`,
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                          fontSize: '1.2rem',
-                          fontWeight: '600',
-                          cursor: 'move',
-                          transition: 'all 0.3s ease',
-                          zIndex: draggedModule?.id === module.id ? 1000 : 1
-                        }}
-                      >
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                            {module.component === 'profile' ? '👤' : 
-                             module.component === 'links' ? '🔗' : 
-                             module.component === 'social' ? '📱' : '🐦'}
-                          </div>
-                          <div style={{ fontSize: '0.9rem' }}>
-                            {module.name}
-                          </div>
-                        </div>
-                        
-                        {/* 调整大小的手柄 */}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            right: '0',
-                            bottom: '0',
-                            width: '16px',
-                            height: '16px',
-                            background: 'rgba(255,255,255,0.8)',
-                            border: '2px solid ' + selectedTheme.colors.primary,
-                            borderRadius: '0 0 6px 0',
-                            cursor: 'se-resize',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
-                          onMouseDown={(e) => {
-                            e.stopPropagation()
-                            handleResizeStart(module, 'right-bottom')
-                          }}
-                        >
-                          <div style={{
-                            width: '4px',
-                            height: '4px',
-                            background: selectedTheme.colors.primary,
-                            borderRadius: '50%'
-                          }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div style={{
-                    marginTop: '1rem',
-                    padding: '1rem',
-                    background: 'rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    color: 'rgba(255,255,255,0.8)',
-                    fontSize: '0.9rem'
-                  }}>
-                    💡 提示：拖拽模块可以调整位置，拖拽右下角可以调整大小。调整完成后点击【应用布局】保存。
-                  </div>
-                </div>
-              )}
-
-              {activeThemeSubItem === 'css' && (
-                /* CSS 编辑器 */
-                <div style={{
-                  background: selectedTheme.colors.surface,
-                  backdropFilter: 'blur(10px)',
-                  border: `1px solid ${selectedTheme.colors.primary}20`,
-                  borderRadius: '16px',
-                  padding: '1.5rem'
-                }}>
-                  <h2 style={{ 
-                    color: selectedTheme.colors.primary,
-                    margin: '0 0 1rem 0',
-                    fontSize: '1.2rem',
-                    fontWeight: '600'
-                  }}>
-                    📝 修改 CSS 文件
-                  </h2>
+                    placeholder="在这里输入 CSS 代码..."
+                  />
+                  
                   <div style={{
                     display: 'flex',
-                    flexDirection: 'column',
                     gap: '1rem'
                   }}>
-                    <textarea
-                      value={cssContent}
-                      onChange={(e) => setCssContent(e.target.value)}
-                      style={{
-                        width: '100%',
-                        height: '400px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: `1px solid ${selectedTheme.colors.primary}30`,
-                        borderRadius: '8px',
-                        color: selectedTheme.colors.primary,
-                        padding: '1rem',
-                        fontFamily: 'Monaco, Consolas, "Courier New", monospace',
-                        fontSize: '0.9rem',
-                        lineHeight: '1.5',
-                        resize: 'vertical'
-                      }}
-                      placeholder="在这里输入 CSS 代码..."
-                    />
-                    
-                    <div style={{
-                      display: 'flex',
-                      gap: '1rem'
-                    }}>
-                      <button
-                        onClick={() => setCssContent(`:root {
+                    <button
+                      onClick={() => setCssContent(`:root {
   /* 品牌色彩 */
   --color-primary: ${selectedTheme.colors.primary};
   --color-secondary: ${selectedTheme.colors.secondary};
@@ -1243,65 +1149,62 @@ export const Dashboard: React.FC = () => {
   line-height: 1.5;
   font-weight: 400;
 }`)}
-                        style={{
-                          padding: '0.75rem 1.5rem',
-                          background: '#6B7280',
-                          border: '1px solid #4B5563',
-                          borderRadius: '8px',
-                          color: 'white',
-                          cursor: 'pointer',
-                          fontSize: '0.9rem',
-                          fontWeight: '500'
-                        }}
-                      >
-                        重置 CSS
-                      </button>
-                      
-                      <button
-                        onClick={handleApplyCSS}
-                        style={{
-                          padding: '0.75rem 1.5rem',
-                          background: selectedTheme.colors.primary + '20',
-                          border: `1px solid ${selectedTheme.colors.primary}40`,
-                          borderRadius: '8px',
-                          color: selectedTheme.colors.primary,
-                          cursor: 'pointer',
-                          fontSize: '0.9rem',
-                          fontWeight: '500'
-                        }}
-                      >
-                        应用 CSS 文件
-                      </button>
-                    </div>
+                      style={{
+                        padding: '0.75rem 1.5rem',
+                        background: '#6B7280',
+                        border: '1px solid #4B5563',
+                        borderRadius: '8px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '500'
+                      }}
+                    >
+                      重置 CSS
+                    </button>
+                    
+                    <button
+                      onClick={handleApplyCSS}
+                      style={{
+                        padding: '0.75rem 1.5rem',
+                        background: selectedTheme.colors.primary + '20',
+                        border: `1px solid ${selectedTheme.colors.primary}40`,
+                        borderRadius: '8px',
+                        color: selectedTheme.colors.primary,
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '500'
+                      }}
+                    >
+                      应用 CSS 文件
+                    </button>
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* 应用布局按钮 - 只在布局模式下显示 */}
-              {activeThemeSubItem === 'layout' && (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}>
-                  <button
-                    onClick={handleApplyLayout}
-                    disabled={isSaving}
-                    style={{
-                      padding: '1rem 2rem',
-                      background: isSaving ? '#ccc' : selectedTheme.colors.primary,
-                      border: `2px solid ${selectedTheme.colors.primary}`,
-                      borderRadius: '12px',
-                      color: 'white',
-                      cursor: isSaving ? 'not-allowed' : 'pointer',
-                      fontSize: '1.1rem',
-                      fontWeight: '600',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    {isSaving ? '保存中...' : '🚀 应用布局'}
-                  </button>
-                </div>
-              )}
+              {/* 应用布局按钮 */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center'
+              }}>
+                <button
+                  onClick={handleApplyLayout}
+                  disabled={isSaving}
+                  style={{
+                    padding: '1rem 2rem',
+                    background: isSaving ? '#ccc' : selectedTheme.colors.primary,
+                    border: `2px solid ${selectedTheme.colors.primary}`,
+                    borderRadius: '12px',
+                    color: 'white',
+                    cursor: isSaving ? 'not-allowed' : 'pointer',
+                    fontSize: '1.1rem',
+                    fontWeight: '600',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {isSaving ? '保存中...' : '🚀 应用布局'}
+                </button>
+              </div>
             </>
           ) : (
             <>
