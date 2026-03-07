@@ -424,7 +424,8 @@ export const Dashboard: React.FC = () => {
   const loadUser = async () => {
     try {
       console.log('开始加载用户数据...')
-      const userData = await api.getUserByUsername('admin') // 临时使用 admin
+      // 使用test用户而不是admin，因为admin用户不存在
+      const userData = await api.getUserByUsername('test')
       console.log('获取到的用户数据:', userData)
       
       if (userData) {
@@ -611,8 +612,8 @@ export const Dashboard: React.FC = () => {
       
       console.log('准备更新的用户数据:', updatedUser)
       
-      // 使用正确的API端点
-      const result = await api.updateUser('admin', updatedUser)
+      // 使用test用户而不是admin
+      const result = await api.updateUser('test', updatedUser)
       console.log('API更新结果:', result)
       setUser(updatedUser)
       console.log('布局应用成功')
