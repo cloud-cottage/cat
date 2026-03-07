@@ -88,3 +88,6 @@ button {
     padding: 0 1rem;
   }
 }
+
+/* 导入主题CSS变量 */
+@import './styles/themes.css';
