@@ -529,7 +529,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         textAlign: 'center', 
         padding: '1rem',
         fontSize: '0.75rem',
-        borderTop: '1px solid var(--theme-primary)20',
+        borderTop: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
         marginTop: '2rem'
       }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
@@ -581,23 +581,23 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             background: 'var(--theme-surface)',
             borderRadius: '16px',
             padding: '2rem',
-            maxWidth: '800px',
+            maxWidth: '600px',
             width: '90%',
             maxHeight: '80vh',
             overflow: 'auto',
-            border: '1px solid var(--theme-primary)20'
+            border: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
           }}>
             <h2 style={{ 
               color: 'var(--theme-primary)',
-              margin: '0 0 2rem 0',
-              fontSize: '1.8rem',
-              fontWeight: '700',
+              margin: '0 0 1rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600',
               textAlign: 'center'
             }}>
-              🎨 选择主题
+               选择主题
             </h2>
             
-            {/* 8个主题选项 */}
+            {/* 8 */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
@@ -620,19 +620,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                       padding: '1.5rem',
                       textAlign: 'center',
                       cursor: 'pointer',
-                      background: isCurrentTheme ? 'var(--theme-bg)40' : '#f8f9fa',
+                      background: isCurrentTheme ? 'rgba(var(--theme-primary-rgb), 0.4)' : '#f8f9fa',
                       minHeight: '120px',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      boxShadow: isCurrentTheme ? `0 4px 12px var(--theme-primary)40` : '0 2px 4px rgba(0,0,0,0.1)',
+                      boxShadow: isCurrentTheme ? `0 4px 12px rgba(var(--theme-primary-rgb), 0.4)` : '0 2px 4px rgba(0,0,0,0.1)',
                       transform: isCurrentTheme ? 'scale(1.05)' : 'scale(1)',
                       transition: 'all 0.3s ease'
                     }}
                     onMouseEnter={(e) => {
                       if (!isCurrentTheme) {
-                        e.currentTarget.style.background = 'var(--theme-bg)60'
+                        e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.6)'
                         e.currentTarget.style.transform = 'scale(1.02)'
                       }
                     }}
@@ -662,7 +662,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                         fontWeight: '700',
                         marginTop: '0.25rem'
                       }}>
-                        当前选择
+                        选择
                       </div>
                     )}
                   </div>
@@ -670,7 +670,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
               })}
             </div>
             
-            {/* 关闭按钮 */}
+            {/* */}
             <div style={{ textAlign: 'center' }}>
               <button
                 onClick={() => setShowThemeSelector(false)}
@@ -685,14 +685,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                   fontWeight: '600'
                 }}
               >
-                取消
+                 取消
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 探索模态框 */}
+      {/* Explore */}
       {showExploreModal && (
         <div style={{
           position: 'fixed',
@@ -714,7 +714,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             width: '90%',
             maxHeight: '80vh',
             overflow: 'auto',
-            border: '1px solid var(--theme-primary)20'
+            border: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
           }}>
             <h2 style={{ 
               color: 'var(--theme-primary)',
@@ -740,8 +740,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 onClick={() => setShowExploreModal(false)}
                 style={{
                   padding: '0.75rem 1.5rem',
-                  background: 'var(--theme-primary)20',
-                  border: '1px solid var(--theme-primary)40',
+                  background: 'rgba(var(--theme-primary-rgb), 0.2)',
+                  border: '1px solid rgba(var(--theme-primary-rgb), 0.4)',
                   borderRadius: '8px',
                   color: 'var(--theme-primary)',
                   cursor: 'pointer',

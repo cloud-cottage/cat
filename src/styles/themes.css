@@ -3,7 +3,9 @@
 /* 钻石手主题 - 增强可读性 */
 .theme-diamond {
   --theme-primary: #FF8C42;
+  --theme-primary-rgb: 255, 140, 66;
   --theme-secondary: #1C6E9C;
+  --theme-secondary-rgb: 28, 110, 156;
   --theme-bg: linear-gradient(135deg, #F8F9FA 0%, #E8EAF6 50%, #F8F9FA 100%);
   --theme-surface: linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%);
   --theme-diamond-style: 1;
@@ -26,7 +28,9 @@
 /* HODL蓝主题 - 增强可读性 */
 .theme-hodl-blue {
   --theme-primary: #1C6E9C;
+  --theme-primary-rgb: 28, 110, 156;
   --theme-secondary: #FF8C42;
+  --theme-secondary-rgb: 255, 140, 66;
   --theme-bg: #EBF8FF;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
@@ -48,7 +52,9 @@
 /* 草莓熊主题 - 增强可读性 */
 .theme-strawberry {
   --theme-primary: #FF6B9D;
+  --theme-primary-rgb: 255, 107, 157;
   --theme-secondary: #C66FBC;
+  --theme-secondary-rgb: 198, 111, 188;
   --theme-bg: #FFF0F5;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
@@ -70,7 +76,9 @@
 /* 赛博橙主题 - 增强可读性 */
 .theme-cyber-orange {
   --theme-primary: #FF6B35;
+  --theme-primary-rgb: 255, 107, 53;
   --theme-secondary: #00D9FF;
+  --theme-secondary-rgb: 0, 217, 255;
   --theme-bg: #0A0E27;
   --theme-surface: #1A1F3A;
   --theme-diamond-style: 0;
@@ -92,7 +100,9 @@
 /* 韭菜绿主题 - 增强可读性 */
 .theme-leek-green {
   --theme-primary: #52C41A;
+  --theme-primary-rgb: 82, 196, 26;
   --theme-secondary: #52C41A;
+  --theme-secondary-rgb: 82, 196, 26;
   --theme-bg: #F6FFED;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
@@ -114,7 +124,9 @@
 /* 拿铁棕主题 - 增强可读性 */
 .theme-latte-brown {
   --theme-primary: #8B4513;
+  --theme-primary-rgb: 139, 69, 19;
   --theme-secondary: #D2691E;
+  --theme-secondary-rgb: 210, 105, 30;
   --theme-bg: #FFF8DC;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
@@ -136,7 +148,9 @@
 /* 神秘紫主题 - 增强可读性 */
 .theme-mystery-purple {
   --theme-primary: #6B46C1;
+  --theme-primary-rgb: 107, 70, 193;
   --theme-secondary: #9F7AEA;
+  --theme-secondary-rgb: 159, 122, 234;
   --theme-bg: #F7FAFC;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
@@ -158,7 +172,9 @@
 /* Web3主题 - 增强可读性 */
 .theme-web3 {
   --theme-primary: #00D4FF;
+  --theme-primary-rgb: 0, 212, 255;
   --theme-secondary: #FF00FF;
+  --theme-secondary-rgb: 255, 0, 255;
   --theme-bg: #000000;
   --theme-surface: #1A1A2E;
   --theme-diamond-style: 0;
