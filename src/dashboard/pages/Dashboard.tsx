@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { api, type User } from '../../profile/lib/api'
+import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
 
 interface Module {
   id: string
@@ -10,7 +11,7 @@ interface Module {
   size: { width: number; height: number }
 }
 
-interface Theme {
+interface DashboardTheme {
   id: number
   name: string
   description: string
@@ -24,358 +25,81 @@ interface Theme {
   modules: Module[]
 }
 
-// 主题配置 - 8个主题模板
-const THEMES: Theme[] = [
-  {
-    id: 1,
-    name: '钻石手',
-    description: '清爽简约，专注内容',
-    preview: '/themes/diamond.png',
-    colors: {
-      primary: '#FF8C42',
-      secondary: '#1C6E9C',
-      bg: '#F8F9FA',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 0, y: 0 },
-        size: { width: 3, height: 2 }
-      },
-      {
-        id: 'mostfind',
-        name: '我活跃在',
-        component: 'mostfind',
-        position: { x: 0, y: 2 },
-        size: { width: 2, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 2, y: 2 },
-        size: { width: 4, height: 4 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 3, y: 0 },
-        size: { width: 3, height: 2 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 6 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'HODL蓝',
-    description: '长期持有，信仰坚定',
-    preview: '/themes/hodl.png',
-    colors: {
-      primary: '#1C6E9C',
-      secondary: '#FF8C42',
-      bg: '#EBF8FF',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 2, y: 0 },
-        size: { width: 2, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 0, y: 2 },
-        size: { width: 3, height: 4 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 3, y: 2 },
-        size: { width: 3, height: 4 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 6 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: '草莓熊',
-    description: '温柔浪漫，少女心',
-    preview: '/themes/strawberry.png',
-    colors: {
-      primary: '#FF6B9D',
-      secondary: '#C66FBC',
-      bg: '#FFF0F5',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 0, y: 0 },
-        size: { width: 2, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 2, y: 0 },
-        size: { width: 4, height: 3 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 0, y: 2 },
-        size: { width: 6, height: 4 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 6 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 4,
-    name: '赛博橙',
-    description: '未来科技，霓虹风格',
-    preview: '/themes/cyber.png',
-    colors: {
-      primary: '#FF6B35',
-      secondary: '#00D9FF',
-      bg: '#0A0E27',
-      surface: '#1A1F3A'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 1, y: 0 },
-        size: { width: 4, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 0, y: 2 },
-        size: { width: 3, height: 3 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 3, y: 2 },
-        size: { width: 3, height: 3 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 5 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 5,
-    name: '韭菜绿',
-    description: '自然清新，护眼舒适',
-    preview: '/themes/leek.png',
-    colors: {
-      primary: '#52C41A',
-      secondary: '#52C41A',
-      bg: '#F6FFED',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 0, y: 0 },
-        size: { width: 2, height: 3 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 2, y: 0 },
-        size: { width: 4, height: 2 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 2, y: 2 },
-        size: { width: 4, height: 3 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 5 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 6,
-    name: '拿铁棕',
-    description: '温暖治愈，ins 风格',
-    preview: '/themes/latte.png',
-    colors: {
-      primary: '#8B4513',
-      secondary: '#D2691E',
-      bg: '#FFF8DC',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 0, y: 0 },
-        size: { width: 3, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 0, y: 2 },
-        size: { width: 3, height: 3 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 3, y: 2 },
-        size: { width: 3, height: 3 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 5 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 7,
-    name: '神秘紫',
-    description: '神秘优雅，高级感',
-    preview: '/themes/purple.png',
-    colors: {
-      primary: '#6B46C1',
-      secondary: '#9F7AEA',
-      bg: '#F7FAFC',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 1, y: 0 },
-        size: { width: 4, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 0, y: 2 },
-        size: { width: 2, height: 4 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 2, y: 2 },
-        size: { width: 4, height: 4 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 6 },
-        size: { width: 6, height: 4 }
-      }
-    ]
-  },
-  {
-    id: 8,
-    name: '深海蓝',
-    description: '清新宁静，夏日气息',
-    preview: '/themes/ocean.png',
-    colors: {
-      primary: '#0891B2',
-      secondary: '#06B6D4',
-      bg: '#F0F9FF',
-      surface: '#FFFFFF'
-    },
-    modules: [
-      {
-        id: 'profile',
-        name: '用户资料',
-        component: 'profile',
-        position: { x: 0, y: 0 },
-        size: { width: 2, height: 2 }
-      },
-      {
-        id: 'links',
-        name: '注册链接',
-        component: 'links',
-        position: { x: 2, y: 0 },
-        size: { width: 4, height: 2 }
-      },
-      {
-        id: 'social',
-        name: '社交媒体',
-        component: 'social',
-        position: { x: 0, y: 2 },
-        size: { width: 6, height: 4 }
-      },
-      {
-        id: 'twitter',
-        name: '推特动态',
-        component: 'twitter',
-        position: { x: 0, y: 6 },
-        size: { width: 6, height: 4 }
-      }
-    ]
+// Dashboard专用的主题配置 - 使用共享的颜色但添加预览和描述
+const DASHBOARD_THEMES: DashboardTheme[] = SHARED_THEMES.map((theme) => ({
+  ...theme,
+  description: getThemeDescription(theme.name),
+  preview: `/themes/${theme.className.replace('theme-', '')}.png`,
+  modules: getThemeModules(theme.id)
+}))
+
+function getThemeDescription(name: string): string {
+  const descriptions: Record<string, string> = {
+    '钻石手': '清爽简约，专注内容',
+    'HODL蓝': '专业稳重，值得信赖',
+    '草莓熊': '可爱甜美，温馨舒适',
+    '赛博橙': '科技未来，动感活力',
+    '韭菜绿': '生机勃勃，自然清新',
+    '拿铁棕': '温暖醇厚，舒适安逸',
+    '神秘紫': '优雅神秘，独特个性',
+    'Web3': '数字未来，去中心化'
   }
-]
+  return descriptions[name] || '个性化主题'
+}
+
+function getThemeModules(themeId: number): Module[] {
+  // 根据主题ID返回默认模块配置
+  const baseModules = [
+    {
+      id: 'profile',
+      name: '用户资料',
+      component: 'profile' as const,
+      position: { x: 0, y: 0 },
+      size: { width: 3, height: 2 }
+    },
+    {
+      id: 'social',
+      name: '社交媒体',
+      component: 'social' as const,
+      position: { x: 3, y: 0 },
+      size: { width: 3, height: 2 }
+    },
+    {
+      id: 'mostfind',
+      name: '我活跃在',
+      component: 'mostfind' as const,
+      position: { x: 0, y: 2 },
+      size: { width: 2, height: 2 }
+    },
+    {
+      id: 'links',
+      name: '注册链接',
+      component: 'links' as const,
+      position: { x: 2, y: 2 },
+      size: { width: 4, height: 4 }
+    },
+    {
+      id: 'twitter',
+      name: '推特动态',
+      component: 'twitter' as const,
+      position: { x: 0, y: 6 },
+      size: { width: 6, height: 4 }
+    }
+  ]
+
+  // 钻石手主题有特殊布局
+  if (themeId === 1) {
+    return baseModules
+  }
+
+  return baseModules
+}
 
 export const Dashboard: React.FC = () => {
   const { address } = useAccount()
   const [user, setUser] = useState<User | null>(null)
-  const [selectedTheme, setSelectedTheme] = useState<Theme>(THEMES[0])
-  const [modules, setModules] = useState<Module[]>(THEMES[0].modules)
+  const [selectedTheme, setSelectedTheme] = useState<DashboardTheme>(DASHBOARD_THEMES[0])
+  const [modules, setModules] = useState<Module[]>(DASHBOARD_THEMES[0].modules)
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
   const [resizingModule, setResizingModule] = useState<{ module: Module; direction: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -395,12 +119,12 @@ export const Dashboard: React.FC = () => {
   // CSS 编辑器状态
   const [cssContent, setCssContent] = useState(`:root {
   /* 品牌色彩 */
-  --color-primary: ${THEMES[0].colors.primary};
-  --color-secondary: ${THEMES[0].colors.secondary};
+  --color-primary: ${DASHBOARD_THEMES[0].colors.primary};
+  --color-secondary: ${DASHBOARD_THEMES[0].colors.secondary};
   
   /* 背景色 */
-  --color-bg: ${THEMES[0].colors.bg};
-  --color-surface: ${THEMES[0].colors.surface};
+  --color-bg: ${DASHBOARD_THEMES[0].colors.bg};
+  --color-surface: ${DASHBOARD_THEMES[0].colors.surface};
   
   /* 文字颜色 */
   --color-text-dark: #2D3748;
@@ -447,7 +171,7 @@ export const Dashboard: React.FC = () => {
         if (userData.user.layout) {
           console.log('加载用户布局配置:', userData.user.layout)
           setModules(userData.user.layout.modules)
-          const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
+          const theme = DASHBOARD_THEMES.find(t => t.id === userData.user.layout!.themeId)
           if (theme) {
             setSelectedTheme(theme)
             console.log('设置主题:', theme.name)
@@ -455,20 +179,20 @@ export const Dashboard: React.FC = () => {
         } else {
           // 如果用户未设置布局，使用第一个主题作为默认
           console.log('用户未设置布局，使用默认主题')
-          setSelectedTheme(THEMES[0])
-          setModules(THEMES[0].modules)
+          setSelectedTheme(DASHBOARD_THEMES[0])
+          setModules(DASHBOARD_THEMES[0].modules)
         }
       } else {
         // 如果用户不存在，使用第一个主题作为默认
         console.log('用户不存在，使用默认主题')
-        setSelectedTheme(THEMES[0])
-        setModules(THEMES[0].modules)
+        setSelectedTheme(DASHBOARD_THEMES[0])
+        setModules(DASHBOARD_THEMES[0].modules)
       }
     } catch (error) {
       console.error('加载用户数据失败:', error)
       // 出错时也使用第一个主题作为默认
-      setSelectedTheme(THEMES[0])
-      setModules(THEMES[0].modules)
+      setSelectedTheme(DASHBOARD_THEMES[0])
+      setModules(DASHBOARD_THEMES[0].modules)
     }
   }
 
@@ -568,7 +292,7 @@ export const Dashboard: React.FC = () => {
     ))
   }
 
-  const handleThemeChange = (theme: Theme) => {
+  const handleThemeChange = (theme: DashboardTheme) => {
     setSelectedTheme(theme)
     setModules(theme.modules)
     
@@ -756,18 +480,14 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div style={{
+    <div className={getThemeClassName(selectedTheme.id)} style={{
       minHeight: '100vh',
-      background: selectedTheme.colors.bg,
+      background: 'var(--theme-bg)',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
       {/* 头部 */}
-      <div style={{
-        background: selectedTheme.colors.surface,
-        backdropFilter: 'blur(10px)',
-        border: `1px solid ${selectedTheme.colors.primary}20`,
-        padding: '1rem 2rem',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      <div className="theme-module" style={{
+        padding: '1rem 2rem'
       }}>
         <div style={{
           maxWidth: '1400px',
@@ -776,8 +496,7 @@ export const Dashboard: React.FC = () => {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <h1 style={{ 
-            color: selectedTheme.colors.primary,
+          <h1 className="theme-module-title" style={{ 
             margin: 0,
             fontSize: '1.5rem',
             fontWeight: '700'
@@ -887,7 +606,7 @@ export const Dashboard: React.FC = () => {
                     }}>
                       选择主题：
                     </div>
-                    {THEMES.map(theme => (
+                    {DASHBOARD_THEMES.map(theme => (
                       <div
                         key={theme.id}
                         onClick={(e) => {
