@@ -406,40 +406,230 @@ export default function UserProfile({ username: propUsername }: { username?: str
         gap: '1rem',
         minHeight: '900px'
       }}>
-        {/* 临时显示布局信息 */}
-        <div style={{
-          gridColumn: '1 / span 6',
-          gridRow: '1 / span 1',
-          background: currentTheme.colors.surface + '10',
-          borderRadius: '16px',
-          padding: '1rem',
-          border: `1px solid ${currentTheme.colors.primary}20`,
-          textAlign: 'center'
-        }}>
-          <h3 style={{ 
-            color: currentTheme.colors.primary, 
-            margin: '0 0 0.5rem 0',
-            fontSize: '1.2rem',
-            fontWeight: '600'
-          }}>
-            🌐 布局系统已启用
-          </h3>
-          <p style={{ 
-            color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
-            margin: 0,
-            fontSize: '0.9rem'
-          }}>
-            容器宽度: 1800px | 格子尺寸: 300px × 300px | 网格: 6×9
-          </p>
-          <p style={{ 
-            color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
-            margin: '0.5rem 0',
-            fontSize: '0.8rem',
-            opacity: 0.7
-          }}>
-            当前布局模块数量: {layoutModules.length}
-          </p>
-        </div>
+        {/* 根据布局模块渲染内容 */}
+        {layoutModules.map((module) => (
+          <div
+            key={module.id}
+            style={{
+              gridColumn: `${module.position.x + 1} / span ${module.size.width}`,
+              gridRow: `${module.position.y + 1} / span ${module.size.height}`,
+              background: currentTheme.colors.surface + '10',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '16px',
+              padding: '1.5rem',
+              border: `1px solid ${currentTheme.colors.primary}20`,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}
+          >
+            <h3 style={{ 
+              color: currentTheme.colors.primary, 
+              margin: '0 0 1rem 0',
+              fontSize: '1.1rem',
+              fontWeight: '600'
+            }}>
+              {module.name}
+            </h3>
+            
+            {module.component === 'profile' && (
+              <div style={{ textAlign: 'center' }}>
+                {getUserAvatarUrl(user) ? (
+                  <img 
+                    src={getUserAvatarUrl(user!)} 
+                    alt={user?.username}
+                    style={{ 
+                      width: '80px', 
+                      height: '80px', 
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '3px solid rgba(255,255,255,0.2)',
+                      margin: '0 auto 1rem'
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.style.display = 'none'
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    color: 'white',
+                    margin: '0 auto 1rem'
+                  }}>
+                    {user?.username?.charAt(0)?.toUpperCase() || '?'}
+                  </div>
+                )}
+                
+                <h4 style={{ 
+                  color: currentTheme.colors.primary, 
+                  margin: '0 0 0.5rem 0',
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold'
+                }}>
+                  {user?.username}
+                </h4>
+                
+                {user?.bio && (
+                  <p style={{ 
+                    color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+                    margin: 0,
+                    fontSize: '0.9rem',
+                    lineHeight: 1.4
+                  }}>
+                    {user.bio}
+                  </p>
+                )}
+              </div>
+            )}
+            
+            {module.component === 'mostfind' && (
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌍</div>
+                <p style={{ 
+                  color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+                  margin: '0 0 1rem 0',
+                  fontSize: '1.1rem',
+                  fontWeight: '500'
+                }}>
+                  我活跃在各大Web3平台
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div style={{ fontSize: '2rem' }}>🐦</div>
+                  <div style={{ fontSize: '2rem' }}>💎</div>
+                  <div style={{ fontSize: '2rem' }}>🚀</div>
+                  <div style={{ fontSize: '2rem' }}>🎮</div>
+                  <div style={{ fontSize: '2rem' }}>🎨</div>
+                </div>
+              </div>
+            )}
+            
+            {module.component === 'links' && (
+              <div style={{ flex: 1, overflow: 'auto' }}>
+                {links.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📝</div>
+                    <p style={{ 
+                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                      margin: 0,
+                      fontSize: '1rem',
+                      fontWeight: '500'
+                    }}>
+                      暂无链接
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {links.map((link) => (
+                      <div
+                        key={link.id}
+                        style={{
+                          background: currentTheme.colors.surface + '20',
+                          border: `1px solid ${currentTheme.colors.primary}30`,
+                          borderRadius: '8px',
+                          padding: '0.75rem',
+                          fontSize: '0.8rem'
+                        }}
+                      >
+                        <div style={{ 
+                          fontWeight: '600',
+                          color: currentTheme.colors.primary,
+                          marginBottom: '0.5rem'
+                        }}>
+                          {link.label}
+                        </div>
+                        {link.url && (
+                          <div style={{
+                            opacity: 0.7,
+                            fontFamily: 'monospace',
+                            wordBreak: 'break-all',
+                            fontSize: '0.7rem'
+                          }}>
+                            {link.url}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {module.component === 'social' && (
+              <div>
+                {user?.twitterHandle ? (
+                  <div style={{
+                    background: currentTheme.colors.surface + '20',
+                    border: `1px solid ${currentTheme.colors.primary}30`,
+                    borderRadius: '8px',
+                    padding: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>🐦</span>
+                    <div>
+                      <div style={{ 
+                        fontSize: '1rem', 
+                        fontWeight: '600',
+                        color: currentTheme.colors.primary 
+                      }}>
+                        Twitter
+                      </div>
+                      <div style={{
+                        fontSize: '0.8rem',
+                        opacity: 0.7,
+                        color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666'
+                      }}>
+                        @{user.twitterHandle}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📱</div>
+                    <p style={{ 
+                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                      margin: 0,
+                      fontSize: '1rem',
+                      fontWeight: '500'
+                    }}>
+                      暂无社交媒体
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {module.component === 'twitter' && (
+              <div style={{ flex: 1 }}>
+                {user?.twitterHandle ? (
+                  <TwitterTimeline twitterHandle={user.twitterHandle} />
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🐦</div>
+                    <p style={{ 
+                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                      margin: 0,
+                      fontSize: '1rem',
+                      fontWeight: '500'
+                    }}>
+                      暂未设置推特账号
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
       {/* 头像区域 */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
