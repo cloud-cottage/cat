@@ -1,28 +1,25 @@
 /* CSS变量主题系统 */
 
-/* 钻石手主题 - 增强可读性 */
+/* 钻石手主题 */
 .theme-diamond {
   --theme-primary: #FF8C42;
   --theme-primary-rgb: 255, 140, 66;
   --theme-secondary: #1C6E9C;
   --theme-secondary-rgb: 28, 110, 156;
+  --theme-accent: #FF6B35;
+  --theme-accent-rgb: 255, 107, 53;
+  --theme-surface: rgba(255, 255, 255, 0.95);
+  --theme-surface-rgb: 255, 255, 255;
   --theme-bg: #D9DFDE;
-  --theme-surface: linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%);
-  --theme-diamond-style: 1;
-  
-  /* 文本颜色变量 - 提高可读性 */
-  --theme-text-primary: #2D3748;
+  --theme-text-primary: #2C3E50;
   --theme-text-secondary: #4A5568;
-  --theme-text-muted: #718096;
-  --theme-text-white: #FFFFFF;
-  
-  /* 钻石效果变量 */
-  --theme-glow: 0 0 20px rgba(255, 140, 66, 0.3);
-  --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-  --theme-hover-shadow: 0 12px 48px rgba(255, 140, 66, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.9), inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-  --theme-border-radius: 24px;
-  --theme-border-width: 3px;
-  --theme-text-shadow: 0 2px 6px rgba(255, 140, 66, 0.4), 0 0 12px rgba(255, 140, 66, 0.2);
+  --theme-text-muted: #7F8C8D;
+  --theme-border-radius: 16px;
+  --theme-border-width: 2px;
+  --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
+  background: url('/images/diamond-background.png') repeat;
+  background-size: 200px 200px;
+  background-attachment: fixed;
 }
 
 /* HODL蓝主题 - 增强可读性 */
