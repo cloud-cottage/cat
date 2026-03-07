@@ -15,7 +15,12 @@ const THEMES = [
       bg: 'linear-gradient(135deg, #F8F9FA 0%, #E8EAF6 50%, #F8F9FA 100%)',
       surface: 'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%)'
     },
-    diamondStyle: true
+    diamondStyle: true,
+    effects: {
+      glow: '0 0 20px rgba(255, 140, 66, 0.3)',
+      shadow: '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.1)',
+      hoverShadow: '0 12px 48px rgba(255, 140, 66, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.9), inset 0 -2px 6px rgba(0, 0, 0, 0.15)'
+    }
   },
   {
     id: 2,
@@ -419,33 +424,37 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 50%, #FFFFFF 100%)' : 
                 currentTheme.colors.surface + '10',
               backdropFilter: currentTheme.diamondStyle ? 'none' : 'blur(10px)',
-              borderRadius: currentTheme.diamondStyle ? '20px' : '16px',
+              borderRadius: currentTheme.diamondStyle ? '24px' : '16px',
               padding: '1.5rem',
               border: currentTheme.diamondStyle ? 
-                '2px solid transparent' : 
+                '3px solid transparent' : 
                 `1px solid ${currentTheme.colors.primary}20`,
               backgroundClip: 'padding-box',
               borderImage: currentTheme.diamondStyle ? 
-                'linear-gradient(145deg, #FF8C42, #1C6E9C, #FF8C42) 1' : 
+                'linear-gradient(145deg, #FF8C42 0%, #1C6E9C 25%, #FF8C42 50%, #1C6E9C 75%, #FF8C42 100%) 1' : 
                 'none',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              boxShadow: currentTheme.diamondStyle ? 
-                '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)' : 
+              boxShadow: currentTheme.diamondStyle && currentTheme.effects ? 
+                currentTheme.effects.shadow : 
                 '0 4px 16px rgba(0,0,0,0.1)',
-              position: 'relative'
+              position: 'relative',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: 'translateZ(0)'
             }}
             onMouseEnter={(e) => {
-              if (currentTheme.diamondStyle) {
-                e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 140, 66, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.15)'
+              if (currentTheme.diamondStyle && currentTheme.effects) {
+                e.currentTarget.style.transform = 'translateY(-6px) scale(1.03) rotateX(2deg)'
+                e.currentTarget.style.boxShadow = currentTheme.effects.hoverShadow
+                e.currentTarget.style.filter = 'brightness(1.05)'
               }
             }}
             onMouseLeave={(e) => {
-              if (currentTheme.diamondStyle) {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+              if (currentTheme.diamondStyle && currentTheme.effects) {
+                e.currentTarget.style.transform = 'translateY(0) scale(1) rotateX(0deg)'
+                e.currentTarget.style.boxShadow = currentTheme.effects.shadow
+                e.currentTarget.style.filter = 'brightness(1)'
               }
             }}
           >
@@ -455,14 +464,15 @@ export default function UserProfile({ username: propUsername }: { username?: str
               fontSize: '1.1rem',
               fontWeight: '600',
               background: currentTheme.diamondStyle ? 
-                'linear-gradient(135deg, #FF8C42 0%, #1C6E9C 50%, #FF8C42 100%)' : 
+                'linear-gradient(135deg, #FF8C42 0%, #1C6E9C 25%, #FF8C42 50%, #1C6E9C 75%, #FF8C42 100%)' : 
                 'none',
               WebkitBackgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
               WebkitTextFillColor: currentTheme.diamondStyle ? 'transparent' : 'unset',
               backgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
               textShadow: currentTheme.diamondStyle ? 
-                '0 2px 4px rgba(255, 140, 66, 0.3)' : 
-                'none'
+                '0 2px 6px rgba(255, 140, 66, 0.4), 0 0 12px rgba(255, 140, 66, 0.2)' : 
+                'none',
+              filter: currentTheme.diamondStyle ? 'drop-shadow(0 0 8px rgba(255, 140, 66, 0.3))' : 'none'
             } as React.CSSProperties}>
               {module.component === 'profile' ? (user?.nickname || user?.username) : module.name}
             </h3>
