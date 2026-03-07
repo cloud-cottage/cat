@@ -384,6 +384,9 @@ export default function UserProfile({ username: propUsername }: { username?: str
     return <div className="blog-container">用户不存在</div>
   }
 
+  // 临时使用layoutModules来避免构建错误
+  console.log('Current layout modules:', layoutModules.length)
+
   return (
     <div style={{ 
       minHeight: '100vh',
