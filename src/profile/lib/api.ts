@@ -1,4 +1,4 @@
-const API_BASE = 'https://www.catcat.meme/api/user-kv'
+const API_BASE = 'https://www.catcat.meme/api/user-kv.js'
 
 // IPFS 配置
 const IPFS_CONFIG = {
