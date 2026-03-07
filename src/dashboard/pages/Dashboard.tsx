@@ -420,37 +420,49 @@ export const Dashboard: React.FC = () => {
 
   const gridRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!address) return
-    
-    const loadUser = async () => {
-      try {
-        const userData = await api.getUserByUsername('admin') // 临时使用 admin
-        if (userData) {
-          setUser(userData.user)
-          // 加载用户的布局配置
-          if (userData.user.layout) {
-            setModules(userData.user.layout.modules)
-            const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
-            if (theme) setSelectedTheme(theme)
-          } else {
-            // 如果用户未设置布局，使用第一个主题作为默认
-            setSelectedTheme(THEMES[0])
-            setModules(THEMES[0].modules)
+  // 加载用户数据的函数
+  const loadUser = async () => {
+    try {
+      console.log('开始加载用户数据...')
+      const userData = await api.getUserByUsername('admin') // 临时使用 admin
+      console.log('获取到的用户数据:', userData)
+      
+      if (userData) {
+        setUser(userData.user)
+        console.log('当前用户布局:', userData.user.layout)
+        
+        // 加载用户的布局配置
+        if (userData.user.layout) {
+          console.log('加载用户布局配置:', userData.user.layout)
+          setModules(userData.user.layout.modules)
+          const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
+          if (theme) {
+            setSelectedTheme(theme)
+            console.log('设置主题:', theme.name)
           }
         } else {
-          // 如果用户不存在，使用第一个主题作为默认
+          // 如果用户未设置布局，使用第一个主题作为默认
+          console.log('用户未设置布局，使用默认主题')
           setSelectedTheme(THEMES[0])
           setModules(THEMES[0].modules)
         }
-      } catch (error) {
-        console.error('加载用户数据失败:', error)
-        // 出错时也使用第一个主题作为默认
+      } else {
+        // 如果用户不存在，使用第一个主题作为默认
+        console.log('用户不存在，使用默认主题')
         setSelectedTheme(THEMES[0])
         setModules(THEMES[0].modules)
       }
+    } catch (error) {
+      console.error('加载用户数据失败:', error)
+      // 出错时也使用第一个主题作为默认
+      setSelectedTheme(THEMES[0])
+      setModules(THEMES[0].modules)
     }
+  }
 
+  useEffect(() => {
+    if (!address) return
+    
     loadUser()
   }, [address])
 
@@ -589,13 +601,19 @@ export const Dashboard: React.FC = () => {
         updatedAt: new Date().toISOString()
       }
       
+      console.log('准备保存的布局数据:', userLayout)
+      console.log('当前模块状态:', modules)
+      
       const updatedUser = {
         ...user,
         layout: userLayout
       }
       
+      console.log('准备更新的用户数据:', updatedUser)
+      
       // 使用正确的API端点
-      await api.updateUser('admin', updatedUser)
+      const result = await api.updateUser('admin', updatedUser)
+      console.log('API更新结果:', result)
       setUser(updatedUser)
       console.log('布局应用成功')
       alert('✅ 布局已成功应用并保存！')
@@ -1185,8 +1203,28 @@ export const Dashboard: React.FC = () => {
               {/* 应用布局按钮 */}
               <div style={{
                 display: 'flex',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                gap: '1rem'
               }}>
+                <button
+                  onClick={() => {
+                    console.log('手动重新加载用户数据...')
+                    loadUser()
+                  }}
+                  style={{
+                    padding: '1rem 2rem',
+                    background: '#6B7280',
+                    border: '2px solid #4B5563',
+                    borderRadius: '12px',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontSize: '1.1rem',
+                    fontWeight: '600',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  🔄 重新加载数据
+                </button>
                 <button
                   onClick={handleApplyLayout}
                   disabled={isSaving}
