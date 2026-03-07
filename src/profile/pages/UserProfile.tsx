@@ -123,12 +123,17 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         width: '1800px',
         maxWidth: '100%',
         margin: '0 auto',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(6, 300px)',
-        gridTemplateRows: 'repeat(9, 300px)',
-        gap: '1rem',
-        minHeight: '900px'
+        display: 'flex',
+        flexDirection: 'column'
       }}>
+        {/* 网格布局 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(6, 300px)',
+          gridTemplateRows: 'repeat(9, 300px)',
+          gap: '1rem',
+          minHeight: '900px'
+        }}>
         {/* 根据布局模块渲染内容 */}
         {layoutModules.map((module) => (
           <div
@@ -445,6 +450,46 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             )}
           </div>
         ))}
+        </div>
+
+        {/* 页脚功能链接 */}
+        <div className="theme-text-muted" style={{ 
+          textAlign: 'center', 
+          padding: '1rem',
+          fontSize: '0.75rem',
+          borderTop: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
+          marginTop: '2rem'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+            <a
+              href="/privacy"
+              className="theme-link"
+            >
+              隐私条款
+            </a>
+            <a
+              href="https://t.me/xCatKing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="theme-link"
+            >
+              报错
+            </a>
+            <button
+              onClick={() => setShowExploreModal(true)}
+              className="theme-link"
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 'inherit',
+                padding: 0
+              }}
+            >
+              随机逛逛Explore
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 底部编辑链接 */}
@@ -522,45 +567,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             编辑我的链接
           </a>
         )}
-      </div>
-
-      {/* 页脚功能链接 */}
-      <div className="theme-text-muted" style={{ 
-        textAlign: 'center', 
-        padding: '1rem',
-        fontSize: '0.75rem',
-        borderTop: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
-        marginTop: '2rem'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
-          <a
-            href="/privacy"
-            className="theme-link"
-          >
-            隐私条款
-          </a>
-          <a
-            href="https://t.me/xCatKing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="theme-link"
-          >
-            报错
-          </a>
-          <button
-            onClick={() => setShowExploreModal(true)}
-            className="theme-link"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 'inherit',
-              padding: 0
-            }}
-          >
-            随机逛逛Explore
-          </button>
-        </div>
       </div>
 
       {/* 主题选择器模态框 */}
