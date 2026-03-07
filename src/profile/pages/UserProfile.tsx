@@ -12,9 +12,10 @@ const THEMES = [
     colors: {
       primary: '#FF8C42',
       secondary: '#1C6E9C',
-      bg: '#F8F9FA',
-      surface: '#FFFFFF'
-    }
+      bg: 'linear-gradient(135deg, #F8F9FA 0%, #E8EAF6 50%, #F8F9FA 100%)',
+      surface: 'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%)'
+    },
+    diamondStyle: true
   },
   {
     id: 2,
@@ -414,22 +415,55 @@ export default function UserProfile({ username: propUsername }: { username?: str
             style={{
               gridColumn: `${module.position.x + 1} / span ${module.size.width}`,
               gridRow: `${module.position.y + 1} / span ${module.size.height}`,
-              background: currentTheme.colors.surface + '10',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '16px',
+              background: currentTheme.diamondStyle ? 
+                'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 50%, #FFFFFF 100%)' : 
+                currentTheme.colors.surface + '10',
+              backdropFilter: currentTheme.diamondStyle ? 'none' : 'blur(10px)',
+              borderRadius: currentTheme.diamondStyle ? '20px' : '16px',
               padding: '1.5rem',
-              border: `1px solid ${currentTheme.colors.primary}20`,
+              border: currentTheme.diamondStyle ? 
+                '2px solid transparent' : 
+                `1px solid ${currentTheme.colors.primary}20`,
+              backgroundClip: 'padding-box',
+              borderImage: currentTheme.diamondStyle ? 
+                'linear-gradient(145deg, #FF8C42, #1C6E9C, #FF8C42) 1' : 
+                'none',
               display: 'flex',
               flexDirection: 'column',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              boxShadow: currentTheme.diamondStyle ? 
+                '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)' : 
+                '0 4px 16px rgba(0,0,0,0.1)',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => {
+              if (currentTheme.diamondStyle) {
+                e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 140, 66, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.15)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (currentTheme.diamondStyle) {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+              }
             }}
           >
             <h3 style={{ 
               color: currentTheme.colors.primary, 
               margin: '0 0 1rem 0',
               fontSize: '1.1rem',
-              fontWeight: '600'
-            }}>
+              fontWeight: '600',
+              background: currentTheme.diamondStyle ? 
+                'linear-gradient(135deg, #FF8C42 0%, #1C6E9C 50%, #FF8C42 100%)' : 
+                'none',
+              WebkitBackgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
+              WebkitTextFillColor: currentTheme.diamondStyle ? 'transparent' : 'unset',
+              backgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
+              textShadow: currentTheme.diamondStyle ? 
+                '0 2px 4px rgba(255, 140, 66, 0.3)' : 
+                'none'
+            } as React.CSSProperties}>
               {module.component === 'profile' ? (user?.nickname || user?.username) : module.name}
             </h3>
             
