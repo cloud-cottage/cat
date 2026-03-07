@@ -239,10 +239,11 @@ export default function UserProfile({ username: propUsername }: { username?: str
           // 如果用户没有设置布局，使用第一个主题的默认布局
           setCurrentTheme(THEMES[0])
           setLayoutModules([
-            { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 3 } },
-            { id: 'links', name: '注册链接', component: 'links', position: { x: 3, y: 0 }, size: { width: 3, height: 4 } },
-            { id: 'social', name: '社交媒体', component: 'social', position: { x: 0, y: 3 }, size: { width: 3, height: 3 } },
-            { id: 'twitter', name: '推特时间线', component: 'twitter', position: { x: 3, y: 4 }, size: { width: 3, height: 4 } }
+            { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
+            { id: 'mostfind', name: '我活跃在', component: 'mostfind', position: { x: 0, y: 2 }, size: { width: 2, height: 2 } },
+            { id: 'links', name: '注册链接', component: 'links', position: { x: 2, y: 2 }, size: { width: 4, height: 4 } },
+            { id: 'social', name: '社交媒体', component: 'social', position: { x: 3, y: 0 }, size: { width: 3, height: 2 } },
+            { id: 'twitter', name: '推特时间线', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
           ])
         }
         

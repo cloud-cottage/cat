@@ -76,7 +76,7 @@ export interface User {
     modules: Array<{
       id: string
       name: string
-      component: 'profile' | 'links' | 'twitter' | 'social'
+      component: 'profile' | 'links' | 'twitter' | 'social' | 'mostfind'
       position: { x: number; y: number }
       size: { width: number; height: number }
     }>

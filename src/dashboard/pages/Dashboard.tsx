@@ -5,7 +5,7 @@ import { api, type User } from '../../profile/lib/api'
 interface Module {
   id: string
   name: string
-  component: 'profile' | 'links' | 'twitter' | 'social'
+  component: 'profile' | 'links' | 'twitter' | 'social' | 'mostfind'
   position: { x: number; y: number }
   size: { width: number; height: number }
 }
@@ -43,21 +43,28 @@ const THEMES: Theme[] = [
         name: '用户资料',
         component: 'profile',
         position: { x: 0, y: 0 },
-        size: { width: 3, height: 3 }
+        size: { width: 3, height: 2 }
+      },
+      {
+        id: 'mostfind',
+        name: '我活跃在',
+        component: 'mostfind',
+        position: { x: 0, y: 2 },
+        size: { width: 2, height: 2 }
       },
       {
         id: 'links',
         name: '注册链接',
         component: 'links',
-        position: { x: 3, y: 0 },
-        size: { width: 3, height: 4 }
+        position: { x: 2, y: 2 },
+        size: { width: 4, height: 4 }
       },
       {
         id: 'social',
         name: '社交媒体',
         component: 'social',
-        position: { x: 0, y: 3 },
-        size: { width: 6, height: 3 }
+        position: { x: 3, y: 0 },
+        size: { width: 3, height: 2 }
       },
       {
         id: 'twitter',
