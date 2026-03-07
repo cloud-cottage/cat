@@ -69,6 +69,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             return
           }
         }
+        
+        if (!userData) return
+        
         setUser(userData.user)
         setLinks(userData.links)
         if (userData.user.layout) {
@@ -79,7 +82,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
           }
         } else {
           setCurrentTheme(THEMES[0])
-          setLayoutModules([])
+          // 设置默认模块布局
+          setLayoutModules([
+            { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
+            { id: 'mostfind', name: '我活跃在', component: 'mostfind', position: { x: 0, y: 2 }, size: { width: 2, height: 2 } },
+            { id: 'links', name: '注册链接', component: 'links', position: { x: 2, y: 2 }, size: { width: 4, height: 4 } },
+            { id: 'social', name: '社交媒体', component: 'social', position: { x: 3, y: 0 }, size: { width: 3, height: 2 } },
+            { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
+          ])
         }
         document.title = `${userData.user.nickname || userData.user.username}｜CAT｜Your Web3 Paws`
         setIsOwner(!!(address && address.toLowerCase() === userData.user.walletAddress.toLowerCase()))
@@ -190,7 +200,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 {user?.bio && (
                   <p style={{ 
                     color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
-                    margin: 0,
+                    margin: '0 0 1rem 0',
                     fontSize: '0.9rem',
                     lineHeight: 1.4
                   }}>
@@ -198,12 +208,76 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                   </p>
                 )}
                 
+                {/* 认证徽章 - 绿色邮戳/印章风格 */}
                 {user?.walletAddress && user.walletAddress !== '0x0000' && (
-                  <div style={{ marginTop: '1rem' }}>
+                  <div style={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '1rem',
+                    transform: 'rotate(-8deg)',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                  }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                      color: 'white',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 'bold',
+                      boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}>
+                      <span style={{ fontSize: '0.7rem' }}>该页面由</span>
+                      <br/>
+                      <span style={{ 
+                        fontSize: '0.8rem', 
+                        fontFamily: 'monospace',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                      </span>
+                      <br/>
+                      签名认证
+                    </div>
+                    
+                    {/* 伪元素效果 - 通过额外div实现 */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '-2px',
+                      left: '-2px',
+                      right: '-2px',
+                      bottom: '-2px',
+                      border: '1px dashed rgba(76, 175, 80, 0.2)',
+                      borderRadius: '8px',
+                      pointerEvents: 'none'
+                    }} />
+                    
+                    <div style={{
+                      position: 'absolute',
+                      top: '2px',
+                      left: '2px',
+                      right: '2px',
+                      bottom: '2px',
+                      border: '1px dotted rgba(139, 195, 74, 0.15)',
+                      borderRadius: '8px',
+                      pointerEvents: 'none'
+                    }} />
+                  </div>
+                )}
+                
+                {/* 钱包地址 */}
+                {user?.walletAddress && user.walletAddress !== '0x0000' && (
+                  <div style={{ marginBottom: '1rem' }}>
                     <button
                       onClick={() => setShowWalletAddress(!showWalletAddress)}
                       style={{
-                        padding: '0.5rem 1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
                         background: 'var(--theme-primary)',
                         border: 'none',
                         borderRadius: '20px',
@@ -214,21 +288,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                         transition: 'all 0.3s ease'
                       }}
                     >
-                      {showWalletAddress ? '隐藏钱包地址' : '显示钱包地址'}
+                      <span style={{ fontSize: '1.2rem' }}>💼</span>
+                      {showWalletAddress ? user.walletAddress : `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}
                     </button>
-                    {showWalletAddress && (
-                      <div style={{
-                        marginTop: '0.5rem',
-                        padding: '0.5rem',
-                        background: 'rgba(0,0,0,0.1)',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
-                        wordBreak: 'break-all',
-                        fontFamily: 'monospace'
-                      }}>
-                        {user.walletAddress}
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
