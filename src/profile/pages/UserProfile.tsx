@@ -974,25 +974,27 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 }
               }}
               style={{
-                color: 'rgba(255,255,255,0.9)',
+                color: 'white',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
                 padding: '0.5rem 1rem',
                 borderRadius: '20px',
-                background: isEditing ? 'rgba(244, 67, 54, 0.8)' : 'rgba(76, 175, 80, 0.8)',
+                background: isEditing ? 'rgba(244, 67, 54, 0.9)' : 'rgba(76, 175, 80, 0.9)',
                 backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.2)',
+                border: '1px solid rgba(255,255,255,0.3)',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
-                display: 'inline-block'
+                display: 'inline-block',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                fontWeight: '500'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 1)' : 'rgba(76, 175, 80, 1)'
                 e.currentTarget.style.color = 'white'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 0.8)' : 'rgba(76, 175, 80, 0.8)'
-                e.currentTarget.style.color = 'rgba(255,255,255,0.9)'
+                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 0.9)' : 'rgba(76, 175, 80, 0.9)'
+                e.currentTarget.style.color = 'white'
               }}
             >
               {isEditing ? '完成编辑' : '进入编辑模式'}
