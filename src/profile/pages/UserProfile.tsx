@@ -198,8 +198,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 </h4>
                 
                 {user?.bio && (
-                  <p style={{ 
-                    color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+                  <p className="theme-text-secondary" style={{ 
                     margin: '0 0 1rem 0',
                     fontSize: '0.9rem',
                     lineHeight: 1.4
@@ -274,18 +273,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                   <div style={{ marginBottom: '1rem' }}>
                     <button
                       onClick={() => setShowWalletAddress(!showWalletAddress)}
+                      className="theme-button"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
-                        background: 'var(--theme-primary)',
-                        border: 'none',
-                        borderRadius: '20px',
-                        color: 'white',
-                        cursor: 'pointer',
                         fontSize: '0.8rem',
-                        fontWeight: '500',
-                        transition: 'all 0.3s ease'
+                        borderRadius: '20px'
                       }}
                     >
                       <span style={{ fontSize: '1.2rem' }}>💼</span>
@@ -299,8 +293,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             {module.component === 'mostfind' && (
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌍</div>
-                <p style={{ 
-                  color: currentTheme.id === 4 ? 'rgba(255,255,255,0.9)' : '#666', 
+                <p className="theme-text-secondary" style={{ 
                   margin: '0 0 1rem 0',
                   fontSize: '1.1rem',
                   fontWeight: '500'
@@ -322,8 +315,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 {links.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '2rem' }}>
                     <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📝</div>
-                    <p style={{ 
-                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                    <p className="theme-text-muted" style={{ 
                       margin: 0,
                       fontSize: '1rem',
                       fontWeight: '500'
@@ -372,8 +364,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                           {link.label.charAt(0).toUpperCase()}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{
-                            color: currentTheme.id === 4 ? 'white' : '#333',
+                          <div className="theme-text-primary" style={{
                             fontSize: '0.9rem',
                             fontWeight: '600',
                             overflow: 'hidden',
@@ -383,8 +374,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                             {link.label}
                           </div>
                           {link.description && (
-                            <div style={{
-                              color: currentTheme.id === 4 ? 'rgba(255,255,255,0.7)' : '#666',
+                            <div className="theme-text-muted" style={{
                               fontSize: '0.8rem',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
@@ -408,26 +398,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                     href={`https://twitter.com/${user.twitterHandle}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="theme-button"
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.5rem',
                       padding: '0.75rem 1.5rem',
-                      background: 'var(--theme-primary)',
-                      color: 'white',
-                      textDecoration: 'none',
                       borderRadius: '25px',
                       fontSize: '1rem',
                       fontWeight: '600',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.05)'
-                      e.currentTarget.style.boxShadow = '0 4px 12px var(--theme-primary)40'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)'
-                      e.currentTarget.style.boxShadow = 'none'
+                      textDecoration: 'none'
                     }}
                   >
                     🐦 Twitter
@@ -435,8 +415,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 ) : (
                   <div style={{ textAlign: 'center', padding: '2rem' }}>
                     <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📱</div>
-                    <p style={{ 
-                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                    <p className="theme-text-muted" style={{ 
                       margin: 0,
                       fontSize: '1rem',
                       fontWeight: '500'
@@ -465,8 +444,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                 ) : (
                   <div style={{ textAlign: 'center', padding: '2rem' }}>
                     <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🐦</div>
-                    <p style={{ 
-                      color: currentTheme.id === 4 ? 'white' : '#666', 
+                    <p className="theme-text-muted" style={{ 
                       margin: 0,
                       fontSize: '1rem',
                       fontWeight: '500'
@@ -527,24 +505,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                   setIsEditing(true)
                 }
               }}
+              className="theme-button"
               style={{
-                padding: '0.75rem 1.5rem',
-                background: isEditing ? '#28a745' : 'var(--theme-primary)',
-                border: 'none',
-                borderRadius: '25px',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)'
-                e.currentTarget.style.boxShadow = isEditing ? '0 4px 12px rgba(40, 167, 69, 0.3)' : '0 4px 12px var(--theme-primary)40'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = 'none'
+                background: isEditing ? '#28a745' : undefined
               }}
             >
               {isEditing ? '完成编辑' : '开始编辑'}
@@ -554,25 +517,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             {isEditing && (
               <button
                 onClick={() => setShowThemeSelector(true)}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  background: 'var(--theme-secondary)',
-                  border: 'none',
-                  borderRadius: '25px',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px var(--theme-secondary)40'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
+                className="theme-button-secondary"
               >
                 🎨 选择主题
               </button>
@@ -581,25 +526,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         ) : (
           <a
             href="/admin"
+            className="theme-button"
             style={{
-              display: 'inline-block',
-              padding: '0.75rem 1.5rem',
-              background: 'var(--theme-primary)',
-              border: 'none',
-              borderRadius: '25px',
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.05)'
-              e.currentTarget.style.boxShadow = '0 4px 12px var(--theme-primary)40'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)'
-              e.currentTarget.style.boxShadow = 'none'
+              textDecoration: 'none'
             }}
           >
             编辑我的链接
@@ -608,28 +537,17 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
       </div>
 
       {/* 页脚功能链接 */}
-      <div style={{ 
+      <div className="theme-text-muted" style={{ 
         textAlign: 'center', 
         padding: '1rem',
         fontSize: '0.75rem',
-        color: currentTheme.id === 4 ? 'rgba(255,255,255,0.6)' : '#999',
         borderTop: '1px solid var(--theme-primary)20',
         marginTop: '2rem'
       }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
           <a
             href="/privacy"
-            style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              transition: 'color 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--theme-primary)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'inherit'
-            }}
+            className="theme-link"
           >
             隐私条款
           </a>
@@ -637,36 +555,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             href="https://t.me/xCatKing"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              transition: 'color 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--theme-primary)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'inherit'
-            }}
+            className="theme-link"
           >
             报错
           </a>
           <button
             onClick={() => setShowExploreModal(true)}
+            className="theme-link"
             style={{
               background: 'none',
               border: 'none',
-              color: 'inherit',
               cursor: 'pointer',
               fontSize: 'inherit',
-              padding: 0,
-              transition: 'color 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--theme-primary)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'inherit'
+              padding: 0
             }}
           >
             随机逛逛Explore
