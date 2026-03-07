@@ -329,37 +329,25 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
                       <div
                         key={link.id}
                         onClick={() => link.url && window.open(link.url, '_blank')}
+                        className="theme-card"
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.75rem',
-                          padding: '0.75rem',
-                          background: 'rgba(255,255,255,0.05)',
-                          border: `1px solid var(--theme-primary)20`,
-                          borderRadius: '8px',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
-                          e.currentTarget.style.transform = 'translateY(-1px)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
-                          e.currentTarget.style.transform = 'translateY(0)'
+                          padding: '1rem',
+                          cursor: 'pointer'
                         }}
                       >
-                        <div style={{
+                        <div className="theme-tag" style={{
                           width: '32px',
                           height: '32px',
                           borderRadius: '6px',
-                          background: `linear-gradient(135deg, var(--theme-primary), var(--theme-secondary))`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          color: 'white',
                           fontSize: '0.9rem',
-                          fontWeight: 'bold'
+                          fontWeight: 'bold',
+                          padding: 0
                         }}>
                           {link.label.charAt(0).toUpperCase()}
                         </div>
