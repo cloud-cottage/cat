@@ -465,11 +465,12 @@
   }
 }
 
-/* 钻石主题特殊样式 */
+/* 钻石手主题特殊样式 */
 .theme-diamond .theme-module {
   backdrop-filter: none;
   border-radius: var(--theme-border-radius);
   border: var(--theme-border-width) solid transparent;
+  background: #E6E9E7;
   background-clip: padding-box;
   border-image: linear-gradient(145deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%) 1;
 }

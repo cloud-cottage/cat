@@ -113,16 +113,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
 
   return (
     <div className={`blog-container ${getThemeClassName(currentTheme.id)}`} style={{ 
+      width: '1800px',
+      maxWidth: '100%',
+      margin: '0 auto',
       minHeight: '100vh',
       background: 'var(--theme-bg)',
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
-      {/* 1800像素宽的格子布局容器 */}
+      {/* 页面主容器 */}
       <div style={{
-        width: '1800px',
-        maxWidth: '100%',
-        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column'
       }}>
@@ -764,3 +764,5 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
     </div>
   )
 }
+
+export default UserProfile
