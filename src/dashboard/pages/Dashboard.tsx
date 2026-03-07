@@ -431,8 +431,12 @@ export const Dashboard: React.FC = () => {
   const loadUser = async () => {
     try {
       console.log('开始加载用户数据...')
-      // 使用test用户而不是admin，因为admin用户不存在
-      const userData = await api.getUserByUsername('test')
+      // 从URL获取用户名，如果没有则使用'test'作为默认
+      const urlParams = new URLSearchParams(window.location.search)
+      const targetUsername = urlParams.get('user') || 'test'
+      
+      console.log('目标用户名:', targetUsername)
+      const userData = await api.getUserByUsername(targetUsername)
       console.log('获取到的用户数据:', userData)
       
       if (userData) {
