@@ -600,7 +600,14 @@ export const api = {
 
       const result = await response.json()
       console.log('API 更新用户成功:', result)
-      return result.user
+      
+      // 后端现在返回 {success: true, user: updatedUser}
+      if (result.success && result.user) {
+        return result.user
+      } else {
+        // 兼容旧格式
+        return result.user || result
+      }
     } catch (error) {
       console.error('API 更新用户出错，更新 localStorage:', error)
       const localData = getLocalData(username)

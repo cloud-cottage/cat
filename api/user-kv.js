@@ -129,7 +129,9 @@ export default async function handler(req, res) {
         }
       }
       
-      res.json({ success: true })
+      // 返回更新后的用户数据
+      const updatedUserData = await redis.hgetall(userKey)
+      res.json({ success: true, user: updatedUserData })
     } catch (error) {
       console.error('Error updating user:', error)
       res.status(500).json({ error: 'Internal server error' })
