@@ -202,6 +202,7 @@ export default function UserProfile({ username: propUsername }: { username?: str
   const [showWalletAddress, setShowWalletAddress] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [currentTheme, setCurrentTheme] = useState(THEMES[0]) // 默认主题
+  const [showThemeSelector, setShowThemeSelector] = useState(false)
 
   useEffect(() => {
     if (!username) return
@@ -974,31 +975,71 @@ export default function UserProfile({ username: propUsername }: { username?: str
                 }
               }}
               style={{
-                color: 'white',
+                color: '#ffffff',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
-                padding: '0.5rem 1rem',
-                borderRadius: '20px',
-                background: isEditing ? 'rgba(244, 67, 54, 0.9)' : 'rgba(76, 175, 80, 0.9)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.3)',
+                padding: '0.6rem 1.2rem',
+                borderRadius: '25px',
+                background: isEditing ? '#f44336' : '#4caf50',
+                border: '2px solid #ffffff',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
                 display: 'inline-block',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                fontWeight: '500'
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                fontWeight: '600',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+                textTransform: 'none',
+                lineHeight: '1.2',
+                minWidth: '120px',
+                textAlign: 'center'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 1)' : 'rgba(76, 175, 80, 1)'
-                e.currentTarget.style.color = 'white'
+                e.currentTarget.style.background = isEditing ? '#d32f2f' : '#388e3c'
+                e.currentTarget.style.transform = 'scale(1.05)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = isEditing ? 'rgba(244, 67, 54, 0.9)' : 'rgba(76, 175, 80, 0.9)'
-                e.currentTarget.style.color = 'white'
+                e.currentTarget.style.background = isEditing ? '#f44336' : '#4caf50'
+                e.currentTarget.style.transform = 'scale(1)'
               }}
             >
               {isEditing ? '完成编辑' : '进入编辑模式'}
             </button>
+            
+            {/* 主题选择器按钮 - 只在编辑模式下显示 */}
+            {isEditing && (
+              <button
+                onClick={() => setShowThemeSelector(true)}
+                style={{
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  padding: '0.6rem 1.2rem',
+                  borderRadius: '25px',
+                  background: '#2196f3',
+                  border: '2px solid #ffffff',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  display: 'inline-block',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  fontWeight: '600',
+                  fontFamily: 'system-ui, -apple-system, sans-serif',
+                  textTransform: 'none',
+                  lineHeight: '1.2',
+                  minWidth: '120px',
+                  textAlign: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#1976d2'
+                  e.currentTarget.style.transform = 'scale(1.05)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#2196f3'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+              >
+                选择主题
+              </button>
+            )}
           </div>
         ) : (
           <a
@@ -1036,6 +1077,168 @@ export default function UserProfile({ username: propUsername }: { username?: str
           onClose={() => setShowSettings(false)}
           onSave={handleSaveSettings}
         />
+      )}
+      
+      {/* 主题选择器模态框 */}
+      {showThemeSelector && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '20px',
+            padding: '2rem',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <h3 style={{ margin: '0 0 1.5rem 0', textAlign: 'center', color: '#333' }}>
+              选择主题
+            </h3>
+            
+            {/* 九宫格主题选择器 */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1rem',
+              marginBottom: '2rem'
+            }}>
+              {/* 保持现状 - 中央位置 */}
+              <div
+                onClick={() => {
+                  setShowThemeSelector(false)
+                }}
+                style={{
+                  gridColumn: '2',
+                  gridRow: '2',
+                  border: '2px solid #ddd',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  background: '#f8f9fa',
+                  minHeight: '120px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎨</div>
+                <div style={{ fontSize: '0.9rem', color: '#666', fontWeight: '600' }}>保持现状</div>
+              </div>
+              
+              {/* 8个主题选项 */}
+              {THEMES.map((theme, index) => {
+                // 计算九宫格位置 (0-7 对应周围8个位置)
+                const positions = [
+                  { col: 1, row: 1 }, // 左上
+                  { col: 2, row: 1 }, // 中上
+                  { col: 3, row: 1 }, // 右上
+                  { col: 1, row: 2 }, // 左中
+                  { col: 3, row: 2 }, // 右中
+                  { col: 1, row: 3 }, // 左下
+                  { col: 2, row: 3 }, // 中下
+                  { col: 3, row: 3 }  // 右下
+                ]
+                const pos = positions[index]
+                const isCurrentTheme = currentTheme.id === theme.id
+                
+                return (
+                  <div
+                    key={theme.id}
+                    onClick={() => {
+                      setCurrentTheme(theme)
+                      setShowThemeSelector(false)
+                    }}
+                    style={{
+                      gridColumn: pos.col,
+                      gridRow: pos.row,
+                      border: isCurrentTheme ? '3px solid ' + theme.colors.primary : '2px solid #ddd',
+                      borderRadius: '12px',
+                      padding: '1rem',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      background: isCurrentTheme ? theme.colors.bg + '40' : '#f8f9fa',
+                      minHeight: '120px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      boxShadow: isCurrentTheme ? `0 4px 12px ${theme.colors.primary}40` : '0 2px 4px rgba(0,0,0,0.1)',
+                      transform: isCurrentTheme ? 'scale(1.05)' : 'scale(1)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCurrentTheme) {
+                        e.currentTarget.style.background = theme.colors.bg + '60'
+                        e.currentTarget.style.transform = 'scale(1.02)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCurrentTheme) {
+                        e.currentTarget.style.background = '#f8f9fa'
+                        e.currentTarget.style.transform = 'scale(1)'
+                      }
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                        marginBottom: '0.5rem'
+                      }}
+                    />
+                    <div style={{ fontSize: '0.8rem', color: '#333', fontWeight: '600' }}>
+                      {theme.name}
+                    </div>
+                    {isCurrentTheme && (
+                      <div style={{ 
+                        fontSize: '0.7rem', 
+                        color: theme.colors.primary, 
+                        fontWeight: '700',
+                        marginTop: '0.25rem'
+                      }}>
+                        当前选择
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            
+            {/* 关闭按钮 */}
+            <div style={{ textAlign: 'center' }}>
+              <button
+                onClick={() => setShowThemeSelector(false)}
+                style={{
+                  padding: '0.8rem 2rem',
+                  background: '#6c757d',
+                  border: 'none',
+                  borderRadius: '25px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '600'
+                }}
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
