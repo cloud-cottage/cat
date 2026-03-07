@@ -3,96 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link, type LinkGroup, PREDEFINED_ICONS, getUserAvatarUrl } from '../lib/api'
 import { SettingsModal } from '../components/SettingsModal'
-
-// 主题配置 - 从 admin 面板导入相同的主题
-const THEMES = [
-  {
-    id: 1,
-    name: '钻石手',
-    colors: {
-      primary: '#FF8C42',
-      secondary: '#1C6E9C',
-      bg: 'linear-gradient(135deg, #F8F9FA 0%, #E8EAF6 50%, #F8F9FA 100%)',
-      surface: 'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%)'
-    },
-    diamondStyle: true,
-    effects: {
-      glow: '0 0 20px rgba(255, 140, 66, 0.3)',
-      shadow: '0 8px 32px rgba(255, 140, 66, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.1)',
-      hoverShadow: '0 12px 48px rgba(255, 140, 66, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.9), inset 0 -2px 6px rgba(0, 0, 0, 0.15)'
-    }
-  },
-  {
-    id: 2,
-    name: 'HODL蓝',
-    colors: {
-      primary: '#1C6E9C',
-      secondary: '#FF8C42',
-      bg: '#EBF8FF',
-      surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 3,
-    name: '草莓熊',
-    colors: {
-      primary: '#FF6B9D',
-      secondary: '#C66FBC',
-      bg: '#FFF0F5',
-      surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 4,
-    name: '赛博橙',
-    colors: {
-      primary: '#FF6B35',
-      secondary: '#00D9FF',
-      bg: '#0A0E27',
-      surface: '#1A1F3A'
-    }
-  },
-  {
-    id: 5,
-    name: '韭菜绿',
-    colors: {
-      primary: '#52C41A',
-      secondary: '#52C41A',
-      bg: '#F6FFED',
-      surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 6,
-    name: '拿铁棕',
-    colors: {
-      primary: '#8B4513',
-      secondary: '#D2691E',
-      bg: '#FFF8DC',
-      surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 7,
-    name: '神秘紫',
-    colors: {
-      primary: '#6B46C1',
-      secondary: '#9F7AEA',
-      bg: '#F7FAFC',
-      surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 8,
-    name: '深海蓝',
-    colors: {
-      primary: '#0891B2',
-      secondary: '#06B6D4',
-      bg: '#F0F9FF',
-      surface: '#FFFFFF'
-    }
-  }
-]
+import { THEMES, getThemeClassName } from '../../themes'
 
 // 推特时间线组件
 const TwitterTimeline = ({ twitterHandle }: { twitterHandle: string }) => {
@@ -396,9 +307,9 @@ export default function UserProfile({ username: propUsername }: { username?: str
   console.log('Current layout modules:', layoutModules.length)
 
   return (
-    <div style={{ 
+    <div className={`blog-container ${getThemeClassName(currentTheme.id)}`} style={{ 
       minHeight: '100vh',
-      background: currentTheme.colors.bg,
+      background: 'var(--theme-bg)',
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
@@ -417,63 +328,21 @@ export default function UserProfile({ username: propUsername }: { username?: str
         {layoutModules.map((module) => (
           <div
             key={module.id}
+            className="theme-module"
             style={{
               gridColumn: `${module.position.x + 1} / span ${module.size.width}`,
               gridRow: `${module.position.y + 1} / span ${module.size.height}`,
-              background: currentTheme.diamondStyle ? 
-                'linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 50%, #FFFFFF 100%)' : 
-                currentTheme.colors.surface + '10',
-              backdropFilter: currentTheme.diamondStyle ? 'none' : 'blur(10px)',
-              borderRadius: currentTheme.diamondStyle ? '24px' : '16px',
               padding: '1.5rem',
-              border: currentTheme.diamondStyle ? 
-                '3px solid transparent' : 
-                `1px solid ${currentTheme.colors.primary}20`,
-              backgroundClip: 'padding-box',
-              borderImage: currentTheme.diamondStyle ? 
-                'linear-gradient(145deg, #FF8C42 0%, #1C6E9C 25%, #FF8C42 50%, #1C6E9C 75%, #FF8C42 100%) 1' : 
-                'none',
               display: 'flex',
               flexDirection: 'column',
-              overflow: 'hidden',
-              boxShadow: currentTheme.diamondStyle && currentTheme.effects ? 
-                currentTheme.effects.shadow : 
-                '0 4px 16px rgba(0,0,0,0.1)',
-              position: 'relative',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: 'translateZ(0)'
-            }}
-            onMouseEnter={(e) => {
-              if (currentTheme.diamondStyle && currentTheme.effects) {
-                e.currentTarget.style.transform = 'translateY(-6px) scale(1.03) rotateX(2deg)'
-                e.currentTarget.style.boxShadow = currentTheme.effects.hoverShadow
-                e.currentTarget.style.filter = 'brightness(1.05)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (currentTheme.diamondStyle && currentTheme.effects) {
-                e.currentTarget.style.transform = 'translateY(0) scale(1) rotateX(0deg)'
-                e.currentTarget.style.boxShadow = currentTheme.effects.shadow
-                e.currentTarget.style.filter = 'brightness(1)'
-              }
+              overflow: 'hidden'
             }}
           >
-            <h3 style={{ 
-              color: currentTheme.colors.primary, 
+            <h3 className="theme-module-title" style={{ 
               margin: '0 0 1rem 0',
               fontSize: '1.1rem',
-              fontWeight: '600',
-              background: currentTheme.diamondStyle ? 
-                'linear-gradient(135deg, #FF8C42 0%, #1C6E9C 25%, #FF8C42 50%, #1C6E9C 75%, #FF8C42 100%)' : 
-                'none',
-              WebkitBackgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
-              WebkitTextFillColor: currentTheme.diamondStyle ? 'transparent' : 'unset',
-              backgroundClip: currentTheme.diamondStyle ? 'text' : 'unset',
-              textShadow: currentTheme.diamondStyle ? 
-                '0 2px 6px rgba(255, 140, 66, 0.4), 0 0 12px rgba(255, 140, 66, 0.2)' : 
-                'none',
-              filter: currentTheme.diamondStyle ? 'drop-shadow(0 0 8px rgba(255, 140, 66, 0.3))' : 'none'
-            } as React.CSSProperties}>
+              fontWeight: '600'
+            }}>
               {module.component === 'profile' ? (user?.nickname || user?.username) : module.name}
             </h3>
             
