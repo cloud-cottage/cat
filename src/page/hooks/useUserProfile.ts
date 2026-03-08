@@ -20,11 +20,10 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
   const [currentTheme, setCurrentTheme] = useState(THEMES[0])
   const [layoutModules, setLayoutModules] = useState<any[]>([])
   const [isOwner, setIsOwner] = useState(false)
-  const [modulesInitialized, setModulesInitialized] = useState(false) // 防止重复初始化
 
   // 加载用户数据
   useEffect(() => {
-    if (!username || modulesInitialized) return // 防止重复执行
+    if (!username) return // 简化条件，只检查username
     
     const loadUserData = async () => {
       try {
@@ -55,7 +54,6 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
               { id: 'social', name: '社交媒体', component: 'social', position: { x: 3, y: 0 }, size: { width: 3, height: 2 } },
               { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
             ])
-            setModulesInitialized(true)
             document.title = `${username}｜CAT｜Your Web3 Paws`
             setLoading(false)
             return
@@ -83,7 +81,6 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
             { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
           ])
         }
-        setModulesInitialized(true)
         document.title = `${userData.user.nickname || userData.user.username}｜CAT｜Your Web3 Paws`
         setIsOwner(!!(address && address.toLowerCase() === userData.user.walletAddress.toLowerCase()))
       } catch (error) {
@@ -109,7 +106,6 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
           { id: 'social', name: '社交媒体', component: 'social', position: { x: 3, y: 0 }, size: { width: 3, height: 2 } },
           { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
         ])
-        setModulesInitialized(true)
         document.title = `${username}｜CAT｜Your Web3 Paws`
       } finally {
         setLoading(false)
@@ -117,7 +113,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
     }
     
     loadUserData()
-  }, [username, address, modulesInitialized])
+  }, [username, address]) // 移除modulesInitialized避免循环
 
   return {
     loading,
