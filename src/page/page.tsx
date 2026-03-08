@@ -31,6 +31,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
   // 应用主题到body元素
   useEffect(() => {
+    console.log('Theme effect triggered:', currentTheme.id, getThemeClassName(currentTheme.id));
     document.body.className = document.body.className.replace(/theme-\w+/g, '');
     document.body.classList.add(getThemeClassName(currentTheme.id));
     
@@ -44,6 +45,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   }
 
   const renderModule = (module: any, index: number) => {
+    console.log('Rendering module:', module.id, module.component, index);
     // 兼容两种命名方式：组件名和数字序号
     const moduleClass = typeof module.id === 'string' && !isNaN(parseInt(module.id)) 
       ? `module-${module.id}`  // 数字序号 (matrix主题)
@@ -194,9 +196,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           <div style={{ flex: 1, overflow: 'auto' }}>
             {links.length > 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {links.map((link) => (
+                {links.map((link, index) => (
                   <a
-                    key={link.id}
+                    key={`${link.id}-${index}`}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
