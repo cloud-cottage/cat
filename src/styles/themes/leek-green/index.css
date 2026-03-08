@@ -16,7 +16,12 @@
   --theme-shadow: 0 4px 16px rgba(82, 196, 26, 0.15);
   --theme-hover-shadow: 0 8px 24px rgba(82, 196, 26, 0.25);
   --theme-glow: 0 0 20px rgba(82, 196, 26, 0.3);
-  background: linear-gradient(135deg, #F6FFED 0%, #D9F7BE 50%, #F6FFED 100%);
+}
+
+/* 韭菜绿主题的body背景 */
+.theme-leek-green body {
+  background: url('/images/themes/leek-green-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }

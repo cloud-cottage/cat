@@ -24,7 +24,7 @@
 
 /* 钻石手主题的body背景 */
 .theme-diamond body {
-  background: url('/images/diamond-background.png') repeat;
+  background: url('/images/themes/diamond-background.png') repeat;
   background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;

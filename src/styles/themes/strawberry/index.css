@@ -17,7 +17,12 @@
   --theme-hover-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
   --theme-glow: 0 0 20px rgba(255, 107, 157, 0.4);
   --theme-border-color: rgba(255, 107, 157, 0.3);
-  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+}
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry body {
+  background: url('/images/themes/strawberry-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }

@@ -15,7 +15,12 @@
   --theme-border-width: 1px;
   --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #F7FAFC 0%, #E9D8FD 50%, #F7FAFC 100%);
+}
+
+/* 神秘紫主题的body背景 */
+.theme-mystery-purple body {
+  background: url('/images/themes/mystery-purple-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }

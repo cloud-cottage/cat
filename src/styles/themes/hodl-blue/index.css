@@ -26,7 +26,8 @@
 
 /* HODL蓝主题的body背景 */
 .theme-hodl-blue body {
-  background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 50%, #EBF8FF 100%);
+  background: url('/images/themes/hodl-blue-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }

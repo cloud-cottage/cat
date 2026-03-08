@@ -16,7 +16,12 @@
   --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   --theme-glow: none;
-  background: linear-gradient(135deg, #0A0E27 0%, #1A1F3A 50%, #0A0E27 100%);
+}
+
+/* 赛博橙主题的body背景 */
+.theme-cyber-orange body {
+  background: url('/images/themes/cyber-orange-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }

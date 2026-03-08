@@ -15,7 +15,12 @@
   --theme-border-width: 1px;
   --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 50%, #FFF8DC 100%);
+}
+
+/* 拿铁棕主题的body背景 */
+.theme-latte-brown body {
+  background: url('/images/themes/latte-brown-background.png') repeat;
+  background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
 }
