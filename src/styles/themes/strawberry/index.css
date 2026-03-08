@@ -17,6 +17,7 @@
   --theme-hover-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
   --theme-glow: 0 0 20px rgba(255, 107, 157, 0.4);
   --theme-border-color: rgba(255, 107, 157, 0.3);
+  --theme-text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
 }
 
 /* 草莓熊主题的body背景 */
@@ -25,4 +26,43 @@
   background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
+}
+
+/* 网格容器背景 - 草莓熊渐变 */
+.theme-strawberry .blog-container {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 157, 0.05) 0%,
+    rgba(198, 111, 188, 0.08) 25%,
+    rgba(255, 107, 157, 0.05) 50%,
+    rgba(198, 111, 188, 0.08) 75%,
+    rgba(255, 107, 157, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 107, 157, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 107, 157, 0.1);
+}
+
+/* 草莓熊主题特殊样式 */
+.theme-strawberry .theme-module {
+  background: var(--theme-surface);
+  border-radius: var(--theme-border-radius);
+  border: var(--theme-border-width) solid var(--theme-primary);
+  box-shadow: var(--theme-shadow);
+  min-height: 200px;
+}
+
+.theme-strawberry .theme-module:hover {
+  transform: translateY(-6px) scale(1.03) rotateX(2deg);
+  filter: brightness(1.05);
+}
+
+.theme-strawberry .theme-module-title {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--theme-text-shadow);
+  filter: drop-shadow(0 0 8px var(--theme-primary));
+  color: var(--theme-text-primary);
 }
