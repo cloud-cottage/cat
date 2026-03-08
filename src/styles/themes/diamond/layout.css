@@ -12,15 +12,15 @@
 /* 模块位置定义 - 使用CSS Grid命名区域 */
 .theme-diamond .grid-container {
   grid-template-areas: 
-    "profile profile stats stats nft nft activity"
-    "profile profile stats stats nft nft activity"
-    "profile profile stats stats nft nft activity"
-    "blog blog blog blog blog blog blog"
-    "blog blog blog blog blog blog blog"
-    "blog blog blog blog blog blog blog"
-    "social social social social social social"
-    "social social social social social social"
-    "settings settings settings settings settings settings";
+    "profile profile social social social social"
+    "profile profile social social social social"
+    "mostfind mostfind links links links links"
+    "mostfind mostfind links links links links"
+    "mostfind mostfind links links links links"
+    "twitter twitter twitter twitter twitter twitter"
+    "twitter twitter twitter twitter twitter twitter"
+    "twitter twitter twitter twitter twitter twitter"
+    "twitter twitter twitter twitter twitter twitter";
 }
 
 /* 具体模块位置 */
@@ -28,28 +28,20 @@
   grid-area: profile;
 }
 
-.theme-diamond .module-stats {
-  grid-area: stats;
-}
-
-.theme-diamond .module-nft {
-  grid-area: nft;
-}
-
-.theme-diamond .module-blog {
-  grid-area: blog;
-}
-
 .theme-diamond .module-social {
   grid-area: social;
 }
 
-.theme-diamond .module-activity {
-  grid-area: activity;
+.theme-diamond .module-mostfind {
+  grid-area: mostfind;
 }
 
-.theme-diamond .module-settings {
-  grid-area: settings;
+.theme-diamond .module-links {
+  grid-area: links;
+}
+
+.theme-diamond .module-twitter {
+  grid-area: twitter;
 }
 
 /* 响应式调整 */
@@ -58,18 +50,18 @@
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(12, 280px);
     grid-template-areas: 
-      "profile profile stats stats"
-      "profile profile stats stats"
-      "nft nft activity activity"
-      "nft nft activity activity"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "social social social social"
-      "social social social social"
-      "settings settings settings settings"
-      "settings settings settings settings";
+      "profile profile social social"
+      "profile profile social social"
+      "mostfind mostfind links links"
+      "mostfind mostfind links links"
+      "mostfind mostfind links links"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter";
   }
 }
 
@@ -80,29 +72,27 @@
     grid-template-areas: 
       "profile profile"
       "profile profile"
-      "stats stats"
-      "stats stats"
-      "nft nft"
-      "nft nft"
-      "activity activity"
-      "activity activity"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
       "social social"
       "social social"
-      "social social"
-      "social social"
-      "settings settings"
-      "settings settings";
+      "mostfind mostfind"
+      "mostfind mostfind"
+      "links links"
+      "links links"
+      "links links"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter";
   }
 }
 
 /* 布局元数据 - 可通过JavaScript读取 */
 .theme-diamond::before {
-  content: '{"name":"diamond","displayName":"钻石手","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"stats":{"area":"stats","order":2},"nft":{"area":"nft","order":3},"blog":{"area":"blog","order":4},"social":{"area":"social","order":5},"activity":{"area":"activity","order":6},"settings":{"area":"settings","order":7}}}';
+  content: '{"name":"diamond","displayName":"钻石手","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"social":{"area":"social","order":2},"mostfind":{"area":"mostfind","order":3},"links":{"area":"links","order":4},"twitter":{"area":"twitter","order":5}}}';
   display: none;
 }

@@ -144,7 +144,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         {layoutModules.map((module) => (
           <div
             key={module.id}
-            className={`theme-module module-${module.type}`}
+            className={`theme-module module-${module.component}`}
             style={{
               padding: '1.5rem',
               display: 'flex',
