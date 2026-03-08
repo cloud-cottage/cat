@@ -2,12 +2,13 @@
 .theme-module {
   background: #E6E9E7;
   backdrop-filter: none;
-  border-radius: var(--theme-border-radius);
-  border: var(--theme-border-width) solid transparent;
+  border-radius: 16px;
+  border: 2px solid transparent;
   background-clip: padding-box;
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 200px;
 }
 
 .theme-module::before {
@@ -17,7 +18,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-primary));
+  background: linear-gradient(90deg, #FF8C42, #1C6E9C, #FF8C42);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -27,12 +28,12 @@
 }
 
 .theme-module:hover {
-  box-shadow: var(--theme-hover-shadow);
-  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .theme-module-title {
-  color: var(--theme-primary);
+  color: #2C3E50;
   font-weight: 600;
   margin: 0 0 1rem 0;
   position: relative;
@@ -46,7 +47,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary));
+  background: linear-gradient(90deg, #FF8C42, #1C6E9C);
   transition: width 0.3s ease;
 }
 
@@ -56,25 +57,25 @@
 
 /* 文本样式类 */
 .theme-text-primary {
-  color: var(--theme-text-primary);
+  color: #2C3E50;
 }
 
 .theme-text-secondary {
-  color: var(--theme-text-secondary);
+  color: #4A5568;
 }
 
 .theme-text-muted {
-  color: var(--theme-text-muted);
+  color: #7F8C8D;
 }
 
 .theme-text-white {
-  color: var(--theme-text-white);
+  color: #FFFFFF;
 }
 
 /* 按钮样式 */
 .theme-button {
-  background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
-  color: var(--theme-text-white);
+  background: linear-gradient(135deg, #FF8C42, #1C6E9C);
+  color: #FFFFFF;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -84,7 +85,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px var(--theme-primary)20;
+  box-shadow: 0 4px 12px rgba(255, 140, 66, 0.2);
 }
 
 .theme-button::before {
