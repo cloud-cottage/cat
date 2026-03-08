@@ -1,5 +1,5 @@
 /* 导入主题CSS变量 */
-@import './styles/themes.css';
+@import './styles/themes/index.css';
 
 :root {
   /* Brand Colors */

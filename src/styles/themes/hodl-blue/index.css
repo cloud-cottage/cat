@@ -1,0 +1,47 @@
+/* HODL蓝主题 */
+
+/* 导入布局配置 */
+@import './layout.css';
+
+/* 主题变量定义 */
+.theme-hodl-blue {
+  --theme-primary: #1C6E9C;
+  --theme-primary-rgb: 28, 110, 156;
+  --theme-secondary: #FF8C42;
+  --theme-secondary-rgb: 255, 140, 66;
+  --theme-bg: transparent;
+  --theme-surface: #FFFFFF;
+  --theme-surface-rgb: 255, 255, 255;
+  --theme-text-primary: #1A365D;
+  --theme-text-secondary: #2C5282;
+  --theme-text-muted: #4A5568;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 12px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 4px 16px rgba(26, 54, 93, 0.1);
+  --theme-hover-shadow: 0 8px 24px rgba(26, 54, 93, 0.15);
+  --theme-glow: 0 0 20px rgba(28, 110, 156, 0.3);
+  --theme-border-color: rgba(28, 110, 156, 0.2);
+}
+
+/* HODL蓝主题的body背景 */
+.theme-hodl-blue body {
+  background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 50%, #EBF8FF 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
+
+/* 网格容器背景 - 蓝色光芒渐变 */
+.theme-hodl-blue .blog-container {
+  background: linear-gradient(135deg, 
+    rgba(28, 110, 156, 0.05) 0%,
+    rgba(255, 140, 66, 0.08) 25%,
+    rgba(28, 110, 156, 0.05) 50%,
+    rgba(255, 140, 66, 0.08) 75%,
+    rgba(28, 110, 156, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(28, 110, 156, 0.2);
+  box-shadow: 0 8px 32px rgba(28, 110, 156, 0.1);
+}

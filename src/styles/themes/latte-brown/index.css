@@ -1,0 +1,21 @@
+/* 拿铁棕主题 */
+.theme-latte-brown {
+  --theme-primary: #8B4513;
+  --theme-primary-rgb: 139, 69, 19;
+  --theme-secondary: #D2691E;
+  --theme-secondary-rgb: 210, 105, 30;
+  --theme-bg: transparent;
+  --theme-surface: #FFFFFF;
+  --theme-surface-rgb: 255, 255, 255;
+  --theme-text-primary: #442211;
+  --theme-text-secondary: #702C12;
+  --theme-text-muted: #975A16;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 16px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #FFF8DC 0%, #F5DEB3 50%, #FFF8DC 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}

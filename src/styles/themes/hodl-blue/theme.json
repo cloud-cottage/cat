@@ -1,0 +1,61 @@
+{
+  "name": "hodl-blue",
+  "displayName": "HODL蓝",
+  "description": "稳健的蓝色主题，适合价值投资者",
+  "version": "1.0.0",
+  "author": "Cloud Cottage",
+  "colors": {
+    "primary": "#1C6E9C",
+    "secondary": "#FF8C42",
+    "surface": "#FFFFFF",
+    "text": {
+      "primary": "#1A365D",
+      "secondary": "#2C5282",
+      "muted": "#4A5568",
+      "white": "#FFFFFF"
+    }
+  },
+  "layout": {
+    "container": {
+      "width": "1800px",
+      "maxWidth": "100%",
+      "margin": "0 auto",
+      "minHeight": "100vh",
+      "padding": "2rem 1rem"
+    },
+    "grid": {
+      "columns": 6,
+      "rows": 9,
+      "columnSize": "1fr",
+      "rowHeight": "280px",
+      "gap": "1rem"
+    },
+    "module": {
+      "background": "#E6E9E7",
+      "borderRadius": "12px",
+      "borderWidth": "1px",
+      "padding": "1.5rem"
+    }
+  },
+  "background": {
+    "type": "gradient",
+    "value": "linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 50%, #EBF8FF 100%)",
+    "attachment": "fixed"
+  },
+  "typography": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "fontSize": "16px",
+    "lineHeight": "1.5"
+  },
+  "effects": {
+    "shadow": "0 4px 16px rgba(26, 54, 93, 0.1)",
+    "hoverShadow": "0 8px 24px rgba(26, 54, 93, 0.15)",
+    "glow": "0 0 20px rgba(28, 110, 156, 0.3)"
+  },
+  "metadata": {
+    "category": "professional",
+    "tags": ["blue", "hodl", "value", "investment"],
+    "difficulty": "beginner",
+    "popularity": "high"
+  }
+}

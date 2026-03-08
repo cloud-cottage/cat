@@ -1,0 +1,113 @@
+/* HODL蓝主题布局配置 - 专业布局 */
+
+/* 网格布局定义 */
+.theme-hodl-blue .grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(9, 280px);
+  gap: 1rem;
+  min-height: 900px;
+}
+
+/* HODL蓝主题布局 - 更专业的排列 */
+.theme-hodl-blue .grid-container {
+  grid-template-areas: 
+    "profile profile profile stats stats stats"
+    "profile profile profile stats stats stats"
+    "portfolio portfolio portfolio portfolio portfolio portfolio"
+    "portfolio portfolio portfolio portfolio portfolio portfolio"
+    "nft nft nft activity activity activity"
+    "nft nft nft activity activity activity"
+    "blog blog blog blog blog blog"
+    "blog blog blog blog blog blog"
+    "social social social social social social";
+}
+
+/* 具体模块位置 */
+.theme-hodl-blue .module-profile {
+  grid-area: profile;
+}
+
+.theme-hodl-blue .module-stats {
+  grid-area: stats;
+}
+
+.theme-hodl-blue .module-portfolio {
+  grid-area: portfolio;
+}
+
+.theme-hodl-blue .module-nft {
+  grid-area: nft;
+}
+
+.theme-hodl-blue .module-blog {
+  grid-area: blog;
+}
+
+.theme-hodl-blue .module-social {
+  grid-area: social;
+}
+
+.theme-hodl-blue .module-activity {
+  grid-area: activity;
+}
+
+.theme-hodl-blue .module-settings {
+  /* HODL蓝主题将设置集成到profile中 */
+  display: none;
+}
+
+/* 响应式调整 */
+@media (max-width: 1400px) {
+  .theme-hodl-blue .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(12, 280px);
+    grid-template-areas: 
+      "profile profile stats stats"
+      "profile profile stats stats"
+      "portfolio portfolio portfolio portfolio"
+      "portfolio portfolio portfolio portfolio"
+      "nft nft activity activity"
+      "nft nft activity activity"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "social social social social"
+      "social social social social";
+  }
+}
+
+@media (max-width: 900px) {
+  .theme-hodl-blue .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(18, 280px);
+    grid-template-areas: 
+      "profile profile"
+      "profile profile"
+      "stats stats"
+      "stats stats"
+      "portfolio portfolio"
+      "portfolio portfolio"
+      "portfolio portfolio"
+      "portfolio portfolio"
+      "nft nft"
+      "nft nft"
+      "activity activity"
+      "activity activity"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "social social"
+      "social social";
+  }
+}
+
+/* 布局元数据 */
+.theme-hodl-blue::before {
+  content: '{"name":"hodl-blue","displayName":"HODL蓝","layout":{"type":"professional","focus":"portfolio","grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"stats":{"area":"stats","order":2},"portfolio":{"area":"portfolio","order":3},"nft":{"area":"nft","order":4},"blog":{"area":"blog","order":5},"social":{"area":"social","order":6},"activity":{"area":"activity","order":7}}}}';
+  display: none;
+}

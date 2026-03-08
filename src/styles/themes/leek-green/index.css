@@ -1,0 +1,22 @@
+/* 韭菜绿主题 */
+.theme-leek-green {
+  --theme-primary: #52C41A;
+  --theme-primary-rgb: 82, 196, 26;
+  --theme-secondary: #52C41A;
+  --theme-secondary-rgb: 82, 196, 26;
+  --theme-bg: transparent;
+  --theme-surface: #FFFFFF;
+  --theme-surface-rgb: 255, 255, 255;
+  --theme-text-primary: #14532D;
+  --theme-text-secondary: #166534;
+  --theme-text-muted: #16A34A;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 12px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 4px 16px rgba(82, 196, 26, 0.15);
+  --theme-hover-shadow: 0 8px 24px rgba(82, 196, 26, 0.25);
+  --theme-glow: 0 0 20px rgba(82, 196, 26, 0.3);
+  background: linear-gradient(135deg, #F6FFED 0%, #D9F7BE 50%, #F6FFED 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}

@@ -1,0 +1,23 @@
+/* 草莓熊主题 */
+.theme-strawberry {
+  --theme-primary: #FF6B9D;
+  --theme-primary-rgb: 255, 107, 157;
+  --theme-secondary: #C66FBC;
+  --theme-secondary-rgb: 198, 111, 188;
+  --theme-bg: transparent;
+  --theme-surface: #FFFFFF;
+  --theme-surface-rgb: 255, 255, 255;
+  --theme-text-primary: #702459;
+  --theme-text-secondary: #97266D;
+  --theme-text-muted: #B83280;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 16px;
+  --theme-border-width: 2px;
+  --theme-shadow: 0 4px 16px rgba(255, 107, 157, 0.15);
+  --theme-hover-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
+  --theme-glow: 0 0 20px rgba(255, 107, 157, 0.4);
+  --theme-border-color: rgba(255, 107, 157, 0.3);
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}

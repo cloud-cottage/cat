@@ -1,0 +1,69 @@
+{
+  "name": "web3",
+  "displayName": "Web3",
+  "description": "未来感十足的Web3主题，适合加密原生用户",
+  "version": "1.0.0",
+  "author": "Cloud Cottage",
+  "colors": {
+    "primary": "#00D4FF",
+    "secondary": "#FF00FF",
+    "surface": "#1A1A2E",
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#E2E8F0",
+      "muted": "#A0AEC0",
+      "white": "#FFFFFF"
+    }
+  },
+  "layout": {
+    "container": {
+      "width": "1800px",
+      "maxWidth": "100%",
+      "margin": "0 auto",
+      "minHeight": "100vh",
+      "padding": "2rem 1rem"
+    },
+    "grid": {
+      "columns": 6,
+      "rows": 9,
+      "columnSize": "1fr",
+      "rowHeight": "280px",
+      "gap": "1rem"
+    },
+    "module": {
+      "background": "#E6E9E7",
+      "borderRadius": "16px",
+      "borderWidth": "1px",
+      "padding": "1.5rem"
+    }
+  },
+  "background": {
+    "type": "gradient",
+    "value": "linear-gradient(135deg, #000000 0%, #1A1A2E 50%, #000000 100%)",
+    "attachment": "fixed"
+  },
+  "typography": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    "fontSize": "16px",
+    "lineHeight": "1.5"
+  },
+  "effects": {
+    "shadow": "0 4px 16px rgba(0, 0, 0, 0.5)",
+    "hoverShadow": "0 8px 24px rgba(0, 0, 0, 0.7)",
+    "glow": "0 0 20px rgba(0, 212, 255, 0.3)",
+    "textShadow": "0 0 10px rgba(0, 212, 255, 0.5)"
+  },
+  "animations": {
+    "glow": {
+      "keyframes": "web3-glow",
+      "duration": "2s",
+      "iteration": "infinite"
+    }
+  },
+  "metadata": {
+    "category": "modern",
+    "tags": ["web3", "crypto", "futuristic", "dark"],
+    "difficulty": "advanced",
+    "popularity": "medium"
+  }
+}

@@ -1,0 +1,22 @@
+/* 赛博橙主题 */
+.theme-cyber-orange {
+  --theme-primary: #FF6B35;
+  --theme-primary-rgb: 255, 107, 53;
+  --theme-secondary: #00D9FF;
+  --theme-secondary-rgb: 0, 217, 255;
+  --theme-bg: transparent;
+  --theme-surface: #1A1F3A;
+  --theme-surface-rgb: 26, 31, 58;
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #E2E8F0;
+  --theme-text-muted: #A0AEC0;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 16px;
+  --theme-border-width: 1px;
+  --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --theme-glow: none;
+  background: linear-gradient(135deg, #0A0E27 0%, #1A1F3A 50%, #0A0E27 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}

@@ -109,7 +109,7 @@
 
 .blog-container {
   padding: 2rem;
-  max-width: 1200px;
+  /* 移除max-width限制，让主题CSS控制宽度 */
   margin: 0 auto;
   min-height: 100vh;
 }

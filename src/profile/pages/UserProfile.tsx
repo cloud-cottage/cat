@@ -125,22 +125,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         display: 'flex',
         flexDirection: 'column'
       }}>
-        {/* 网格布局 */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gridTemplateRows: 'repeat(9, 280px)',
-          gap: '1rem',
-          minHeight: '900px'
-        }}>
+        {/* 网格布局 - 使用CSS中定义的布局 */}
+        <div className="grid-container">
         {/* 根据布局模块渲染内容 */}
         {layoutModules.map((module) => (
           <div
             key={module.id}
-            className="theme-module"
+            className={`theme-module module-${module.type}`}
             style={{
-              gridColumn: `${module.position.x + 1} / span ${module.size.width}`,
-              gridRow: `${module.position.y + 1} / span ${module.size.height}`,
               padding: '1.5rem',
               display: 'flex',
               flexDirection: 'column',

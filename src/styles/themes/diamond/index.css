@@ -1,0 +1,65 @@
+/* 钻石手主题 */
+
+/* 导入布局配置 */
+@import './layout.css';
+
+/* 主题变量定义 */
+.theme-diamond {
+  --theme-primary: #FF8C42;
+  --theme-primary-rgb: 255, 140, 66;
+  --theme-secondary: #1C6E9C;
+  --theme-secondary-rgb: 28, 110, 156;
+  --theme-accent: #FF6B35;
+  --theme-accent-rgb: 255, 107, 53;
+  --theme-surface: rgba(255, 255, 255, 0.95);
+  --theme-surface-rgb: 255, 255, 255;
+  --theme-bg: transparent;
+  --theme-text-primary: #2C3E50;
+  --theme-text-secondary: #4A5568;
+  --theme-text-muted: #7F8C8D;
+  --theme-border-radius: 16px;
+  --theme-border-width: 2px;
+  --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
+}
+
+/* 钻石手主题的body背景 */
+.theme-diamond body {
+  background: url('/images/diamond-background.png') repeat;
+  background-size: 200px 200px;
+  background-attachment: fixed;
+  background-color: transparent;
+}
+
+/* 网格容器背景 - 钻石光芒渐变 */
+.theme-diamond .blog-container {
+  background: linear-gradient(135deg, 
+    rgba(255, 140, 66, 0.05) 0%,
+    rgba(28, 110, 156, 0.08) 25%,
+    rgba(255, 107, 53, 0.05) 50%,
+    rgba(28, 110, 156, 0.08) 75%,
+    rgba(255, 140, 66, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 140, 66, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 140, 66, 0.1);
+}
+
+/* 钻石手主题特殊样式 */
+.theme-diamond .theme-module {
+  border-image: linear-gradient(145deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%) 1;
+}
+
+.theme-diamond .theme-module:hover {
+  transform: translateY(-6px) scale(1.03) rotateX(2deg);
+  filter: brightness(1.05);
+}
+
+.theme-diamond .theme-module-title {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--theme-text-shadow);
+  filter: drop-shadow(0 0 8px var(--theme-primary));
+}

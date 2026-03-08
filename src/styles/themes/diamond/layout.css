@@ -1,0 +1,108 @@
+/* 钻石手主题布局配置 */
+
+/* 网格布局定义 */
+.theme-diamond .grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(9, 280px);
+  gap: 1rem;
+  min-height: 900px;
+}
+
+/* 模块位置定义 - 使用CSS Grid命名区域 */
+.theme-diamond .grid-container {
+  grid-template-areas: 
+    "profile profile stats stats nft nft activity"
+    "profile profile stats stats nft nft activity"
+    "profile profile stats stats nft nft activity"
+    "blog blog blog blog blog blog blog"
+    "blog blog blog blog blog blog blog"
+    "blog blog blog blog blog blog blog"
+    "social social social social social social"
+    "social social social social social social"
+    "settings settings settings settings settings settings";
+}
+
+/* 具体模块位置 */
+.theme-diamond .module-profile {
+  grid-area: profile;
+}
+
+.theme-diamond .module-stats {
+  grid-area: stats;
+}
+
+.theme-diamond .module-nft {
+  grid-area: nft;
+}
+
+.theme-diamond .module-blog {
+  grid-area: blog;
+}
+
+.theme-diamond .module-social {
+  grid-area: social;
+}
+
+.theme-diamond .module-activity {
+  grid-area: activity;
+}
+
+.theme-diamond .module-settings {
+  grid-area: settings;
+}
+
+/* 响应式调整 */
+@media (max-width: 1400px) {
+  .theme-diamond .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(12, 280px);
+    grid-template-areas: 
+      "profile profile stats stats"
+      "profile profile stats stats"
+      "nft nft activity activity"
+      "nft nft activity activity"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "blog blog blog blog"
+      "social social social social"
+      "social social social social"
+      "settings settings settings settings"
+      "settings settings settings settings";
+  }
+}
+
+@media (max-width: 900px) {
+  .theme-diamond .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(18, 280px);
+    grid-template-areas: 
+      "profile profile"
+      "profile profile"
+      "stats stats"
+      "stats stats"
+      "nft nft"
+      "nft nft"
+      "activity activity"
+      "activity activity"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "blog blog"
+      "social social"
+      "social social"
+      "social social"
+      "social social"
+      "settings settings"
+      "settings settings";
+  }
+}
+
+/* 布局元数据 - 可通过JavaScript读取 */
+.theme-diamond::before {
+  content: '{"name":"diamond","displayName":"钻石手","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"stats":{"area":"stats","order":2},"nft":{"area":"nft","order":3},"blog":{"area":"blog","order":4},"social":{"area":"social","order":5},"activity":{"area":"activity","order":6},"settings":{"area":"settings","order":7}}}';
+  display: none;
+}

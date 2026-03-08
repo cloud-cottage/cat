@@ -1,0 +1,47 @@
+/* Web3主题 */
+
+/* 导入布局配置 */
+@import './layout.css';
+
+/* 主题变量定义 */
+.theme-web3 {
+  --theme-primary: #00D4FF;
+  --theme-primary-rgb: 0, 212, 255;
+  --theme-secondary: #FF00FF;
+  --theme-secondary-rgb: 255, 0, 255;
+  --theme-bg: transparent;
+  --theme-surface: #1A1A2E;
+  --theme-surface-rgb: 26, 26, 46;
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #E2E8F0;
+  --theme-text-muted: #A0AEC0;
+  --theme-text-white: #FFFFFF;
+  --theme-border-radius: 16px;
+  --theme-border-width: 1px;
+  --theme-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+  --theme-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --theme-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --theme-text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Web3主题的body背景 */
+.theme-web3 body {
+  background: linear-gradient(135deg, #000000 0%, #1A1A2E 50%, #000000 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
+
+/* 网格容器背景 - Web3科技光芒渐变 */
+.theme-web3 .blog-container {
+  background: linear-gradient(135deg, 
+    rgba(0, 212, 255, 0.05) 0%,
+    rgba(255, 0, 255, 0.08) 25%,
+    rgba(0, 212, 255, 0.05) 50%,
+    rgba(255, 0, 255, 0.08) 75%,
+    rgba(0, 212, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+}
