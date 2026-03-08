@@ -5,10 +5,18 @@
 
 /* 导入各主题样式 */
 @import './diamond/index.css';
+@import './diamond/layout.css';
 @import './hodl-blue/index.css';
+@import './hodl-blue/layout.css';
 @import './strawberry/index.css';
+@import './strawberry/layout.css';
 @import './cyber-orange/index.css';
+@import './cyber-orange/layout.css';
 @import './leek-green/index.css';
+@import './leek-green/layout.css';
 @import './latte-brown/index.css';
+@import './latte-brown/layout.css';
 @import './mystery-purple/index.css';
+@import './mystery-purple/layout.css';
 @import './web3/index.css';
+@import './web3/layout.css';

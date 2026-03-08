@@ -30,6 +30,12 @@ export interface ThemeLayout {
  */
 export async function parseThemeLayoutFromCSS(themeId: number, themeName: string): Promise<ThemeLayout> {
   try {
+    // 检查是否在浏览器环境中
+    if (typeof document === 'undefined') {
+      console.warn('Document not available, using default layout for theme', themeName);
+      return getDefaultThemeLayout(themeId, themeName);
+    }
+
     // 创建临时元素来读取CSS元数据
     const tempElement = document.createElement('div');
     tempElement.className = `theme-${themeName}`;
@@ -43,10 +49,12 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
     // 清理临时元素
     document.body.removeChild(tempElement);
 
-    if (content && content !== 'none') {
+    if (content && content !== 'none' && content !== '') {
       // 解析JSON字符串
       const jsonStr = content.replace(/['"]/g, '');
       const metadata = JSON.parse(jsonStr);
+      
+      console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
       
       return {
         themeId,
@@ -57,6 +65,7 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
     }
 
     // 如果无法从CSS读取，返回默认布局
+    console.warn(`No layout metadata found for theme ${themeName}, using default`);
     return getDefaultThemeLayout(themeId, themeName);
 
   } catch (error) {
