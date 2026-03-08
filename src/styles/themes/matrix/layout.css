@@ -1,0 +1,94 @@
+/* 韭菜帝国主题布局配置 - 由Admin页面编辑 */
+
+/* 网格布局定义 */
+.theme-matrix .grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(9, 280px);
+  gap: 1rem;
+  min-height: 900px;
+}
+
+/* 韭菜帝国主题布局 - 使用数组序号 */
+.theme-matrix .grid-container {
+  grid-template-areas: 
+    "0 0 1 1 1 1"
+    "0 0 1 1 1 1"
+    "2 2 3 3 3 3"
+    "2 2 3 3 3 3"
+    "2 2 3 3 3 3"
+    "4 4 4 4 4 4"
+    "4 4 4 4 4 4"
+    "4 4 4 4 4 4"
+    "4 4 4 4 4 4";
+}
+
+.theme-matrix .module-0 {
+  grid-area: 0;
+}
+
+.theme-matrix .module-1 {
+  grid-area: 1;
+}
+
+.theme-matrix .module-2 {
+  grid-area: 2;
+}
+
+.theme-matrix .module-3 {
+  grid-area: 3;
+}
+
+.theme-matrix .module-4 {
+  grid-area: 4;
+}
+
+/* 响应式调整 */
+@media (max-width: 1400px) {
+  .theme-matrix .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(12, 280px);
+    grid-template-areas: 
+      "0 0 1 1"
+      "0 0 1 1"
+      "2 2 3 3"
+      "2 2 3 3"
+      "2 2 3 3"
+      "4 4 4 4"
+      "4 4 4 4"
+      "4 4 4 4"
+      "4 4 4 4"
+      "4 4 4 4"
+      "4 4 4 4";
+  }
+}
+
+@media (max-width: 900px) {
+  .theme-matrix .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(18, 280px);
+    grid-template-areas: 
+      "0 0"
+      "0 0"
+      "1 1"
+      "1 1"
+      "2 2"
+      "2 2"
+      "3 3"
+      "3 3"
+      "3 3"
+      "4 4"
+      "4 4"
+      "4 4"
+      "4 4"
+      "4 4"
+      "4 4"
+      "4 4";
+  }
+}
+
+/* 布局元数据 - 使用数组序号 */
+.theme-matrix::before {
+  content: '{"name":"matrix","displayName":"韭菜帝国","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"0":{"area":"0","order":1},"1":{"area":"1","order":2},"2":{"area":"2","order":3},"3":{"area":"3","order":4},"4":{"area":"4","order":5}}}';
+  display: none;
+}

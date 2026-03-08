@@ -78,29 +78,29 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
  * 将CSS模块配置转换为Admin页面模块格式
  */
 function convertCSSToModules(cssModules: Record<string, any>): Module[] {
-  const moduleMapping: Record<string, { name: string; component: Module['component'] }> = {
-    'profile': { name: '用户资料', component: 'profile' },
-    'stats': { name: '统计数据', component: 'social' },
-    'portfolio': { name: '投资组合', component: 'links' },
-    'nft': { name: 'NFT收藏', component: 'mostfind' },
-    'blog': { name: '博客文章', component: 'twitter' },
-    'social': { name: '社交媒体', component: 'social' },
-    'activity': { name: '活动记录', component: 'mostfind' },
-    'settings': { name: '设置', component: 'links' }
-  };
+  // 模块数组 - 按顺序对应
+  const moduleArray = [
+    { name: '用户资料', component: 'profile' as const },
+    { name: '社交媒体', component: 'social' as const },
+    { name: '我活跃在', component: 'mostfind' as const },
+    { name: '注册链接', component: 'links' as const },
+    { name: '推特动态', component: 'twitter' as const }
+  ];
 
   const modules: Module[] = [];
 
+  // 使用数组序号映射
   Object.entries(cssModules).forEach(([moduleKey, config], index) => {
-    const mapping = moduleMapping[moduleKey];
-    if (mapping) {
+    const moduleIndex = parseInt(moduleKey);
+    if (!isNaN(moduleIndex) && moduleIndex < moduleArray.length) {
+      const moduleInfo = moduleArray[moduleIndex];
       // 根据order或index计算位置
       const position = calculateGridPosition(config.order || index + 1);
       
       modules.push({
-        id: moduleKey,
-        name: mapping.name,
-        component: mapping.component,
+        id: moduleInfo.component, // 使用组件名作为ID
+        name: moduleInfo.name,
+        component: moduleInfo.component,
         position,
         size: { width: 2, height: 2 } // 默认大小，可以根据需要调整
       });

@@ -58,7 +58,7 @@ export const THEMES: Theme[] = [
   {
     id: 5,
     name: '韭菜帝国',
-    className: 'theme-leek-green',
+    className: 'theme-matrix',
     colors: {
       primary: '#52C41A',
       secondary: '#52C41A',
