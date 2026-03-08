@@ -94,6 +94,7 @@ export const Dashboard: React.FC = () => {
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
   const [resizingModule, setResizingModule] = useState<{ module: Module; direction: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [isEditingDisabled, setIsEditingDisabled] = useState(false)
   
   // 被禁止的用户名管理状态
   const [newForbiddenUsername, setNewForbiddenUsername] = useState('')
@@ -135,10 +136,14 @@ export const Dashboard: React.FC = () => {
           setSelectedTheme(currentTheme);
           setModules(currentTheme.modules);
         }
+        
+        // 设置初始编辑禁用状态
+        setIsEditingDisabled(selectedTheme.id === 1)
       } catch (error) {
         console.error('Failed to load theme layouts:', error);
         // 如果加载失败，使用默认布局
         setModules(getDefaultModules());
+        setIsEditingDisabled(selectedTheme.id === 1)
       }
     };
 
@@ -355,7 +360,7 @@ export const Dashboard: React.FC = () => {
   }
 
   const handleApplyLayout = async () => {
-    if (!user) return
+    if (!user || isEditingDisabled) return
     
     setIsSaving(true)
     
@@ -411,6 +416,11 @@ export const Dashboard: React.FC = () => {
   }
 
   const handleApplyCSS = async () => {
+    if (isEditingDisabled) {
+      alert('⚠️ 默认主题不能应用自定义CSS')
+      return
+    }
+    
     // 保存 CSS 到 localStorage
     localStorage.setItem('custom-css', cssContent)
     
@@ -662,20 +672,20 @@ export const Dashboard: React.FC = () => {
                           key={theme.id}
                           onClick={(e) => {
                             e.stopPropagation()
-                            if (!isCyberOrange) {
-                              handleThemeChange(theme)
-                            }
+                            handleThemeChange(theme)
+                            // 设置编辑禁用状态
+                            setIsEditingDisabled(isCyberOrange)
                           }}
                           style={{
                             background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
                             borderRadius: '8px',
                             padding: '0.75rem',
-                            cursor: isCyberOrange ? 'not-allowed' : 'pointer',
+                            cursor: 'pointer',
                             transition: 'all 0.3s ease',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.75rem',
-                            opacity: isCyberOrange ? 0.6 : 1
+                            opacity: isCyberOrange && selectedTheme.id !== theme.id ? 0.6 : 1
                           }}
                         >
                           <div style={{
@@ -970,18 +980,19 @@ export const Dashboard: React.FC = () => {
                     
                     <button
                       onClick={handleApplyCSS}
+                      disabled={isEditingDisabled}
                       style={{
                         padding: '0.75rem 1.5rem',
-                        background: selectedTheme.colors.primary + '20',
-                        border: `1px solid ${selectedTheme.colors.primary}40`,
+                        background: isEditingDisabled ? '#ccc' : selectedTheme.colors.primary + '20',
+                        border: `1px solid ${isEditingDisabled ? '#999' : selectedTheme.colors.primary + '40'}`,
                         borderRadius: '8px',
-                        color: selectedTheme.colors.primary,
-                        cursor: 'pointer',
+                        color: isEditingDisabled ? '#666' : selectedTheme.colors.primary,
+                        cursor: isEditingDisabled ? 'not-allowed' : 'pointer',
                         fontSize: '0.9rem',
                         fontWeight: '500'
                       }}
                     >
-                      应用 CSS 文件
+                      {isEditingDisabled ? '🚫 默认主题' : '应用 CSS 文件'}
                     </button>
                   </div>
                 </div>
@@ -995,20 +1006,20 @@ export const Dashboard: React.FC = () => {
               }}>
                 <button
                   onClick={handleApplyLayout}
-                  disabled={isSaving}
+                  disabled={isSaving || isEditingDisabled}
                   style={{
                     padding: '1rem 2rem',
-                    background: isSaving ? '#ccc' : selectedTheme.colors.primary,
+                    background: (isSaving || isEditingDisabled) ? '#ccc' : selectedTheme.colors.primary,
                     border: `2px solid ${selectedTheme.colors.primary}`,
                     borderRadius: '12px',
                     color: 'white',
-                    cursor: isSaving ? 'not-allowed' : 'pointer',
+                    cursor: (isSaving || isEditingDisabled) ? 'not-allowed' : 'pointer',
                     fontSize: '1.1rem',
                     fontWeight: '600',
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  {isSaving ? '保存中...' : '🚀 应用布局'}
+                  {isSaving ? '保存中...' : isEditingDisabled ? '🚫 默认主题' : '🚀 应用布局'}
                 </button>
               </div>
             </>
