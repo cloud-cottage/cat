@@ -38,7 +38,7 @@ function getThemeDescription(name: string): string {
     'HODL蓝': '专业稳重，值得信赖',
     '草莓熊': '可爱甜美，温馨舒适',
     '赛博橙': '科技未来，动感活力',
-    '韭菜绿': '生机勃勃，自然清新',
+    '韭菜帝国': '生机勃勃，自然清新',
     '拿铁棕': '温暖醇厚，舒适安逸',
     '神秘紫': '优雅神秘，独特个性',
     'Web3': '数字未来，去中心化'
@@ -149,6 +149,20 @@ export const Dashboard: React.FC = () => {
 
     loadThemeLayouts();
   }, []); // 只在组件挂载时执行一次
+  
+  // 加载被禁止的用户名列表
+  useEffect(() => {
+    const loadForbiddenUsernames = async () => {
+      try {
+        const usernames = await api.getForbiddenUsernames()
+        setForbiddenUsernames(usernames)
+      } catch (error) {
+        console.error('Failed to load forbidden usernames:', error)
+      }
+    }
+    
+    loadForbiddenUsernames()
+  }, [])
   
   // CSS 编辑器状态
   const [cssContent, setCssContent] = useState(`:root {
@@ -433,7 +447,7 @@ export const Dashboard: React.FC = () => {
   }
 
   // 处理被禁止的用户名
-  const handleAddForbiddenUsername = () => {
+  const handleAddForbiddenUsername = async () => {
     if (!newForbiddenUsername.trim()) {
       alert('请输入用户名')
       return
@@ -444,15 +458,28 @@ export const Dashboard: React.FC = () => {
       return
     }
     
-    setForbiddenUsernames([...forbiddenUsernames, newForbiddenUsername.trim()])
-    setNewForbiddenUsername('')
-    alert('用户名已添加到禁止名单')
+    const updatedList = [...forbiddenUsernames, newForbiddenUsername.trim()]
+    const success = await api.updateForbiddenUsernames(updatedList)
+    
+    if (success) {
+      setForbiddenUsernames(updatedList)
+      setNewForbiddenUsername('')
+      alert('用户名已添加到禁止名单')
+    } else {
+      alert('添加失败，请重试')
+    }
   }
 
-  const handleRemoveForbiddenUsername = (index: number) => {
+  const handleRemoveForbiddenUsername = async (index: number) => {
     const updatedList = forbiddenUsernames.filter((_, i) => i !== index)
-    setForbiddenUsernames(updatedList)
-    alert('用户名已从禁止名单中移除')
+    const success = await api.updateForbiddenUsernames(updatedList)
+    
+    if (success) {
+      setForbiddenUsernames(updatedList)
+      alert('用户名已从禁止名单中移除')
+    } else {
+      alert('移除失败，请重试')
+    }
   }
 
   const renderGridLines = () => {

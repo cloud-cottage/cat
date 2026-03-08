@@ -681,6 +681,38 @@ export const api = {
         setLocalData(username, { user: localData.user, links: localData.links, groups: userGroups })
       }
     }
+  },
+
+  updateForbiddenUsernames: async (usernames: string[]): Promise<boolean> => {
+    try {
+      // 保存到localStorage作为临时方案
+      localStorage.setItem('forbidden-usernames', JSON.stringify(usernames))
+      console.log('Forbidden usernames updated:', usernames)
+      return true
+    } catch (error) {
+      console.error('Failed to update forbidden usernames:', error)
+      return false
+    }
+  },
+
+  getForbiddenUsernames: async (): Promise<string[]> => {
+    try {
+      // 从localStorage获取作为临时方案
+      const stored = localStorage.getItem('forbidden-usernames')
+      if (stored) {
+        return JSON.parse(stored)
+      }
+      // 返回默认列表
+      return [
+        'admin', 'administrator', 'root', 'system', 'api', 'www', 'mail', 'ftp',
+        'i', 'username', 'user', 'users', 'profile', 'profiles', 'edit', 'editor',
+        'setup', 'config', 'configuration', 'settings', 'dashboard', 'admin',
+        'test', 'demo', 'example', 'sample', 'temp', 'temporary'
+      ]
+    } catch (error) {
+      console.error('Failed to get forbidden usernames:', error)
+      return []
+    }
   }
 }
 

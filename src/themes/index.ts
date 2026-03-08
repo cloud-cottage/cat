@@ -57,7 +57,7 @@ export const THEMES: Theme[] = [
   },
   {
     id: 5,
-    name: '韭菜绿',
+    name: '韭菜帝国',
     className: 'theme-leek-green',
     colors: {
       primary: '#52C41A',
