@@ -1,3 +1,6 @@
+/* 导入主题CSS变量 */
+@import './styles/themes.css';
+
 :root {
   /* Brand Colors */
   --color-primary: #FF8C42; /* Warm Orange */
@@ -88,6 +91,3 @@ button {
     padding: 0 1rem;
   }
 }
-
-/* 导入主题CSS变量 */
-@import './styles/themes.css';

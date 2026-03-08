@@ -17,10 +17,6 @@
   --theme-border-radius: 16px;
   --theme-border-width: 2px;
   --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
-}
-
-/* 钻石手主题的背景 */
-.theme-diamond {
   background: url('/images/diamond-background.png') repeat;
   background-size: 200px 200px;
   background-attachment: fixed;
