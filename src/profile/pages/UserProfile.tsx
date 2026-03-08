@@ -78,7 +78,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             }
             setUser(defaultUser)
             setLinks([])
-            setCurrentTheme(THEMES[0])
+            setCurrentTheme(THEMES[0]) // 赛博橙主题作为默认
             setLayoutModules([
               { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
               { id: 'mostfind', name: '我活跃在', component: 'mostfind', position: { x: 0, y: 2 }, size: { width: 2, height: 2 } },
@@ -103,7 +103,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             setLayoutModules(userData.user.layout.modules || [])
           }
         } else {
-          setCurrentTheme(THEMES[0])
+          setCurrentTheme(THEMES[0]) // 赛博橙主题作为默认
           // 设置默认模块布局
           setLayoutModules([
             { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
@@ -130,7 +130,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         }
         setUser(defaultUser)
         setLinks([])
-        setCurrentTheme(THEMES[0])
+        setCurrentTheme(THEMES[0]) // 赛博橙主题作为默认
         setLayoutModules([
           { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
           { id: 'mostfind', name: '我活跃在', component: 'mostfind', position: { x: 0, y: 2 }, size: { width: 2, height: 2 } },

@@ -13,6 +13,17 @@ export interface Theme {
 export const THEMES: Theme[] = [
   {
     id: 1,
+    name: '赛博橙',
+    className: 'theme-cyber-orange',
+    colors: {
+      primary: '#FF6B35',
+      secondary: '#00D9FF',
+      bg: '#0A0E27',
+      surface: '#1A1F3A'
+    }
+  },
+  {
+    id: 2,
     name: '钻石手',
     className: 'theme-diamond',
     colors: {
@@ -23,7 +34,7 @@ export const THEMES: Theme[] = [
     }
   },
   {
-    id: 2,
+    id: 3,
     name: 'HODL蓝',
     className: 'theme-hodl-blue',
     colors: {
@@ -34,7 +45,7 @@ export const THEMES: Theme[] = [
     }
   },
   {
-    id: 3,
+    id: 4,
     name: '草莓熊',
     className: 'theme-strawberry',
     colors: {
@@ -42,17 +53,6 @@ export const THEMES: Theme[] = [
       secondary: '#C66FBC',
       bg: '#FFF0F5',
       surface: '#FFFFFF'
-    }
-  },
-  {
-    id: 4,
-    name: '赛博橙',
-    className: 'theme-cyber-orange',
-    colors: {
-      primary: '#FF6B35',
-      secondary: '#00D9FF',
-      bg: '#0A0E27',
-      surface: '#1A1F3A'
     }
   },
   {
@@ -107,5 +107,5 @@ export const getThemeById = (id: number): Theme | undefined => {
 
 export const getThemeClassName = (id: number): string => {
   const theme = getThemeById(id)
-  return theme?.className || 'theme-hodl-blue'
+  return theme?.className || 'theme-cyber-orange'
 }

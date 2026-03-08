@@ -655,47 +655,54 @@ export const Dashboard: React.FC = () => {
                     }}>
                       选择主题：
                     </div>
-                    {DASHBOARD_THEMES.map(theme => (
-                      <div
-                        key={theme.id}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleThemeChange(theme)
-                        }}
-                        style={{
-                          background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
-                          borderRadius: '8px',
-                          padding: '0.75rem',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.75rem'
-                        }}
-                      >
-                        <div style={{
-                          width: '30px',
-                          height: '30px',
-                          borderRadius: '6px',
-                          background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                          fontSize: '0.9rem',
-                          fontWeight: 'bold'
-                        }}>
-                          {theme.name.charAt(0)}
+                    {DASHBOARD_THEMES.map(theme => {
+                      const isCyberOrange = theme.id === 1 // 赛博橙主题ID
+                      return (
+                        <div
+                          key={theme.id}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (!isCyberOrange) {
+                              handleThemeChange(theme)
+                            }
+                          }}
+                          style={{
+                            background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
+                            borderRadius: '8px',
+                            padding: '0.75rem',
+                            cursor: isCyberOrange ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.3s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            opacity: isCyberOrange ? 0.6 : 1
+                          }}
+                        >
+                          <div style={{
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '6px',
+                            background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold'
+                          }}>
+                            {theme.name.charAt(0)}
+                          </div>
+                          <span style={{
+                            color: selectedTheme.colors.primary,
+                            fontSize: '0.85rem',
+                            fontWeight: '500'
+                          }}>
+                            {theme.name}
+                            {isCyberOrange && ' (默认)'}
+                          </span>
                         </div>
-                        <span style={{
-                          color: selectedTheme.colors.primary,
-                          fontSize: '0.85rem',
-                          fontWeight: '500'
-                        }}>
-                          {theme.name}
-                        </span>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </div>
