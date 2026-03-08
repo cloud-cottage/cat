@@ -10,16 +10,21 @@
   --theme-accent-rgb: 255, 107, 53;
   --theme-surface: rgba(255, 255, 255, 0.95);
   --theme-surface-rgb: 255, 255, 255;
-  --theme-bg: #D9DFDE;
+  --theme-bg: transparent;
   --theme-text-primary: #2C3E50;
   --theme-text-secondary: #4A5568;
   --theme-text-muted: #7F8C8D;
   --theme-border-radius: 16px;
   --theme-border-width: 2px;
   --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
+}
+
+/* 钻石手主题的背景 */
+.theme-diamond {
   background: url('/images/diamond-background.png') repeat;
   background-size: 200px 200px;
   background-attachment: fixed;
+  background-color: transparent;
 }
 
 /* HODL蓝主题 - 增强可读性 */
@@ -28,22 +33,26 @@
   --theme-primary-rgb: 28, 110, 156;
   --theme-secondary: #FF8C42;
   --theme-secondary-rgb: 255, 140, 66;
-  --theme-bg: #EBF8FF;
+  --theme-bg: transparent;
   --theme-surface: #FFFFFF;
-  --theme-diamond-style: 0;
-  
-  /* 文本颜色变量 */
+  --theme-surface-rgb: 255, 255, 255;
   --theme-text-primary: #1A365D;
   --theme-text-secondary: #2C5282;
   --theme-text-muted: #4A5568;
   --theme-text-white: #FFFFFF;
-  
-  --theme-glow: none;
-  --theme-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  --theme-hover-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  --theme-border-radius: 16px;
+  --theme-border-radius: 12px;
   --theme-border-width: 1px;
-  --theme-text-shadow: none;
+  --theme-shadow: 0 4px 16px rgba(26, 54, 93, 0.1);
+  --theme-hover-shadow: 0 8px 24px rgba(26, 54, 93, 0.15);
+  --theme-glow: 0 0 20px rgba(28, 110, 156, 0.3);
+  --theme-border-color: rgba(28, 110, 156, 0.2);
+}
+
+/* HODL蓝主题的背景 */
+.theme-hodl-blue {
+  background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 50%, #EBF8FF 100%);
+  background-attachment: fixed;
+  background-color: transparent;
 }
 
 /* 草莓熊主题 - 增强可读性 */
@@ -52,7 +61,7 @@
   --theme-primary-rgb: 255, 107, 157;
   --theme-secondary: #C66FBC;
   --theme-secondary-rgb: 198, 111, 188;
-  --theme-bg: #FFF0F5;
+  --theme-bg: transparent;
   --theme-surface: #FFFFFF;
   --theme-diamond-style: 0;
   
@@ -68,6 +77,13 @@
   --theme-border-radius: 16px;
   --theme-border-width: 1px;
   --theme-text-shadow: none;
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
 }
 
 /* 赛博橙主题 - 增强可读性 */
@@ -92,6 +108,13 @@
   --theme-border-radius: 16px;
   --theme-border-width: 1px;
   --theme-text-shadow: none;
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
 }
 
 /* 韭菜绿主题 - 增强可读性 */
@@ -116,6 +139,13 @@
   --theme-border-radius: 16px;
   --theme-border-width: 1px;
   --theme-text-shadow: none;
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
 }
 
 /* 拿铁棕主题 - 增强可读性 */
@@ -140,6 +170,13 @@
   --theme-border-radius: 16px;
   --theme-border-width: 1px;
   --theme-text-shadow: none;
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
 }
 
 /* 神秘紫主题 - 增强可读性 */
@@ -164,6 +201,13 @@
   --theme-border-radius: 16px;
   --theme-border-width: 1px;
   --theme-text-shadow: none;
+
+/* 草莓熊主题的body背景 */
+.theme-strawberry {
+  background: linear-gradient(135deg, #FFF0F5 0%, #FED7E2 50%, #FFF0F5 100%);
+  background-attachment: fixed;
+  background-color: transparent;
+}
 }
 
 /* Web3主题 - 增强可读性 */
@@ -192,15 +236,14 @@
 
 /* 通用组件样式 */
 .theme-module {
-  background: var(--theme-surface);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid var(--theme-primary);
-  box-shadow: var(--theme-shadow);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0);
+  background: #E6E9E7;
+  backdrop-filter: none;
+  border-radius: var(--theme-border-radius);
+  border: var(--theme-border-width) solid transparent;
+  background-clip: padding-box;
   position: relative;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .theme-module::before {
@@ -464,11 +507,6 @@
 
 /* 钻石手主题特殊样式 */
 .theme-diamond .theme-module {
-  backdrop-filter: none;
-  border-radius: var(--theme-border-radius);
-  border: var(--theme-border-width) solid transparent;
-  background: #E6E9E7;
-  background-clip: padding-box;
   border-image: linear-gradient(145deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%) 1;
 }
 

@@ -129,8 +129,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
         {/* 网格布局 */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(6, 300px)',
-          gridTemplateRows: 'repeat(9, 300px)',
+          gridTemplateColumns: 'repeat(6, 1fr)',
+          gridTemplateRows: 'repeat(9, 280px)',
           gap: '1rem',
           minHeight: '900px'
         }}>
