@@ -2,18 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { api, type User } from '../../profile/lib/api'
 import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
+import { parseThemeLayoutFromCSS, type Module as LayoutModule } from '../lib/layout-parser'
+import { saveLayoutToCSSFile, validateLayout } from '../lib/layout-saver'
 
-interface Module {
-  id: string
-  name: string
-  component: 'profile' | 'links' | 'twitter' | 'social' | 'mostfind'
-  position: { x: number; y: number }
-  size: { width: number; height: number }
+interface Module extends LayoutModule {
+  // Admin页面特有的Module属性可以在这里扩展
 }
 
 interface DashboardTheme {
   id: number
   name: string
+  className: string // 添加className属性
   description: string
   preview: string
   colors: {
@@ -30,7 +29,7 @@ const DASHBOARD_THEMES: DashboardTheme[] = SHARED_THEMES.map((theme) => ({
   ...theme,
   description: getThemeDescription(theme.name),
   preview: `/themes/${theme.className.replace('theme-', '')}.png`,
-  modules: getThemeModules(theme.id)
+  modules: [] // 初始化为空，将在组件加载时异步填充
 }))
 
 function getThemeDescription(name: string): string {
@@ -47,9 +46,8 @@ function getThemeDescription(name: string): string {
   return descriptions[name] || '个性化主题'
 }
 
-function getThemeModules(themeId: number): Module[] {
-  // 根据主题ID返回默认模块配置
-  const baseModules = [
+function getDefaultModules(): Module[] {
+  return [
     {
       id: 'profile',
       name: '用户资料',
@@ -85,14 +83,7 @@ function getThemeModules(themeId: number): Module[] {
       position: { x: 0, y: 6 },
       size: { width: 6, height: 4 }
     }
-  ]
-
-  // 钻石手主题有特殊布局
-  if (themeId === 1) {
-    return baseModules
-  }
-
-  return baseModules
+  ];
 }
 
 export const Dashboard: React.FC = () => {
@@ -115,6 +106,44 @@ export const Dashboard: React.FC = () => {
   
   // 当前选中的侧边栏菜单项
   const [activeSidebarItem, setActiveSidebarItem] = useState<'theme' | 'forbidden'>('theme')
+
+  // 异步加载所有主题布局
+  useEffect(() => {
+    const loadThemeLayouts = async () => {
+      try {
+        console.log('Loading theme layouts from CSS...');
+        
+        // 为每个主题加载布局
+        const updatedThemes = await Promise.all(
+          DASHBOARD_THEMES.map(async (theme) => {
+            const themeName = theme.className.replace('theme-', '');
+            const layout = await parseThemeLayoutFromCSS(theme.id, themeName);
+            
+            return {
+              ...theme,
+              modules: layout.modules
+            };
+          })
+        );
+
+        // 更新DASHBOARD_THEMES（这里我们需要创建一个状态来存储更新的主题）
+        console.log('Theme layouts loaded:', updatedThemes);
+        
+        // 设置当前选中主题的模块
+        const currentTheme = updatedThemes.find(t => t.id === selectedTheme.id);
+        if (currentTheme) {
+          setSelectedTheme(currentTheme);
+          setModules(currentTheme.modules);
+        }
+      } catch (error) {
+        console.error('Failed to load theme layouts:', error);
+        // 如果加载失败，使用默认布局
+        setModules(getDefaultModules());
+      }
+    };
+
+    loadThemeLayouts();
+  }, []); // 只在组件挂载时执行一次
   
   // CSS 编辑器状态
   const [cssContent, setCssContent] = useState(`:root {
@@ -329,12 +358,33 @@ export const Dashboard: React.FC = () => {
     if (!user) return
     
     setIsSaving(true)
+    
     try {
-      // 创建用户布局配置
+      // 验证布局
+      const validation = validateLayout(modules)
+      if (!validation.valid) {
+        alert(`❌ 布局验证失败：\n${validation.errors.join('\n')}`)
+        setIsSaving(false)
+        return
+      }
+      
+      // 获取主题名称
+      const themeName = selectedTheme.className.replace('theme-', '')
+      
+      // 保存布局到CSS文件
+      const cssResult = await saveLayoutToCSSFile(themeName, modules)
+      if (!cssResult.success) {
+        alert(`❌ CSS保存失败：${cssResult.message}`)
+        setIsSaving(false)
+        return
+      }
+      
+      // 保存到数据库（保持原有逻辑）
       const userLayout = {
         themeId: selectedTheme.id,
         modules: modules,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        cssLayout: cssResult.cssContent // 添加CSS布局数据
       }
       
       console.log('准备保存的布局数据:', userLayout)
@@ -347,12 +397,11 @@ export const Dashboard: React.FC = () => {
       
       console.log('准备更新的用户数据:', updatedUser)
       
-      // 使用当前登录的用户而不是硬编码的test
       const result = await api.updateUser(user.username, updatedUser)
       console.log('API更新结果:', result)
       setUser(updatedUser)
       console.log('布局应用成功')
-      alert('✅ 布局已成功应用并保存！')
+      alert(`✅ 布局已成功应用并保存！\n📁 CSS文件已更新\n💾 数据库已同步`)
     } catch (error) {
       console.error('应用布局失败:', error)
       alert('❌ 应用布局失败，请重试')
