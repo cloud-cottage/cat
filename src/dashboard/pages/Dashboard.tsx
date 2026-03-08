@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { api, type User } from '../../profile/lib/api'
+import { api, type User } from '../../page/lib/api'
 import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
 import { parseThemeLayoutFromCSS, type Module as LayoutModule } from '../lib/layout-parser'
 import { saveLayoutToCSSFile, validateLayout } from '../lib/layout-saver'
