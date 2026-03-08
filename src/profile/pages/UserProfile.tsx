@@ -107,12 +107,25 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
     return <div className="blog-container">加载中...</div>
   }
 
+  // 应用主题到body元素
+  useEffect(() => {
+    // 清除所有主题类名
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    // 添加当前主题类名到body
+    document.body.classList.add(getThemeClassName(currentTheme.id));
+    
+    return () => {
+      // 清理：移除主题类名
+      document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    };
+  }, [currentTheme.id]);
+
   if (!user) {
     return <div className="blog-container">用户不存在</div>
   }
 
   return (
-    <div className={`blog-container ${getThemeClassName(currentTheme.id)}`} style={{ 
+    <div className="blog-container" style={{ 
       width: '1800px',
       maxWidth: '100%',
       margin: '0 auto',
