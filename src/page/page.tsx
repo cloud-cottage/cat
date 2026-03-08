@@ -43,7 +43,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     return <div className="blog-container">用户不存在</div>
   }
 
-  const renderModule = (module: any) => {
+  const renderModule = (module: any, index: number) => {
     // 兼容两种命名方式：组件名和数字序号
     const moduleClass = typeof module.id === 'string' && !isNaN(parseInt(module.id)) 
       ? `module-${module.id}`  // 数字序号 (matrix主题)
@@ -51,7 +51,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
     return (
       <div
-        key={module.id}
+        key={`${module.id}-${index}`}  // 使用组合键确保唯一性
         className={`theme-module ${moduleClass}`}
         style={{
           padding: '1.5rem',
@@ -310,7 +310,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         flexDirection: 'column'
       }}>
         <div className="grid-container">
-          {layoutModules.map(renderModule)}
+          {layoutModules.map((module, index) => renderModule(module, index))}
         </div>
 
         <div className="theme-text-muted" style={{ 
