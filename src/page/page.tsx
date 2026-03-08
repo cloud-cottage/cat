@@ -31,9 +31,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
   // 应用主题到body元素
   useEffect(() => {
-    console.log('Theme effect triggered:', currentTheme.id, getThemeClassName(currentTheme.id));
+    const themeClass = getThemeClassName(currentTheme.id);
+    console.log('Theme effect triggered:', currentTheme.id, themeClass);
     document.body.className = document.body.className.replace(/theme-\w+/g, '');
-    document.body.classList.add(getThemeClassName(currentTheme.id));
+    document.body.classList.add(themeClass);
     
     return () => {
       document.body.className = document.body.className.replace(/theme-\w+/g, '');
@@ -280,8 +281,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     )
   }
 
+  const themeClass = getThemeClassName(currentTheme.id);
+  
   return (
-    <div className={`blog-container ${getThemeClassName(currentTheme.id)}`} style={{ 
+    <div className={`blog-container ${themeClass}`} style={{ 
       width: '1800px',
       maxWidth: '100%',
       margin: '0 auto',
@@ -303,7 +306,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }}>
         <div>Theme ID: {currentTheme.id}</div>
         <div>Theme Name: {currentTheme.name}</div>
-        <div>Theme Class: {getThemeClassName(currentTheme.id)}</div>
+        <div>Theme Class: {themeClass}</div>
         <div>Modules Count: {layoutModules.length}</div>
       </div>
       
