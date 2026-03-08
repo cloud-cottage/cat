@@ -117,7 +117,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
       maxWidth: '100%',
       margin: '0 auto',
       minHeight: '100vh',
-      background: 'var(--theme-bg)',
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
