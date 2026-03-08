@@ -65,6 +65,28 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username: propUsername
             const newUser = await api.createUser(username, address)
             userData = { user: newUser, links: [], groups: [] }
           } else {
+            // 如果没有用户数据也没有钱包地址，创建默认展示
+            console.log('No user data and no wallet, creating default display')
+            const defaultUser: User = {
+              id: 'default',
+              walletAddress: '0x0000000000000000000000000000000000000000',
+              username: username,
+              nickname: username,
+              themeId: 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+            setUser(defaultUser)
+            setLinks([])
+            setCurrentTheme(THEMES[0])
+            setLayoutModules([
+              { id: 'profile', name: '用户资料', component: 'profile', position: { x: 0, y: 0 }, size: { width: 3, height: 2 } },
+              { id: 'mostfind', name: '我活跃在', component: 'mostfind', position: { x: 0, y: 2 }, size: { width: 2, height: 2 } },
+              { id: 'links', name: '注册链接', component: 'links', position: { x: 2, y: 2 }, size: { width: 4, height: 4 } },
+              { id: 'social', name: '社交媒体', component: 'social', position: { x: 3, y: 0 }, size: { width: 3, height: 2 } },
+              { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
+            ])
+            document.title = `${username}｜CAT｜Your Web3 Paws`
             setLoading(false)
             return
           }
