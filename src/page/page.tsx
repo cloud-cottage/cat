@@ -287,6 +287,24 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
+      {/* 调试信息 */}
+      <div style={{ 
+        position: 'fixed', 
+        top: '10px', 
+        right: '10px', 
+        background: 'rgba(0,0,0,0.8)', 
+        color: 'white', 
+        padding: '10px', 
+        borderRadius: '5px',
+        zIndex: 9999,
+        fontSize: '12px'
+      }}>
+        <div>Theme ID: {currentTheme.id}</div>
+        <div>Theme Name: {currentTheme.name}</div>
+        <div>Theme Class: {getThemeClassName(currentTheme.id)}</div>
+        <div>Modules Count: {layoutModules.length}</div>
+      </div>
+      
       <div style={{
         display: 'flex',
         flexDirection: 'column'

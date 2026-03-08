@@ -113,12 +113,16 @@ export const Dashboard: React.FC = () => {
     const loadThemeLayouts = async () => {
       try {
         console.log('Loading theme layouts from CSS...');
+        console.log('DASHBOARD_THEMES count:', DASHBOARD_THEMES.length);
         
         // 为每个主题加载布局
         const updatedThemes = await Promise.all(
           DASHBOARD_THEMES.map(async (theme) => {
+            console.log('Loading layout for theme:', theme.name, theme.className);
             const themeName = theme.className.replace('theme-', '');
             const layout = await parseThemeLayoutFromCSS(theme.id, themeName, theme.className);
+            
+            console.log('Layout loaded for', theme.name, ':', layout.modules.length, 'modules');
             
             return {
               ...theme,
@@ -133,6 +137,7 @@ export const Dashboard: React.FC = () => {
         // 设置当前选中主题的模块
         const currentTheme = updatedThemes.find(t => t.id === selectedTheme.id);
         if (currentTheme) {
+          console.log('Setting current theme modules:', currentTheme.modules.length);
           setSelectedTheme(currentTheme);
           setModules(currentTheme.modules);
         }
