@@ -118,7 +118,7 @@ export const Dashboard: React.FC = () => {
         const updatedThemes = await Promise.all(
           DASHBOARD_THEMES.map(async (theme) => {
             const themeName = theme.className.replace('theme-', '');
-            const layout = await parseThemeLayoutFromCSS(theme.id, themeName);
+            const layout = await parseThemeLayoutFromCSS(theme.id, themeName, theme.className);
             
             return {
               ...theme,

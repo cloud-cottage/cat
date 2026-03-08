@@ -279,7 +279,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   }
 
   return (
-    <div className="blog-container" style={{ 
+    <div className={`blog-container ${getThemeClassName(currentTheme.id)}`} style={{ 
       width: '1800px',
       maxWidth: '100%',
       margin: '0 auto',

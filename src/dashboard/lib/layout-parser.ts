@@ -28,7 +28,7 @@ export interface ThemeLayout {
  * @param themeName 主题名称
  * @returns Promise<ThemeLayout>
  */
-export async function parseThemeLayoutFromCSS(themeId: number, themeName: string): Promise<ThemeLayout> {
+export async function parseThemeLayoutFromCSS(themeId: number, themeName: string, themeClassName: string): Promise<ThemeLayout> {
   try {
     // 检查是否在浏览器环境中
     if (typeof document === 'undefined') {
@@ -38,7 +38,7 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
 
     // 创建临时元素来读取CSS元数据
     const tempElement = document.createElement('div');
-    tempElement.className = `theme-${themeName}`;
+    tempElement.className = themeClassName; // 使用正确的className
     tempElement.style.display = 'none';
     document.body.appendChild(tempElement);
 
@@ -187,7 +187,7 @@ export async function loadAllThemeLayouts(): Promise<ThemeLayout[]> {
   ];
 
   const layouts = await Promise.all(
-    themes.map(theme => parseThemeLayoutFromCSS(theme.id, theme.name))
+    themes.map(theme => parseThemeLayoutFromCSS(theme.id, theme.name, `theme-${theme.name}`))
   );
 
   return layouts;
