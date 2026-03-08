@@ -20,6 +20,7 @@
   --theme-border-radius: 16px;
   --theme-border-width: 2px;
   --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
+  --theme-text-shadow: 0 0 10px rgba(255, 140, 66, 0.5);
 }
 
 /* 钻石手主题的body背景 */
@@ -48,6 +49,11 @@
 /* 钻石手主题特殊样式 */
 .theme-diamond .theme-module {
   border-image: linear-gradient(145deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%) 1;
+  background: var(--theme-surface);
+  border-radius: var(--theme-border-radius);
+  border: var(--theme-border-width) solid var(--theme-primary);
+  box-shadow: var(--theme-shadow);
+  min-height: 200px;
 }
 
 .theme-diamond .theme-module:hover {
@@ -62,4 +68,5 @@
   background-clip: text;
   text-shadow: var(--theme-text-shadow);
   filter: drop-shadow(0 0 8px var(--theme-primary));
+  color: var(--theme-text-primary);
 }
