@@ -295,21 +295,25 @@ export const Dashboard: React.FC = () => {
     e.preventDefault()
     if (!draggedModule || !gridRef.current) return
 
-    const rect = gridRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    try {
+      const rect = gridRef.current.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
 
-    const cellWidth = rect.width / gridSize.cols
-    const cellHeight = rect.height / gridSize.rows
+      const cellWidth = rect.width / gridSize.cols
+      const cellHeight = rect.height / gridSize.rows
 
-    const newCol = Math.max(0, Math.min(gridSize.cols - draggedModule.size.width, Math.floor(x / cellWidth)))
-    const newRow = Math.max(0, Math.min(gridSize.rows - draggedModule.size.height, Math.floor(y / cellHeight)))
+      const newCol = Math.max(0, Math.min(gridSize.cols - draggedModule.size.width, Math.floor(x / cellWidth)))
+      const newRow = Math.max(0, Math.min(gridSize.rows - draggedModule.size.height, Math.floor(y / cellHeight)))
 
-    setModules(prev => prev.map(m => 
-      m.id === draggedModule.id 
-        ? { ...m, position: { x: newCol, y: newRow } }
-        : m
-    ))
+      setModules(prev => prev.map(m => 
+        m.id === draggedModule.id 
+          ? { ...m, position: { x: newCol, y: newRow } }
+          : m
+      ))
+    } catch (error) {
+      console.error('Error in handleDrop:', error)
+    }
     setDraggedModule(null)
   }
 
@@ -324,28 +328,32 @@ export const Dashboard: React.FC = () => {
   const handleResize = (e: React.MouseEvent) => {
     if (!resizingModule || !gridRef.current) return
 
-    const rect = gridRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    try {
+      const rect = gridRef.current.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
 
-    const cellWidth = rect.width / gridSize.cols
-    const cellHeight = rect.height / gridSize.rows
+      const cellWidth = rect.width / gridSize.cols
+      const cellHeight = rect.height / gridSize.rows
 
-    let newWidth = resizingModule.module.size.width
-    let newHeight = resizingModule.module.size.height
+      let newWidth = resizingModule.module.size.width
+      let newHeight = resizingModule.module.size.height
 
-    if (resizingModule.direction.includes('right')) {
-      newWidth = Math.max(1, Math.min(gridSize.cols - resizingModule.module.position.x, Math.ceil(x / cellWidth)))
+      if (resizingModule.direction.includes('right')) {
+        newWidth = Math.max(1, Math.min(gridSize.cols - resizingModule.module.position.x, Math.ceil(x / cellWidth)))
+      }
+      if (resizingModule.direction.includes('bottom')) {
+        newHeight = Math.max(1, Math.min(gridSize.rows - resizingModule.module.position.y, Math.ceil(y / cellHeight)))
+      }
+
+      setModules(prev => prev.map(m => 
+        m.id === resizingModule.module.id 
+          ? { ...m, size: { width: newWidth, height: newHeight } }
+          : m
+      ))
+    } catch (error) {
+      console.error('Error in handleResize:', error)
     }
-    if (resizingModule.direction.includes('bottom')) {
-      newHeight = Math.max(1, Math.min(gridSize.rows - resizingModule.module.position.y, Math.ceil(y / cellHeight)))
-    }
-
-    setModules(prev => prev.map(m => 
-      m.id === resizingModule.module.id 
-        ? { ...m, size: { width: newWidth, height: newHeight } }
-        : m
-    ))
   }
 
   const handleThemeChange = (theme: DashboardTheme) => {
