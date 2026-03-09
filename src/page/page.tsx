@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { getThemeClassName } from '../themes'
 import { useUserProfile } from './hooks/useUserProfile'
+import { getUserAvatarUrl } from './lib/api'
 
 interface Web3ProfileProps {
   username?: string
@@ -110,13 +111,78 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 <h3>{module.name}</h3>
                 
                 {module.type === 'profile' && (
-                  <div>
-                    <p>{module.content}</p>
-                    {user?.walletAddress && (
-                      <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
-                        {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                      </p>
-                    )}
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ marginBottom: '1rem' }}>
+                      {getUserAvatarUrl(user) ? (
+                        <img 
+                          src={getUserAvatarUrl(user!)} 
+                          alt={user?.username}
+                          style={{ 
+                            width: '80px', 
+                            height: '80px', 
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '3px solid var(--theme-primary)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.style.display = 'none'
+                          }}
+                        />
+                      ) : (
+                        <div style={{
+                          width: '80px',
+                          height: '80px',
+                          borderRadius: '50%',
+                          background: 'linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%)',
+                          margin: '0 auto',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '2rem',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                        }}>
+                          {user?.username?.[0]?.toUpperCase() || '?'}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <h2 style={{ 
+                        margin: '0 0 0.5rem 0', 
+                        fontSize: '1.5rem', 
+                        color: 'var(--theme-primary)',
+                        fontWeight: '600'
+                      }}>
+                        {user?.nickname || user?.username}
+                      </h2>
+                      {user?.nickname && user?.username && (
+                        <p style={{ 
+                          margin: '0 0 0.5rem 0', 
+                          fontSize: '0.875rem', 
+                          opacity: 0.7 
+                        }}>
+                          @{user.username}
+                        </p>
+                      )}
+                      {user?.walletAddress && (
+                        <p style={{ 
+                          margin: '0', 
+                          fontSize: '0.75rem', 
+                          opacity: 0.6,
+                          fontFamily: 'monospace',
+                          background: 'rgba(var(--theme-primary-rgb), 0.1)',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: '4px',
+                          display: 'inline-block'
+                        }}>
+                          {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
                 
@@ -170,16 +236,44 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     {module.data && module.data.length > 0 && (
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
-                          <div key={link.id || linkIndex} style={{ 
-                            fontSize: '0.875rem', 
-                            opacity: 0.8,
-                            marginBottom: '0.25rem'
-                          }}>
-                            • {link.label || link.title || '无标题'}
-                          </div>
+                          <a
+                            key={link.id || linkIndex}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ 
+                              fontSize: '0.875rem', 
+                              opacity: 0.8,
+                              marginBottom: '0.25rem',
+                              display: 'block',
+                              color: 'var(--theme-primary)',
+                              textDecoration: 'none',
+                              padding: '0.25rem 0.5rem',
+                              borderRadius: '4px',
+                              transition: 'all 0.2s ease',
+                              border: '1px solid rgba(var(--theme-primary-rgb), 0.2)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.opacity = '1';
+                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                              e.currentTarget.style.transform = 'translateX(4px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.opacity = '0.8';
+                              e.currentTarget.style.background = 'transparent';
+                              e.currentTarget.style.transform = 'translateX(0)';
+                            }}
+                          >
+                            🔗 {link.label || link.title || '无标题'}
+                          </a>
                         ))}
                         {module.data.length > 3 && (
-                          <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>
+                          <div style={{ 
+                            fontSize: '0.75rem', 
+                            opacity: 0.6,
+                            marginTop: '0.5rem',
+                            fontStyle: 'italic'
+                          }}>
                             ...还有 {module.data.length - 3} 个链接
                           </div>
                         )}
