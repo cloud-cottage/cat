@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getThemeClassName, THEMES } from '../themes'
 import { useUserProfile } from './hooks/useUserProfile'
-import { getUserAvatarUrl } from './lib/api'
+import { getUserAvatarUrl, api } from './lib/api'
 
 interface Web3ProfileProps {
   username?: string
@@ -11,6 +11,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const { loading, user, links, currentTheme, setCurrentTheme } = useUserProfile({ username: propUsername })
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [editForm, setEditForm] = useState({
     nickname: user?.nickname || '',
     bio: user?.bio || '',
@@ -211,20 +212,42 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           />
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                             <button
-                              onClick={() => {
-                                // TODO: 保存编辑内容的逻辑
-                                setIsEditing(false);
+                              onClick={async () => {
+                                try {
+                                  setIsSaving(true);
+                                  console.log('保存用户资料:', editForm);
+                                  
+                                  // 调用API保存用户资料
+                                  const updatedUser = await api.updateUser(user?.username || '', {
+                                    nickname: editForm.nickname,
+                                    bio: editForm.bio,
+                                    twitterHandle: editForm.twitterHandle
+                                  });
+                                  
+                                  console.log('保存成功:', updatedUser);
+                                  setIsEditing(false);
+                                  
+                                  // TODO: 刷新用户数据或更新本地状态
+                                  window.location.reload();
+                                } catch (error) {
+                                  console.error('保存失败:', error);
+                                  alert('保存失败，请重试');
+                                } finally {
+                                  setIsSaving(false);
+                                }
                               }}
+                              disabled={isSaving}
                               style={{
                                 padding: '0.5rem 1rem',
-                                background: 'var(--theme-primary)',
+                                background: isSaving ? '#ccc' : 'var(--theme-primary)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '4px',
-                                cursor: 'pointer'
+                                cursor: isSaving ? 'not-allowed' : 'pointer',
+                                opacity: isSaving ? 0.7 : 1
                               }}
                             >
-                              保存
+                              {isSaving ? '保存中...' : '保存'}
                             </button>
                             <button
                               onClick={() => {
@@ -235,13 +258,15 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 });
                                 setIsEditing(false);
                               }}
+                              disabled={isSaving}
                               style={{
                                 padding: '0.5rem 1rem',
                                 background: 'transparent',
                                 color: 'var(--theme-primary)',
                                 border: '1px solid var(--theme-primary)',
                                 borderRadius: '4px',
-                                cursor: 'pointer'
+                                cursor: isSaving ? 'not-allowed' : 'pointer',
+                                opacity: isSaving ? 0.5 : 1
                               }}
                             >
                               取消
