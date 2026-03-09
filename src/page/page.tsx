@@ -39,11 +39,23 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       type: 'profile'
     },
     { 
+      id: 'social', 
+      name: '社交媒体', 
+      content: '社交链接',
+      type: 'social'
+    },
+    { 
       id: 'links', 
       name: '注册链接', 
       content: `共 ${links.length} 个链接`,
       type: 'links',
       data: links
+    },
+    { 
+      id: 'mostfind', 
+      name: '我活跃在', 
+      content: '活跃平台',
+      type: 'mostfind'
     }
   ];
   
@@ -67,54 +79,122 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           gap: '1rem',
           minHeight: '900px'
         }}>
-          {modules.map((module, index) => (
-            <div
-              key={`simple-${module.id}-${index}`}
-              style={{
-                gridColumn: module.id === 'profile' ? '1 / 4' : '4 / 7',
-                gridRow: module.id === 'profile' ? '1 / 3' : '1 / 3',
-                background: 'rgba(255,255,255,0.1)',
-                padding: '1rem',
-                borderRadius: '8px'
-              }}>
-              <h3>{module.name}</h3>
-              
-              {module.type === 'profile' && (
-                <div>
-                  <p>{module.content}</p>
-                  {user?.walletAddress && (
-                    <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
-                      {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                    </p>
-                  )}
-                </div>
-              )}
-              
-              {module.type === 'links' && (
-                <div>
-                  <p>{module.content}</p>
-                  {module.data && module.data.length > 0 && (
-                    <div style={{ marginTop: '0.5rem' }}>
-                      {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
-                        <div key={link.id || linkIndex} style={{ 
-                          fontSize: '0.875rem', 
-                          opacity: 0.8,
-                          marginBottom: '0.25rem'
+          {modules.map((module, index) => {
+            // 根据模块类型设置网格位置
+            const getPosition = (type: string) => {
+              switch (type) {
+                case 'profile':
+                  return { gridColumn: '1 / 4', gridRow: '1 / 3' };
+                case 'social':
+                  return { gridColumn: '4 / 7', gridRow: '1 / 3' };
+                case 'links':
+                  return { gridColumn: '1 / 4', gridRow: '3 / 5' };
+                case 'mostfind':
+                  return { gridColumn: '4 / 7', gridRow: '3 / 5' };
+                default:
+                  return { gridColumn: '1 / 3', gridRow: '5 / 7' };
+              }
+            };
+
+            const position = getPosition(module.type);
+
+            return (
+              <div
+                key={`simple-${module.id}-${index}`}
+                style={{
+                  ...position,
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '1rem',
+                  borderRadius: '8px'
+                }}>
+                <h3>{module.name}</h3>
+                
+                {module.type === 'profile' && (
+                  <div>
+                    <p>{module.content}</p>
+                    {user?.walletAddress && (
+                      <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
+                        {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                      </p>
+                    )}
+                  </div>
+                )}
+                
+                {module.type === 'social' && (
+                  <div>
+                    <p>{module.content}</p>
+                    <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {user?.twitterHandle && (
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(29, 161, 242, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem'
                         }}>
-                          • {link.label || link.title || '无标题'}
-                        </div>
-                      ))}
-                      {module.data.length > 3 && (
-                        <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>
-                          ...还有 {module.data.length - 3} 个链接
-                        </div>
+                          Twitter
+                        </span>
                       )}
+                      <span style={{ 
+                        padding: '0.25rem 0.5rem', 
+                        background: 'rgba(51, 51, 51, 0.2)', 
+                        borderRadius: '4px',
+                        fontSize: '0.75rem'
+                      }}>
+                        GitHub
+                      </span>
+                      <span style={{ 
+                        padding: '0.25rem 0.5rem', 
+                        background: 'rgba(142, 36, 170, 0.2)', 
+                        borderRadius: '4px',
+                        fontSize: '0.75rem'
+                      }}>
+                        Farcaster
+                      </span>
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+                  </div>
+                )}
+                
+                {module.type === 'links' && (
+                  <div>
+                    <p>{module.content}</p>
+                    {module.data && module.data.length > 0 && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
+                          <div key={link.id || linkIndex} style={{ 
+                            fontSize: '0.875rem', 
+                            opacity: 0.8,
+                            marginBottom: '0.25rem'
+                          }}>
+                            • {link.label || link.title || '无标题'}
+                          </div>
+                        ))}
+                        {module.data.length > 3 && (
+                          <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>
+                            ...还有 {module.data.length - 3} 个链接
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {module.type === 'mostfind' && (
+                  <div>
+                    <p>{module.content}</p>
+                    <div style={{ 
+                      marginTop: '0.5rem', 
+                      fontSize: '0.875rem', 
+                      opacity: 0.8 
+                    }}>
+                      <div>• Web3社区</div>
+                      <div>• 开发者平台</div>
+                      <div>• 创作者生态</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="theme-text-muted" style={{ 
