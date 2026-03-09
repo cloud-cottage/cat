@@ -98,6 +98,17 @@ export const THEMES: Theme[] = [
       bg: '#000000',
       surface: '#1A1A2E'
     }
+  },
+  {
+    id: 9,
+    name: '卫兵',
+    className: 'theme-guard',
+    colors: {
+      primary: '#2E7D32',
+      secondary: '#81C784',
+      bg: '#E8F5E8',
+      surface: '#FFFFFF'
+    }
   }
 ]
 
