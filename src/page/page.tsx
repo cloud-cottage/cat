@@ -6,7 +6,7 @@ interface Web3ProfileProps {
 }
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
-  const { loading, user, currentTheme } = useUserProfile({ username: propUsername })
+  const { loading, user, links, currentTheme } = useUserProfile({ username: propUsername })
   
   if (loading) {
     return <div className="blog-container">加载中...</div>
@@ -17,6 +17,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   }
 
   const themeClass = getThemeClassName(currentTheme.id);
+  
+  // 简单的模块数组
+  const modules = [
+    { id: 'profile', name: '用户资料', content: `${user?.nickname || user?.username}` },
+    { id: 'links', name: '注册链接', content: `共 ${links.length} 个链接` }
+  ];
   
   return (
     <div className={`blog-container ${themeClass}`} style={{ 
@@ -31,7 +37,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         display: 'flex',
         flexDirection: 'column'
       }}>
-        {/* 临时简化：只显示一个简单的div来测试 */}
         <div className="grid-container" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, 1fr)',
@@ -39,16 +44,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           gap: '1rem',
           minHeight: '900px'
         }}>
-          <div style={{
-            gridColumn: '1 / 4',
-            gridRow: '1 / 3',
-            background: 'rgba(255,255,255,0.1)',
-            padding: '1rem',
-            borderRadius: '8px'
-          }}>
-            <h3>用户资料</h3>
-            <p>测试内容</p>
-          </div>
+          {modules.map((module, index) => (
+            <div
+              key={`simple-${module.id}-${index}`}
+              style={{
+                gridColumn: module.id === 'profile' ? '1 / 4' : '4 / 7',
+                gridRow: module.id === 'profile' ? '1 / 3' : '1 / 3',
+                background: 'rgba(255,255,255,0.1)',
+                padding: '1rem',
+                borderRadius: '8px'
+              }}>
+              <h3>{module.name}</h3>
+              <p>{module.content}</p>
+            </div>
+          ))}
         </div>
 
         <div className="theme-text-muted" style={{ 
