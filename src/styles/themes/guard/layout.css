@@ -1,7 +1,7 @@
-/* 赛博橙主题布局配置 - 由Admin页面编辑 */
+/* 卫兵主题布局配置 - 专业绿色主题 */
 
 /* 网格布局定义 */
-.theme-cyber-orange .grid-container {
+.theme-guard .grid-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(9, 280px);
@@ -9,8 +9,8 @@
   min-height: 900px;
 }
 
-/* 赛博橙主题布局 - 用户自定义 */
-.theme-cyber-orange .grid-container {
+/* 卫兵主题布局 - 稳重排列 */
+.theme-guard .grid-container {
   grid-template-areas: 
     "1 1 2 2 3 3"
     "1 1 2 2 3 3"
@@ -23,33 +23,34 @@
     "6 6 6 6 6 6";
 }
 
-.theme-cyber-orange .module-1 {
+/* 具体模块位置 */
+.theme-guard .module-1 {
   grid-area: 1;
 }
 
-.theme-cyber-orange .module-2 {
+.theme-guard .module-2 {
   grid-area: 2;
 }
 
-.theme-cyber-orange .module-3 {
+.theme-guard .module-3 {
   grid-area: 3;
 }
 
-.theme-cyber-orange .module-4 {
+.theme-guard .module-4 {
   grid-area: 4;
 }
 
-.theme-cyber-orange .module-5 {
+.theme-guard .module-5 {
   grid-area: 5;
 }
 
-.theme-cyber-orange .module-6 {
+.theme-guard .module-6 {
   grid-area: 6;
 }
 
 /* 响应式调整 - 保持6列9行 */
 @media (max-width: 1400px) {
-  .theme-cyber-orange .grid-container {
+  .theme-guard .grid-container {
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(9, 280px);
     grid-template-areas: 
@@ -66,7 +67,7 @@
 }
 
 @media (max-width: 900px) {
-  .theme-cyber-orange .grid-container {
+  .theme-guard .grid-container {
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(9, 280px);
     grid-template-areas: 
@@ -83,7 +84,7 @@
 }
 
 /* 布局元数据 */
-.theme-cyber-orange::before {
-  content: '{"name":"cyber-orange","displayName":"赛博橙","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"1":{"area":"1","order":1},"2":{"area":"2","order":2},"3":{"area":"3","order":3},"4":{"area":"4","order":4},"5":{"area":"5","order":5},"6":{"area":"6","order":6}}}';
+.theme-guard::before {
+  content: '{"name":"guard","displayName":"卫兵","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"1":{"area":"1","order":1},"2":{"area":"2","order":2},"3":{"area":"3","order":3},"4":{"area":"4","order":4},"5":{"area":"5","order":5},"6":{"area":"6","order":6}}}';
   display: none;
 }

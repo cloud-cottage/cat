@@ -1,0 +1,75 @@
+/* 极光主题样式 - 北欧风格主题 */
+
+.theme-aurora {
+  /* 主题色彩变量 */
+  --theme-primary: #00BCD4;
+  --theme-secondary: #FF4081;
+  --theme-bg: #E0F7FA;
+  --theme-surface: #FFFFFF;
+  --theme-primary-rgb: 0, 188, 212;
+  
+  /* 文字颜色 */
+  --theme-text-primary: #006064;
+  --theme-text-secondary: #424242;
+  --theme-text-muted: #757575;
+  
+  /* 边框和阴影 */
+  --theme-border: #B2EBF2;
+  --theme-shadow: rgba(0, 188, 212, 0.15);
+  
+  /* 状态颜色 */
+  --theme-success: #00BCD4;
+  --theme-warning: #FF6D00;
+  --theme-error: #D32F2F;
+  --theme-info: #0288D1;
+}
+
+.theme-aurora body {
+  background: var(--theme-bg);
+  color: var(--theme-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.theme-aurora .module {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px var(--theme-shadow);
+  transition: all 0.3s ease;
+}
+
+.theme-aurora .module:hover {
+  box-shadow: 0 4px 16px var(--theme-shadow);
+  transform: translateY(-2px);
+}
+
+.theme-aurora .btn-primary {
+  background: linear-gradient(135deg, var(--theme-primary), #00ACC1);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.theme-aurora .btn-primary:hover {
+  background: linear-gradient(135deg, #00ACC1, #0097A7);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+.theme-aurora .btn-secondary {
+  background: transparent;
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.theme-aurora .btn-secondary:hover {
+  background: rgba(0, 188, 212, 0.1);
+  transform: translateY(-1px);
+}

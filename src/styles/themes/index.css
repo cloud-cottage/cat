@@ -18,5 +18,7 @@
 @import './latte-brown/layout.css';
 @import './mystery-purple/index.css';
 @import './mystery-purple/layout.css';
-@import './web3/index.css';
-@import './web3/layout.css';
+@import './guard/index.css';
+@import './guard/layout.css';
+@import './aurora/index.css';
+@import './aurora/layout.css';

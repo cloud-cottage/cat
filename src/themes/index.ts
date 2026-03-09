@@ -90,23 +90,23 @@ export const THEMES: Theme[] = [
   },
   {
     id: 8,
-    name: 'Web3',
-    className: 'theme-web3',
-    colors: {
-      primary: '#00D4FF',
-      secondary: '#FF00FF',
-      bg: '#000000',
-      surface: '#1A1A2E'
-    }
-  },
-  {
-    id: 9,
     name: '卫兵',
     className: 'theme-guard',
     colors: {
       primary: '#2E7D32',
       secondary: '#81C784',
       bg: '#E8F5E8',
+      surface: '#FFFFFF'
+    }
+  },
+  {
+    id: 9,
+    name: '极光',
+    className: 'theme-aurora',
+    colors: {
+      primary: '#00BCD4',
+      secondary: '#FF4081',
+      bg: '#E0F7FA',
       surface: '#FFFFFF'
     }
   }

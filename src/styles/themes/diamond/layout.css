@@ -9,90 +9,82 @@
   min-height: 900px;
 }
 
-/* 模块位置定义 - 使用CSS Grid命名区域 */
+/* 模块位置定义 - 使用数字 */
 .theme-diamond .grid-container {
   grid-template-areas: 
-    "profile profile social social social social"
-    "profile profile social social social social"
-    "mostfind mostfind links links links links"
-    "mostfind mostfind links links links links"
-    "mostfind mostfind links links links links"
-    "twitter twitter twitter twitter twitter twitter"
-    "twitter twitter twitter twitter twitter twitter"
-    "twitter twitter twitter twitter twitter twitter"
-    "twitter twitter twitter twitter twitter twitter";
+    "1 1 2 2 3 3"
+    "1 1 2 2 3 3"
+    "4 4 5 5 5 5"
+    "4 4 5 5 5 5"
+    "4 4 5 5 5 5"
+    "6 6 6 6 6 6"
+    "6 6 6 6 6 6"
+    "6 6 6 6 6 6"
+    "6 6 6 6 6 6";
 }
 
 /* 具体模块位置 */
-.theme-diamond .module-profile {
-  grid-area: profile;
+.theme-diamond .module-1 {
+  grid-area: 1;
 }
 
-.theme-diamond .module-social {
-  grid-area: social;
+.theme-diamond .module-2 {
+  grid-area: 2;
 }
 
-.theme-diamond .module-mostfind {
-  grid-area: mostfind;
+.theme-diamond .module-3 {
+  grid-area: 3;
 }
 
-.theme-diamond .module-links {
-  grid-area: links;
+.theme-diamond .module-4 {
+  grid-area: 4;
 }
 
-.theme-diamond .module-twitter {
-  grid-area: twitter;
+.theme-diamond .module-5 {
+  grid-area: 5;
 }
 
-/* 响应式调整 */
+.theme-diamond .module-6 {
+  grid-area: 6;
+}
+
+/* 响应式调整 - 保持6列9行 */
 @media (max-width: 1400px) {
   .theme-diamond .grid-container {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(12, 280px);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(9, 280px);
     grid-template-areas: 
-      "profile profile social social"
-      "profile profile social social"
-      "mostfind mostfind links links"
-      "mostfind mostfind links links"
-      "mostfind mostfind links links"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter"
-      "twitter twitter twitter twitter";
+      "1 1 2 2 3 3"
+      "1 1 2 2 3 3"
+      "4 4 5 5 5 5"
+      "4 4 5 5 5 5"
+      "4 4 5 5 5 5"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6";
   }
 }
 
 @media (max-width: 900px) {
   .theme-diamond .grid-container {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(18, 280px);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(9, 280px);
     grid-template-areas: 
-      "profile profile"
-      "profile profile"
-      "social social"
-      "social social"
-      "mostfind mostfind"
-      "mostfind mostfind"
-      "links links"
-      "links links"
-      "links links"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter"
-      "twitter twitter";
+      "1 1 2 2 3 3"
+      "1 1 2 2 3 3"
+      "4 4 5 5 5 5"
+      "4 4 5 5 5 5"
+      "4 4 5 5 5 5"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6"
+      "6 6 6 6 6 6";
   }
 }
 
-/* 布局元数据 - 可通过JavaScript读取 */
+/* 布局元数据 */
 .theme-diamond::before {
-  content: '{"name":"diamond","displayName":"钻石手","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"social":{"area":"social","order":2},"mostfind":{"area":"mostfind","order":3},"links":{"area":"links","order":4},"twitter":{"area":"twitter","order":5}}}';
+  content: '{"name":"diamond","displayName":"钻石手","layout":{"grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"1":{"area":"1","order":1},"2":{"area":"2","order":2},"3":{"area":"3","order":3},"4":{"area":"4","order":4},"5":{"area":"5","order":5},"6":{"area":"6","order":6}}}';
   display: none;
 }

@@ -1,0 +1,75 @@
+/* 卫兵主题样式 - 专业绿色主题 */
+
+.theme-guard {
+  /* 主题色彩变量 */
+  --theme-primary: #2E7D32;
+  --theme-secondary: #81C784;
+  --theme-bg: #E8F5E8;
+  --theme-surface: #FFFFFF;
+  --theme-primary-rgb: 46, 125, 50;
+  
+  /* 文字颜色 */
+  --theme-text-primary: #1B5E20;
+  --theme-text-secondary: #424242;
+  --theme-text-muted: #757575;
+  
+  /* 边框和阴影 */
+  --theme-border: #C8E6C9;
+  --theme-shadow: rgba(46, 125, 50, 0.15);
+  
+  /* 状态颜色 */
+  --theme-success: #2E7D32;
+  --theme-warning: #F57C00;
+  --theme-error: #D32F2F;
+  --theme-info: #0288D1;
+}
+
+.theme-guard body {
+  background: var(--theme-bg);
+  color: var(--theme-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.theme-guard .module {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--theme-shadow);
+  transition: all 0.3s ease;
+}
+
+.theme-guard .module:hover {
+  box-shadow: 0 4px 16px var(--theme-shadow);
+  transform: translateY(-2px);
+}
+
+.theme-guard .btn-primary {
+  background: var(--theme-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.theme-guard .btn-primary:hover {
+  background: #1B5E20;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.theme-guard .btn-secondary {
+  background: transparent;
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.theme-guard .btn-secondary:hover {
+  background: rgba(46, 125, 50, 0.1);
+  transform: translateY(-1px);
+}
