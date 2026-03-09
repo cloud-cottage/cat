@@ -101,7 +101,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           opacity: 0.8,
                           marginBottom: '0.25rem'
                         }}>
-                          • {link.title}
+                          • {link.label || link.title || '无标题'}
                         </div>
                       ))}
                       {module.data.length > 3 && (
