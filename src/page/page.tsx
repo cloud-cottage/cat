@@ -32,7 +32,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   // 应用主题到body元素
   useEffect(() => {
     const themeClass = getThemeClassName(currentTheme.id);
-    console.log('Theme effect triggered:', currentTheme.id, themeClass);
     document.body.className = document.body.className.replace(/theme-\w+/g, '');
     document.body.classList.add(themeClass);
     
@@ -46,7 +45,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   }
 
   const renderModule = (module: any, index: number) => {
-    console.log('Rendering module:', module.id, module.component, index);
     // 兼容两种命名方式：组件名和数字序号
     const moduleClass = typeof module.id === 'string' && !isNaN(parseInt(module.id)) 
       ? `module-${module.id}`  // 数字序号 (matrix主题)
@@ -292,24 +290,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       padding: '2rem 1rem',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
-      {/* 调试信息 */}
-      <div style={{ 
-        position: 'fixed', 
-        top: '10px', 
-        right: '10px', 
-        background: 'rgba(0,0,0,0.8)', 
-        color: 'white', 
-        padding: '10px', 
-        borderRadius: '5px',
-        zIndex: 9999,
-        fontSize: '12px'
-      }}>
-        <div>Theme ID: {currentTheme.id}</div>
-        <div>Theme Name: {currentTheme.name}</div>
-        <div>Theme Class: {themeClass}</div>
-        <div>Modules Count: {layoutModules.length}</div>
-      </div>
-      
       <div style={{
         display: 'flex',
         flexDirection: 'column'
