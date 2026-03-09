@@ -12,6 +12,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
+  const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
+  const [showAddLink, setShowAddLink] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -22,6 +24,31 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         setTimeout(() => setCopySuccess(false), 2000);
       } catch (error) {
         console.error('复制失败:', error);
+      }
+    }
+  };
+
+  // 添加新链接
+  const addNewLink = async () => {
+    if (newLinkForm.url && newLinkForm.label) {
+      try {
+        const newLink = {
+          id: Date.now().toString(),
+          userId: user?.id || '',
+          url: newLinkForm.url,
+          label: newLinkForm.label,
+          order: (links?.length || 0) + 1,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        await api.updateLinks(user?.username || '', [...(links || []), newLink]);
+        setNewLinkForm({ url: '', label: '' });
+        setShowAddLink(false);
+        window.location.reload();
+      } catch (error) {
+        console.error('添加链接失败:', error);
+        alert('添加链接失败，请重试');
       }
     }
   };
@@ -568,7 +595,100 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 
                 {module.type === 'links' && (
                   <div>
-                    <p>{module.content}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <p>{module.content}</p>
+                      <button
+                        onClick={() => setShowAddLink(!showAddLink)}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: 'var(--theme-primary)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        {showAddLink ? '取消' : '+ 添加链接'}
+                      </button>
+                    </div>
+                    
+                    {showAddLink && (
+                      <div style={{
+                        padding: '0.5rem',
+                        background: 'rgba(var(--theme-primary-rgb), 0.1)',
+                        borderRadius: '4px',
+                        marginBottom: '0.5rem'
+                      }}>
+                        <input
+                          type="text"
+                          placeholder="链接标题"
+                          value={newLinkForm.label}
+                          onChange={(e) => setNewLinkForm({...newLinkForm, label: e.target.value})}
+                          style={{
+                            padding: '0.25rem',
+                            border: '1px solid var(--theme-primary)',
+                            borderRadius: '4px',
+                            background: 'var(--theme-surface)',
+                            color: 'var(--theme-primary)',
+                            fontSize: '0.75rem',
+                            width: '100%',
+                            marginBottom: '0.25rem'
+                          }}
+                        />
+                        <input
+                          type="url"
+                          placeholder="链接地址 (https://...)"
+                          value={newLinkForm.url}
+                          onChange={(e) => setNewLinkForm({...newLinkForm, url: e.target.value})}
+                          style={{
+                            padding: '0.25rem',
+                            border: '1px solid var(--theme-primary)',
+                            borderRadius: '4px',
+                            background: 'var(--theme-surface)',
+                            color: 'var(--theme-primary)',
+                            fontSize: '0.75rem',
+                            width: '100%',
+                            marginBottom: '0.25rem'
+                          }}
+                        />
+                        <div style={{ display: 'flex', gap: '0.25rem' }}>
+                          <button
+                            onClick={addNewLink}
+                            disabled={!newLinkForm.url || !newLinkForm.label}
+                            style={{
+                              padding: '0.25rem 0.5rem',
+                              background: newLinkForm.url && newLinkForm.label ? 'var(--theme-primary)' : '#ccc',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            添加
+                          </button>
+                          <button
+                            onClick={() => {
+                              setNewLinkForm({ url: '', label: '' });
+                              setShowAddLink(false);
+                            }}
+                            style={{
+                              padding: '0.25rem 0.5rem',
+                              background: 'transparent',
+                              color: 'var(--theme-primary)',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            取消
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
                     {module.data && module.data.length > 0 && (
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
