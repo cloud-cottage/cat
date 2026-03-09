@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { getThemeClassName } from '../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 
@@ -7,6 +8,17 @@ interface Web3ProfileProps {
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
   const { loading, user, links, currentTheme } = useUserProfile({ username: propUsername })
+  
+  // 应用主题到body元素
+  useEffect(() => {
+    const themeClass = getThemeClassName(currentTheme.id);
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    document.body.classList.add(themeClass);
+    
+    return () => {
+      document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    };
+  }, [currentTheme.id]);
   
   if (loading) {
     return <div className="blog-container">加载中...</div>
