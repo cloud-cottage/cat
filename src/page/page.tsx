@@ -999,7 +999,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     
                     {module.data && module.data.length > 0 && (
                       <div style={{ marginTop: '0.5rem' }}>
-                        {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
+                        {module.data.map((link: any, linkIndex: number) => (
                           <div key={link.id || linkIndex} style={{ marginBottom: '0.25rem' }}>
                             {editingLinkId === link.id ? (
                               <div style={{
@@ -1167,16 +1167,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             )}
                           </div>
                         ))}
-                        {module.data.length > 3 && (
-                          <div style={{ 
-                            fontSize: '0.75rem', 
-                            opacity: 0.6,
-                            marginTop: '0.5rem',
-                            fontStyle: 'italic'
-                          }}>
-                            ...还有 {module.data.length - 3} 个链接
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>
