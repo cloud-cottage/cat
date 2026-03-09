@@ -78,27 +78,27 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
  * 将CSS模块配置转换为Admin页面模块格式
  */
 function convertCSSToModules(cssModules: Record<string, any>): Module[] {
-  // 模块数组 - 按顺序对应
-  const moduleArray = [
-    { name: '用户资料', component: 'profile' as const },
-    { name: '社交媒体', component: 'social' as const },
-    { name: '我活跃在', component: 'mostfind' as const },
-    { name: '注册链接', component: 'links' as const },
-    { name: '推特动态', component: 'twitter' as const }
-  ];
+  // 数字模块映射 - 对应新的数字系统
+  const moduleMap: Record<string, { name: string; component: Module['component'] }> = {
+    '1': { name: '模块1', component: 'profile' },
+    '2': { name: '模块2', component: 'social' },
+    '3': { name: '模块3', component: 'mostfind' },
+    '4': { name: '模块4', component: 'links' },
+    '5': { name: '模块5', component: 'twitter' },
+    '6': { name: '模块6', component: 'social' }
+  };
 
   const modules: Module[] = [];
 
-  // 使用数组序号映射
-  Object.entries(cssModules).forEach(([moduleKey, config], index) => {
-    const moduleIndex = parseInt(moduleKey);
-    if (!isNaN(moduleIndex) && moduleIndex < moduleArray.length) {
-      const moduleInfo = moduleArray[moduleIndex];
+  // 使用数字键映射
+  Object.entries(cssModules).forEach(([moduleKey, config]) => {
+    const moduleInfo = moduleMap[moduleKey];
+    if (moduleInfo) {
       // 根据order或index计算位置
-      const position = calculateGridPosition(config.order || index + 1);
+      const position = calculateGridPosition(config.order || parseInt(moduleKey));
       
       modules.push({
-        id: moduleInfo.component, // 使用组件名作为ID
+        id: moduleKey, // 使用数字作为ID
         name: moduleInfo.name,
         component: moduleInfo.component,
         position,
@@ -176,14 +176,15 @@ function getDefaultThemeLayout(themeId: number, themeName: string): ThemeLayout 
  */
 export async function loadAllThemeLayouts(): Promise<ThemeLayout[]> {
   const themes = [
-    { id: 1, name: 'diamond' },
-    { id: 2, name: 'hodl-blue' },
-    { id: 3, name: 'strawberry' },
-    { id: 4, name: 'cyber-orange' },
-    { id: 5, name: 'leek-green' },
+    { id: 1, name: 'cyber-orange' },
+    { id: 2, name: 'diamond' },
+    { id: 3, name: 'hodl-blue' },
+    { id: 4, name: 'strawberry' },
+    { id: 5, name: 'matrix' },
     { id: 6, name: 'latte-brown' },
     { id: 7, name: 'mystery-purple' },
-    { id: 8, name: 'web3' }
+    { id: 8, name: 'guard' },
+    { id: 9, name: 'aurora' }
   ];
 
   const layouts = await Promise.all(
@@ -222,14 +223,15 @@ export function saveLayoutToCSS(themeName: string, modules: Module[]): string {
 
 function getThemeDisplayName(themeName: string): string {
   const displayNames: Record<string, string> = {
+    'cyber-orange': '赛博橙',
     'diamond': '钻石手',
     'hodl-blue': 'HODL蓝',
     'strawberry': '草莓熊',
-    'cyber-orange': '赛博橙',
-    'leek-green': '韭菜绿',
+    'matrix': '韭菜帝国',
     'latte-brown': '拿铁棕',
     'mystery-purple': '神秘紫',
-    'web3': 'Web3'
+    'guard': '卫兵',
+    'aurora': '极光'
   };
   
   return displayNames[themeName] || themeName;
