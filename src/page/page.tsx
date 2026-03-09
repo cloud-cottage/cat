@@ -28,6 +28,44 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       document.body.className = document.body.className.replace(/theme-\w+/g, '');
     };
   }, [currentTheme.id]);
+
+  // 响应式设计
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+      const gridContainer = document.querySelector('.grid-container');
+      
+      if (gridContainer) {
+        if (isMobile) {
+          // 移动端：单列布局
+          (gridContainer as HTMLElement).style.gridTemplateColumns = '1fr';
+          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(4, auto)';
+          (gridContainer as HTMLElement).style.gap = '1rem';
+          (gridContainer as HTMLElement).style.padding = '0.5rem';
+        } else if (isTablet) {
+          // 平板：双列布局
+          (gridContainer as HTMLElement).style.gridTemplateColumns = 'repeat(2, 1fr)';
+          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(2, auto)';
+          (gridContainer as HTMLElement).style.gap = '1rem';
+          (gridContainer as HTMLElement).style.padding = '1rem';
+        } else {
+          // 桌面：原始布局
+          (gridContainer as HTMLElement).style.gridTemplateColumns = 'repeat(6, 1fr)';
+          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(9, 280px)';
+          (gridContainer as HTMLElement).style.gap = '1rem';
+          (gridContainer as HTMLElement).style.padding = '1rem';
+        }
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   if (loading) {
     return <div className="blog-container">加载中...</div>
@@ -89,19 +127,53 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           minHeight: '900px'
         }}>
           {modules.map((module, index) => {
-            // 根据模块类型设置网格位置
+            // 根据模块类型和屏幕尺寸设置网格位置
             const getPosition = (type: string) => {
-              switch (type) {
-                case 'profile':
-                  return { gridColumn: '1 / 4', gridRow: '1 / 3' };
-                case 'social':
-                  return { gridColumn: '4 / 7', gridRow: '1 / 3' };
-                case 'links':
-                  return { gridColumn: '1 / 4', gridRow: '3 / 5' };
-                case 'mostfind':
-                  return { gridColumn: '4 / 7', gridRow: '3 / 5' };
-                default:
-                  return { gridColumn: '1 / 3', gridRow: '5 / 7' };
+              const isMobile = window.innerWidth < 768;
+              const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+              
+              if (isMobile) {
+                // 移动端：单列布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
+                  case 'social':
+                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
+                  case 'links':
+                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
+                  case 'mostfind':
+                    return { gridColumn: '1 / 2', gridRow: '4 / 5' };
+                  default:
+                    return { gridColumn: '1 / 2', gridRow: '5 / 6' };
+                }
+              } else if (isTablet) {
+                // 平板：双列布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
+                  case 'social':
+                    return { gridColumn: '2 / 3', gridRow: '1 / 2' };
+                  case 'links':
+                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
+                  case 'mostfind':
+                    return { gridColumn: '2 / 3', gridRow: '2 / 3' };
+                  default:
+                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
+                }
+              } else {
+                // 桌面：原始布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 4', gridRow: '1 / 3' };
+                  case 'social':
+                    return { gridColumn: '4 / 7', gridRow: '1 / 3' };
+                  case 'links':
+                    return { gridColumn: '1 / 4', gridRow: '3 / 5' };
+                  case 'mostfind':
+                    return { gridColumn: '4 / 7', gridRow: '3 / 5' };
+                  default:
+                    return { gridColumn: '1 / 3', gridRow: '5 / 7' };
+                }
               }
             };
 
