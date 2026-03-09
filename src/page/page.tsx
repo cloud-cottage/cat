@@ -18,14 +18,36 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     twitterHandle: user?.twitterHandle || ''
   })
   
+  // 同步编辑表单数据
+  useEffect(() => {
+    if (user) {
+      setEditForm({
+        nickname: user.nickname || '',
+        bio: user.bio || '',
+        twitterHandle: user.twitterHandle || ''
+      });
+    }
+  }, [user]);
+
   // 应用主题到body元素
   useEffect(() => {
     const themeClass = getThemeClassName(currentTheme.id);
     document.body.className = document.body.className.replace(/theme-\w+/g, '');
     document.body.classList.add(themeClass);
     
+    // 添加加载动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+    
     return () => {
       document.body.className = document.body.className.replace(/theme-\w+/g, '');
+      document.head.removeChild(style);
     };
   }, [currentTheme.id]);
 
@@ -68,11 +90,62 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   }, []);
   
   if (loading) {
-    return <div className="blog-container">加载中...</div>
+    return (
+      <div className="blog-container" style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        fontSize: '1.2rem'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            width: '40px', 
+            height: '40px', 
+            border: '3px solid var(--theme-primary)', 
+            borderTop: '3px solid transparent', 
+            borderRadius: '50%', 
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 1rem'
+          }}></div>
+          加载中...
+        </div>
+      </div>
+    )
   }
 
   if (!user) {
-    return <div className="blog-container">用户不存在</div>
+    return (
+      <div className="blog-container" style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        fontSize: '1.2rem'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            fontSize: '3rem', 
+            marginBottom: '1rem',
+            opacity: 0.5
+          }}>
+            👤
+          </div>
+          <div style={{ 
+            color: 'var(--theme-primary)',
+            marginBottom: '1rem'
+          }}>
+            用户不存在
+          </div>
+          <div style={{ 
+            fontSize: '0.875rem', 
+            opacity: 0.7 
+          }}>
+            请检查用户名是否正确
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const themeClass = getThemeClassName(currentTheme.id);
