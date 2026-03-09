@@ -165,7 +165,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       
       // 保存主题选择到数据库
       const updatedUser = await api.updateUser(user?.username || '', {
-        themeId: theme.id
+        themeId: theme.id,
+        layout: {
+          themeId: theme.id,
+          modules: user?.layout?.modules || []
+        }
       });
       
       console.log('主题保存成功:', updatedUser);
