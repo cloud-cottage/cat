@@ -54,6 +54,7 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
       let jsonStr = content;
       
       console.log(`Raw content from CSS:`, content);
+      console.log(`Raw content length:`, content.length);
       
       // 移除CSS content的引号包裹
       if (jsonStr.startsWith('"') && jsonStr.endsWith('"')) {
@@ -64,17 +65,24 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
       jsonStr = jsonStr.replace(/\\"/g, '"');
       
       console.log(`Cleaned JSON string:`, jsonStr);
+      console.log(`Cleaned JSON length:`, jsonStr.length);
       
-      const metadata = JSON.parse(jsonStr);
-      
-      console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
-      
-      return {
-        themeId,
-        themeName,
-        modules: convertCSSToModules(metadata.layout?.modules || {}),
-        gridConfig: metadata.layout?.grid || { columns: 6, rows: 9, gap: '1rem' }
-      };
+      // 检查JSON字符串的完整性
+      try {
+        const metadata = JSON.parse(jsonStr);
+        console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
+        
+        return {
+          themeId,
+          themeName,
+          modules: convertCSSToModules(metadata.layout?.modules || {}),
+          gridConfig: metadata.layout?.grid || { columns: 6, rows: 9, gap: '1rem' }
+        };
+      } catch (parseError) {
+        console.error(`JSON parse error for theme ${themeName}:`, parseError);
+        console.error(`JSON string at error position:`, jsonStr.substring(Math.max(0, (parseError as any).message?.match(/position (\d+)/)?.[1] - 50), ((parseError as any).message?.match(/position (\d+)/)?.[1] || 0) + 50));
+        throw parseError;
+      }
     }
 
     // 如果无法从CSS读取，返回默认布局
