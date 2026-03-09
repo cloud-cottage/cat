@@ -101,6 +101,60 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }
     }
   };
+
+  // 上移链接
+  const moveLinkUp = async (linkId: string) => {
+    try {
+      const linkList = [...(links || [])];
+      const currentIndex = linkList.findIndex(link => link.id === linkId);
+      
+      if (currentIndex > 0) {
+        // 交换位置
+        [linkList[currentIndex], linkList[currentIndex - 1]] = 
+        [linkList[currentIndex - 1], linkList[currentIndex]];
+        
+        // 更新order字段
+        const updatedLinks = linkList.map((link, index) => ({
+          ...link,
+          order: index + 1,
+          updatedAt: new Date().toISOString()
+        }));
+        
+        await api.updateLinks(user?.username || '', updatedLinks);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('移动链接失败:', error);
+      alert('移动链接失败，请重试');
+    }
+  };
+
+  // 下移链接
+  const moveLinkDown = async (linkId: string) => {
+    try {
+      const linkList = [...(links || [])];
+      const currentIndex = linkList.findIndex(link => link.id === linkId);
+      
+      if (currentIndex < linkList.length - 1) {
+        // 交换位置
+        [linkList[currentIndex], linkList[currentIndex + 1]] = 
+        [linkList[currentIndex + 1], linkList[currentIndex]];
+        
+        // 更新order字段
+        const updatedLinks = linkList.map((link, index) => ({
+          ...link,
+          order: index + 1,
+          updatedAt: new Date().toISOString()
+        }));
+        
+        await api.updateLinks(user?.username || '', updatedLinks);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('移动链接失败:', error);
+      alert('移动链接失败，请重试');
+    }
+  };
   const [isSaving, setIsSaving] = useState(false)
   const [editForm, setEditForm] = useState({
     nickname: user?.nickname || '',
@@ -842,7 +896,39 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 >
                                   🔗 {link.label || link.title || '无标题'}
                                 </a>
-                                <div style={{ display: 'flex', gap: '0.25rem' }}>
+                                <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+                                  <button
+                                    onClick={() => moveLinkUp(link.id)}
+                                    disabled={linkIndex === 0}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: linkIndex === 0 ? '#ccc' : 'var(--theme-secondary)',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      cursor: linkIndex === 0 ? 'not-allowed' : 'pointer',
+                                      fontSize: '0.75rem',
+                                      opacity: linkIndex === 0 ? 0.5 : 1
+                                    }}
+                                  >
+                                    ↑
+                                  </button>
+                                  <button
+                                    onClick={() => moveLinkDown(link.id)}
+                                    disabled={linkIndex === module.data.length - 1}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: linkIndex === module.data.length - 1 ? '#ccc' : 'var(--theme-secondary)',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      cursor: linkIndex === module.data.length - 1 ? 'not-allowed' : 'pointer',
+                                      fontSize: '0.75rem',
+                                      opacity: linkIndex === module.data.length - 1 ? 0.5 : 1
+                                    }}
+                                  >
+                                    ↓
+                                  </button>
                                   <button
                                     onClick={() => startEditLink(link)}
                                     style={{
