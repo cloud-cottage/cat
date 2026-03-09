@@ -50,8 +50,17 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
     document.body.removeChild(tempElement);
 
     if (content && content !== 'none' && content !== '') {
-      // 解析JSON字符串
-      const jsonStr = content.replace(/['"]/g, '');
+      // 解析JSON字符串 - CSS content通常包含在引号中
+      let jsonStr = content;
+      
+      // 移除CSS content的引号包裹
+      if (jsonStr.startsWith('"') && jsonStr.endsWith('"')) {
+        jsonStr = jsonStr.slice(1, -1);
+      }
+      
+      console.log(`Raw content from CSS:`, content);
+      console.log(`Cleaned JSON string:`, jsonStr);
+      
       const metadata = JSON.parse(jsonStr);
       
       console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
