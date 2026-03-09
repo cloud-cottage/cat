@@ -1,6 +1,6 @@
 /**
  * Admin页面布局解析器
- * 从CSS文件中读取主题布局信息
+ * 从CSS自定义属性中读取主题布局信息
  */
 
 export interface Module {
@@ -12,7 +12,7 @@ export interface Module {
 }
 
 export interface ThemeLayout {
-  themeId: number
+  themeId: string
   themeName: string
   modules: Module[]
   gridConfig: {
@@ -23,7 +23,7 @@ export interface ThemeLayout {
 }
 
 /**
- * 从CSS中解析主题布局信息
+ * 从CSS自定义属性中解析主题布局信息
  * @param themeId 主题ID
  * @param themeName 主题名称
  * @returns Promise<ThemeLayout>
@@ -73,7 +73,7 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
         console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
         
         return {
-          themeId,
+          themeId: themeId.toString(),
           themeName,
           modules: convertCSSToModules(metadata.layout?.modules || {}),
           gridConfig: metadata.layout?.grid || { columns: 6, rows: 9, gap: '1rem' }
@@ -185,7 +185,7 @@ function getDefaultThemeLayout(themeId: number, themeName: string): ThemeLayout 
   ];
 
   return {
-    themeId,
+    themeId: themeId.toString(),
     themeName,
     modules: defaultModules,
     gridConfig: { columns: 6, rows: 9, gap: '1rem' }

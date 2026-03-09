@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS自定义属性布局解析演示</title>
+    <link rel="stylesheet" href="/styles/themes/matrix/layout.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .demo-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .css-properties {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        .property {
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .property-name {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .property-value {
+            color: #28a745;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .parsed-data {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS自定义属性布局解析演示</h1>
+    
+    <div class="demo-container">
+        <h2>Matrix主题CSS自定义属性</h2>
+        <div class="theme-matrix" id="theme-element"></div>
+        
+        <div class="css-properties">
+            <h3>CSS自定义属性值：</h3>
+            <div class="property">
+                <span class="property-name">--theme-name:</span>
+                <span class="property-value" id="theme-name"></span>
+            </div>
+            <div class="property">
+                <span class="property-name">--theme-display-name:</span>
+                <span class="property-value" id="theme-display-name"></span>
+            </div>
+            <div class="property">
+                <span class="property-name">--theme-grid-columns:</span>
+                <span class="property-value" id="theme-grid-columns"></span>
+            </div>
+            <div class="property">
+                <span class="property-name">--theme-grid-rows:</span>
+                <span class="property-value" id="theme-grid-rows"></span>
+            </div>
+            <div class="property">
+                <span class="property-name">--theme-grid-gap:</span>
+                <span class="property-value" id="theme-grid-gap"></span>
+            </div>
+            <div class="property">
+                <span class="property-name">--theme-modules:</span>
+                <span class="property-value" id="theme-modules" style="word-break: break-all;"></span>
+            </div>
+        </div>
+        
+        <div class="parsed-data" id="parsed-result">
+            <h3>解析结果：</h3>
+            <div id="parsed-content">正在解析...</div>
+        </div>
+    </div>
+
+    <script>
+        function parseThemeLayoutFromCSS(element, themeName) {
+            try {
+                // 获取CSS自定义属性
+                const computedStyle = getComputedStyle(element);
+                
+                // 读取主题基本信息
+                const themeId = computedStyle.getPropertyValue('--theme-name').trim().replace(/"/g, '');
+                const displayName = computedStyle.getPropertyValue('--theme-display-name').trim().replace(/"/g, '');
+                
+                // 读取网格配置
+                const columns = parseInt(computedStyle.getPropertyValue('--theme-grid-columns').trim());
+                const rows = parseInt(computedStyle.getPropertyValue('--theme-grid-rows').trim());
+                const gap = computedStyle.getPropertyValue('--theme-grid-gap').trim();
+                
+                // 读取模块布局JSON
+                const modulesJson = computedStyle.getPropertyValue('--theme-modules').trim();
+                const modulesData = JSON.parse(modulesJson);
+                
+                // 显示CSS属性值
+                document.getElementById('theme-name').textContent = themeId;
+                document.getElementById('theme-display-name').textContent = displayName;
+                document.getElementById('theme-grid-columns').textContent = columns;
+                document.getElementById('theme-grid-rows').textContent = rows;
+                document.getElementById('theme-grid-gap').textContent = gap;
+                document.getElementById('theme-modules').textContent = modulesJson;
+                
+                // 转换模块数据格式
+                const modules = {};
+                Object.entries(modulesData).forEach(([key, value]) => {
+                    modules[key] = {
+                        area: value.area,
+                        order: value.order
+                    };
+                });
+                
+                const result = {
+                    themeId,
+                    themeName: displayName,
+                    gridConfig: { columns, rows, gap },
+                    modules
+                };
+                
+                console.log('Successfully parsed layout:', result);
+                
+                // 显示解析结果
+                document.getElementById('parsed-content').innerHTML = `
+                    <div><strong>主题ID:</strong> ${result.themeId}</div>
+                    <div><strong>主题名称:</strong> ${result.themeName}</div>
+                    <div><strong>网格配置:</strong> ${result.gridConfig.columns}列 × ${result.gridConfig.rows}行，间距 ${result.gridConfig.gap}</div>
+                    <div><strong>模块数量:</strong> ${Object.keys(result.modules).length}</div>
+                    <div><strong>模块详情:</strong></div>
+                    <pre>${JSON.stringify(result.modules, null, 2)}</pre>
+                `;
+                
+                return result;
+            } catch (error) {
+                console.error('Failed to parse layout:', error);
+                document.getElementById('parsed-result').className = 'error';
+                document.getElementById('parsed-content').innerHTML = `
+                    <strong>解析失败:</strong> ${error.message}
+                `;
+                return null;
+            }
+        }
+        
+        // 页面加载完成后解析
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeElement = document.getElementById('theme-element');
+            parseThemeLayoutFromCSS(themeElement, 'Matrix');
+        });
+    </script>
+</body>
+</html>
