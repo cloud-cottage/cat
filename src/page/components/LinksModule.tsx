@@ -170,9 +170,9 @@ export const LinksModule: React.FC<LinksModuleProps> = ({
               gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
               gap: '1rem' 
             }}>
-              {groupLinks.map(link => (
+              {groupLinks.map((link, index) => (
                 <a
-                  key={link.id}
+                  key={`${link.id}-${index}`}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"

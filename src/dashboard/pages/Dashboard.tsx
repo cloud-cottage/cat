@@ -845,9 +845,9 @@ export const Dashboard: React.FC = () => {
                   {renderGridLines()}
 
                   {/* 模块 */}
-                  {modules.map(module => (
+                  {modules.map((module, index) => (
                     <div
-                      key={module.id}
+                      key={`${module.id}-${index}`}
                       draggable
                       onDragStart={() => handleDragStart(module)}
                       onDragEnd={() => setDraggedModule(null)}
