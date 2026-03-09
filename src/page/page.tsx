@@ -32,8 +32,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   // 简单的模块数组
   const modules = [
-    { id: 'profile', name: '用户资料', content: `${user?.nickname || user?.username}` },
-    { id: 'links', name: '注册链接', content: `共 ${links.length} 个链接` }
+    { 
+      id: 'profile', 
+      name: '用户资料', 
+      content: `${user?.nickname || user?.username}`,
+      type: 'profile'
+    },
+    { 
+      id: 'links', 
+      name: '注册链接', 
+      content: `共 ${links.length} 个链接`,
+      type: 'links',
+      data: links
+    }
   ];
   
   return (
@@ -67,7 +78,41 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 borderRadius: '8px'
               }}>
               <h3>{module.name}</h3>
-              <p>{module.content}</p>
+              
+              {module.type === 'profile' && (
+                <div>
+                  <p>{module.content}</p>
+                  {user?.walletAddress && (
+                    <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
+                      {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              {module.type === 'links' && (
+                <div>
+                  <p>{module.content}</p>
+                  {module.data && module.data.length > 0 && (
+                    <div style={{ marginTop: '0.5rem' }}>
+                      {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
+                        <div key={link.id || linkIndex} style={{ 
+                          fontSize: '0.875rem', 
+                          opacity: 0.8,
+                          marginBottom: '0.25rem'
+                        }}>
+                          • {link.title}
+                        </div>
+                      ))}
+                      {module.data.length > 3 && (
+                        <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>
+                          ...还有 {module.data.length - 3} 个链接
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
