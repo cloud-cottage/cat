@@ -16,6 +16,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showAddLink, setShowAddLink] = useState(false)
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
   const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
+  const [selectedTheme, setSelectedTheme] = useState(currentTheme)
+  const [applyingTheme, setApplyingTheme] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -153,6 +155,33 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     } catch (error) {
       console.error('移动链接失败:', error);
       alert('移动链接失败，请重试');
+    }
+  };
+
+  // 应用主题功能
+  const applyTheme = async (theme: any) => {
+    try {
+      setApplyingTheme(true);
+      
+      // 保存主题选择到数据库
+      const updatedUser = await api.updateUser(user?.username || '', {
+        themeId: theme.id
+      });
+      
+      console.log('主题保存成功:', updatedUser);
+      
+      // 应用主题
+      setCurrentTheme(theme);
+      setSelectedTheme(theme);
+      setShowThemeSelector(false);
+      
+      // 显示成功提示
+      alert('主题应用成功！');
+    } catch (error) {
+      console.error('主题应用失败:', error);
+      alert('主题应用失败，请重试');
+    } finally {
+      setApplyingTheme(false);
     }
   };
   const [isSaving, setIsSaving] = useState(false)
@@ -1274,21 +1303,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                marginBottom: '1rem'
               }}>
                 {THEMES.map((theme) => (
                   <button
                     key={theme.id}
-                    onClick={() => {
-                      setCurrentTheme(theme);
-                      setShowThemeSelector(false);
-                    }}
+                    onClick={() => setSelectedTheme(theme)}
                     style={{
                       padding: '0.75rem',
-                      background: currentTheme.id === theme.id 
+                      background: selectedTheme?.id === theme.id 
                         ? 'var(--theme-primary)' 
                         : 'transparent',
-                      color: currentTheme.id === theme.id 
+                      color: selectedTheme?.id === theme.id 
                         ? 'white' 
                         : 'var(--theme-primary)',
                       border: `1px solid var(--theme-primary)`,
@@ -1299,12 +1326,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       textAlign: 'left'
                     }}
                     onMouseEnter={(e) => {
-                      if (currentTheme.id !== theme.id) {
+                      if (selectedTheme?.id !== theme.id) {
                         e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
                       }
                     }}
                     onMouseLeave={(e) => {
-                      if (currentTheme.id !== theme.id) {
+                      if (selectedTheme?.id !== theme.id) {
                         e.currentTarget.style.background = 'transparent';
                       }
                     }}
@@ -1312,6 +1339,48 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     {theme.name}
                   </button>
                 ))}
+              </div>
+              
+              {/* 应用主题按钮 */}
+              <div style={{ 
+                display: 'flex', 
+                gap: '1rem', 
+                justifyContent: 'center',
+                borderTop: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
+                paddingTop: '1rem'
+              }}>
+                <button
+                  onClick={() => setShowThemeSelector(false)}
+                  style={{
+                    padding: '0.8rem 2rem',
+                    background: 'transparent',
+                    color: 'var(--theme-primary)',
+                    border: '1px solid var(--theme-primary)',
+                    borderRadius: '25px',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  取消
+                </button>
+                <button
+                  onClick={() => selectedTheme && applyTheme(selectedTheme)}
+                  disabled={!selectedTheme || applyingTheme}
+                  style={{
+                    padding: '0.8rem 2rem',
+                    background: selectedTheme && !applyingTheme ? 'var(--theme-primary)' : '#ccc',
+                    border: 'none',
+                    borderRadius: '25px',
+                    color: 'white',
+                    cursor: selectedTheme && !applyingTheme ? 'pointer' : 'not-allowed',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    opacity: applyingTheme ? 0.7 : 1
+                  }}
+                >
+                  {applyingTheme ? '应用中...' : '应用主题'}
+                </button>
               </div>
             </div>
           )}
