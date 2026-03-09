@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getThemeClassName, THEMES } from '../themes'
 import { useUserProfile } from './hooks/useUserProfile'
-import { getUserAvatarUrl, api } from './lib/api'
+import { api, uploadToIPFS, getUserAvatarUrl } from './lib/api'
 
 interface Web3ProfileProps {
   username?: string
@@ -16,6 +16,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showAddLink, setShowAddLink] = useState(false)
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
   const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const [avatarPreview, setAvatarPreview] = useState<string>('')
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -153,6 +155,62 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     } catch (error) {
       console.error('移动链接失败:', error);
       alert('移动链接失败，请重试');
+    }
+  };
+
+  // 头像上传功能
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // 验证文件类型
+    if (!file.type.startsWith('image/')) {
+      alert('请选择图片文件');
+      return;
+    }
+
+    // 验证文件大小 (最大5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('图片大小不能超过5MB');
+      return;
+    }
+
+    try {
+      setUploadingAvatar(true);
+      
+      // 上传到IPFS
+      const uploadResult = await uploadToIPFS(file);
+      if (!uploadResult) {
+        throw new Error('上传失败');
+      }
+
+      // 更新用户头像URL
+      const ipfsUrl = `https://ipfs.io/ipfs/${uploadResult.IpfsHash}`;
+      const updatedUser = await api.updateUser(user?.username || '', {
+        avatarUrl: ipfsUrl
+      });
+
+      console.log('头像上传成功:', updatedUser);
+      
+      // 刷新页面显示新头像
+      window.location.reload();
+    } catch (error) {
+      console.error('头像上传失败:', error);
+      alert('头像上传失败，请重试');
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  // 头像预览功能
+  const handleAvatarPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAvatarPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
   const [isSaving, setIsSaving] = useState(false)
@@ -415,10 +473,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 
                 {module.type === 'profile' && (
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ marginBottom: '1rem' }}>
-                      {getUserAvatarUrl(user) ? (
+                    <div style={{ marginBottom: '1rem', position: 'relative' }}>
+                      {avatarPreview || getUserAvatarUrl(user) ? (
                         <img 
-                          src={getUserAvatarUrl(user!)} 
+                          src={avatarPreview || getUserAvatarUrl(user!)} 
                           alt={user?.username}
                           style={{ 
                             width: '80px', 
@@ -449,6 +507,66 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                         }}>
                           {user?.username?.[0]?.toUpperCase() || '?'}
+                        </div>
+                      )}
+                      
+                      {isEditing && (
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '-5px',
+                          right: '-5px',
+                          background: 'var(--theme-primary)',
+                          borderRadius: '50%',
+                          width: '30px',
+                          height: '30px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}>
+                          <label htmlFor="avatar-upload" style={{ 
+                            margin: 0, 
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            color: 'white'
+                          }}>
+                            📷
+                          </label>
+                          <input
+                            id="avatar-upload"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={(e) => {
+                              handleAvatarPreview(e);
+                              handleAvatarUpload(e);
+                            }}
+                            disabled={uploadingAvatar}
+                          />
+                        </div>
+                      )}
+                      
+                      {uploadingAvatar && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          background: 'rgba(0,0,0,0.7)',
+                          color: 'white',
+                          padding: '0.5rem',
+                          borderRadius: '4px',
+                          fontSize: '0.75rem'
+                        }}>
+                          上传中...
                         </div>
                       )}
                     </div>
