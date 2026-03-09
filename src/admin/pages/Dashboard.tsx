@@ -5,6 +5,9 @@ import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
 import { parseThemeLayoutFromCSS, type Module as LayoutModule } from '../lib/layout-parser'
 import { saveLayoutToCSSFile, validateLayout } from '../lib/layout-saver'
 
+// 导入主题CSS以确保主题样式可用
+import '../../styles/themes/index.css'
+
 interface Module extends LayoutModule {
   // Admin页面特有的Module属性可以在这里扩展
 }

@@ -11,7 +11,7 @@ import Footer from './components/Footer'
 import { useTranslation } from 'react-i18next'
 import { BlogHome, Setup } from './page'
 import { Web3ProfileSimple as UserProfile } from './page/page'
-import { Dashboard } from './dashboard/pages/Dashboard'
+import { Dashboard } from './admin/pages/Dashboard'
 
 function HomePage() {
   const { t, i18n } = useTranslation()
