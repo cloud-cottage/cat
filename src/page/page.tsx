@@ -124,14 +124,24 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   <div>
                     <p>{module.content}</p>
                     <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {user?.twitterHandle && (
+                      {user?.twitterHandle ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(29, 161, 242, 0.2)', 
                           borderRadius: '4px',
                           fontSize: '0.75rem'
                         }}>
-                          Twitter
+                          Twitter: @{user.twitterHandle}
+                        </span>
+                      ) : (
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(108, 117, 125, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontStyle: 'italic'
+                        }}>
+                          Twitter: 未设置
                         </span>
                       )}
                       <span style={{ 
@@ -140,7 +150,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         borderRadius: '4px',
                         fontSize: '0.75rem'
                       }}>
-                        GitHub
+                        GitHub: {user?.username || '未设置'}
                       </span>
                       <span style={{ 
                         padding: '0.25rem 0.5rem', 
@@ -148,7 +158,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         borderRadius: '4px',
                         fontSize: '0.75rem'
                       }}>
-                        Farcaster
+                        Farcaster: {user?.username || '未设置'}
                       </span>
                     </div>
                   </div>
