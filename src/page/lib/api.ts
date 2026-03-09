@@ -68,6 +68,9 @@ export interface User {
   usernameChangeCount?: number  // 用户名修改次数
   lastUsernameChangeYear?: number  // 上次修改用户名的年份
   twitterHandle?: string
+  linkedInHandle?: string
+  youtubeHandle?: string
+  instagramHandle?: string
   themeId: number
   avatarUrl?: string
   bio?: string

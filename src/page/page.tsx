@@ -159,7 +159,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [editForm, setEditForm] = useState({
     nickname: user?.nickname || '',
     bio: user?.bio || '',
-    twitterHandle: user?.twitterHandle || ''
+    twitterHandle: user?.twitterHandle || '',
+    linkedInHandle: user?.linkedInHandle || '',
+    youtubeHandle: user?.youtubeHandle || '',
+    instagramHandle: user?.instagramHandle || ''
   })
   
   // 同步编辑表单数据
@@ -168,7 +171,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       setEditForm({
         nickname: user.nickname || '',
         bio: user.bio || '',
-        twitterHandle: user.twitterHandle || ''
+        twitterHandle: user.twitterHandle || '',
+        linkedInHandle: user.linkedInHandle || '',
+        youtubeHandle: user.youtubeHandle || '',
+        instagramHandle: user.instagramHandle || ''
       });
     }
   }, [user]);
@@ -499,6 +505,54 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               marginBottom: '0.5rem'
                             }}
                           />
+                          <input
+                            type="text"
+                            value={editForm.linkedInHandle}
+                            onChange={(e) => setEditForm({...editForm, linkedInHandle: e.target.value})}
+                            placeholder="LinkedIn 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.youtubeHandle}
+                            onChange={(e) => setEditForm({...editForm, youtubeHandle: e.target.value})}
+                            placeholder="YouTube 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.instagramHandle}
+                            onChange={(e) => setEditForm({...editForm, instagramHandle: e.target.value})}
+                            placeholder="Instagram 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                             <button
                               onClick={async () => {
@@ -510,7 +564,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   const updatedUser = await api.updateUser(user?.username || '', {
                                     nickname: editForm.nickname,
                                     bio: editForm.bio,
-                                    twitterHandle: editForm.twitterHandle
+                                    twitterHandle: editForm.twitterHandle,
+                                    linkedInHandle: editForm.linkedInHandle,
+                                    youtubeHandle: editForm.youtubeHandle,
+                                    instagramHandle: editForm.instagramHandle
                                   });
                                   
                                   console.log('保存成功:', updatedUser);
@@ -543,7 +600,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 setEditForm({
                                   nickname: user?.nickname || '',
                                   bio: user?.bio || '',
-                                  twitterHandle: user?.twitterHandle || ''
+                                  twitterHandle: user?.twitterHandle || '',
+                                  linkedInHandle: user?.linkedInHandle || '',
+                                  youtubeHandle: user?.youtubeHandle || '',
+                                  instagramHandle: user?.instagramHandle || ''
                                 });
                                 setIsEditing(false);
                               }}
@@ -657,14 +717,31 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <p>{module.content}</p>
                     <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {user?.twitterHandle ? (
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(29, 161, 242, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem'
-                        }}>
-                          Twitter: @{user.twitterHandle}
-                        </span>
+                        <a
+                          href={`https://twitter.com/${user.twitterHandle}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ 
+                            padding: '0.25rem 0.5rem', 
+                            background: 'rgba(29, 161, 242, 0.2)', 
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            textDecoration: 'none',
+                            color: 'var(--theme-primary)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(29, 161, 242, 0.3)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(29, 161, 242, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          🐦 Twitter: @{user.twitterHandle}
+                        </a>
                       ) : (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
@@ -676,22 +753,150 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           Twitter: 未设置
                         </span>
                       )}
-                      <span style={{ 
-                        padding: '0.25rem 0.5rem', 
-                        background: 'rgba(51, 51, 51, 0.2)', 
-                        borderRadius: '4px',
-                        fontSize: '0.75rem'
-                      }}>
-                        GitHub: {user?.username || '未设置'}
-                      </span>
+                      <a
+                        href={`https://github.com/${user?.username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(51, 51, 51, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          textDecoration: 'none',
+                          color: 'var(--theme-primary)',
+                          transition: 'all 0.2s ease',
+                          cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(51, 51, 51, 0.3)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(51, 51, 51, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        🐙 GitHub: {user?.username || '未设置'}
+                      </a>
                       <span style={{ 
                         padding: '0.25rem 0.5rem', 
                         background: 'rgba(142, 36, 170, 0.2)', 
                         borderRadius: '4px',
                         fontSize: '0.75rem'
                       }}>
-                        Farcaster: {user?.username || '未设置'}
+                        📡 Farcaster: {user?.username || '未设置'}
                       </span>
+                      {user?.linkedInHandle ? (
+                        <a
+                          href={`https://linkedin.com/in/${user.linkedInHandle}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ 
+                            padding: '0.25rem 0.5rem', 
+                            background: 'rgba(0, 119, 181, 0.2)', 
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            textDecoration: 'none',
+                            color: 'var(--theme-primary)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(0, 119, 181, 0.3)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(0, 119, 181, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          💼 LinkedIn: @{user.linkedInHandle}
+                        </a>
+                      ) : (
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(108, 117, 125, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontStyle: 'italic'
+                        }}>
+                          LinkedIn: 未设置
+                        </span>
+                      )}
+                      {user?.youtubeHandle ? (
+                        <a
+                          href={`https://youtube.com/@${user.youtubeHandle}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ 
+                            padding: '0.25rem 0.5rem', 
+                            background: 'rgba(255, 0, 0, 0.2)', 
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            textDecoration: 'none',
+                            color: 'var(--theme-primary)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          📺 YouTube: @{user.youtubeHandle}
+                        </a>
+                      ) : (
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(108, 117, 125, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontStyle: 'italic'
+                        }}>
+                          YouTube: 未设置
+                        </span>
+                      )}
+                      {user?.instagramHandle ? (
+                        <a
+                          href={`https://instagram.com/${user.instagramHandle}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ 
+                            padding: '0.25rem 0.5rem', 
+                            background: 'rgba(225, 48, 108, 0.2)', 
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            textDecoration: 'none',
+                            color: 'var(--theme-primary)',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(225, 48, 108, 0.3)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(225, 48, 108, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          📷 Instagram: @{user.instagramHandle}
+                        </a>
+                      ) : (
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          background: 'rgba(108, 117, 125, 0.2)', 
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontStyle: 'italic'
+                        }}>
+                          Instagram: 未设置
+                        </span>
+                      )}
                     </div>
                   </div>
                 )}
