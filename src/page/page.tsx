@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { getThemeClassName } from '../themes'
+import { useEffect, useState } from 'react'
+import { getThemeClassName, THEMES } from '../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { getUserAvatarUrl } from './lib/api'
 
@@ -8,7 +8,8 @@ interface Web3ProfileProps {
 }
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
-  const { loading, user, links, currentTheme } = useUserProfile({ username: propUsername })
+  const { loading, user, links, currentTheme, setCurrentTheme } = useUserProfile({ username: propUsername })
+  const [showThemeSelector, setShowThemeSelector] = useState(false)
   
   // 应用主题到body元素
   useEffect(() => {
@@ -336,6 +337,102 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.7rem', opacity: 0.6 }}>
             Powered by CAT - Your Web3 Paws
           </p>
+          
+          {/* 主题切换按钮 */}
+          <div style={{ marginTop: '1rem' }}>
+            <button
+              onClick={() => setShowThemeSelector(!showThemeSelector)}
+              style={{
+                padding: '0.5rem 1rem',
+                background: 'var(--theme-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              🎨 切换主题
+            </button>
+          </div>
+          
+          {/* 主题选择器 */}
+          {showThemeSelector && (
+            <div style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              background: 'var(--theme-surface)',
+              borderRadius: '8px',
+              border: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}>
+              <h4 style={{ 
+                margin: '0 0 1rem 0', 
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}>
+                选择主题
+              </h4>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                gap: '0.5rem'
+              }}>
+                {THEMES.map((theme) => (
+                  <button
+                    key={theme.id}
+                    onClick={() => {
+                      setCurrentTheme(theme);
+                      setShowThemeSelector(false);
+                    }}
+                    style={{
+                      padding: '0.75rem',
+                      background: currentTheme.id === theme.id 
+                        ? 'var(--theme-primary)' 
+                        : 'transparent',
+                      color: currentTheme.id === theme.id 
+                        ? 'white' 
+                        : 'var(--theme-primary)',
+                      border: `1px solid var(--theme-primary)`,
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'left'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (currentTheme.id !== theme.id) {
+                        e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (currentTheme.id !== theme.id) {
+                        e.currentTarget.style.background = 'transparent';
+                      }
+                    }}
+                  >
+                    <div style={{ fontWeight: 'bold' }}>{theme.name}</div>
+                    <div style={{ 
+                      fontSize: '0.75rem', 
+                      opacity: 0.7,
+                      marginTop: '0.25rem'
+                    }}>
+                      {theme.colors.primary}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
