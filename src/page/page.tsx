@@ -11,6 +11,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const { loading, user, links, currentTheme, setCurrentTheme } = useUserProfile({ username: propUsername })
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [copySuccess, setCopySuccess] = useState(false)
+  
+  // 复制钱包地址功能
+  const copyWalletAddress = async () => {
+    if (user?.walletAddress) {
+      try {
+        await navigator.clipboard.writeText(user.walletAddress);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      } catch (error) {
+        console.error('复制失败:', error);
+      }
+    }
+  };
   const [isSaving, setIsSaving] = useState(false)
   const [editForm, setEditForm] = useState({
     nickname: user?.nickname || '',
@@ -448,18 +462,40 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             </p>
                           )}
                           {user?.walletAddress && (
-                            <p style={{ 
-                              margin: '0', 
-                              fontSize: '0.75rem', 
-                              opacity: 0.6,
-                              fontFamily: 'monospace',
-                              background: 'rgba(var(--theme-primary-rgb), 0.1)',
-                              padding: '0.25rem 0.5rem',
-                              borderRadius: '4px',
-                              display: 'inline-block'
-                            }}>
-                              {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                            </p>
+                            <div 
+                              onClick={copyWalletAddress}
+                              style={{ 
+                                margin: '0', 
+                                fontSize: '0.75rem', 
+                                opacity: 0.6,
+                                fontFamily: 'monospace',
+                                background: 'rgba(var(--theme-primary-rgb), 0.1)',
+                                padding: '0.25rem 0.5rem',
+                                borderRadius: '4px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.opacity = '0.8';
+                                e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.2)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.opacity = '0.6';
+                                e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                              }}
+                            >
+                              <span>{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</span>
+                              <span style={{ 
+                                fontSize: '0.875rem',
+                                opacity: copySuccess ? 1 : 0.5,
+                                transition: 'opacity 0.2s ease'
+                              }}>
+                                {copySuccess ? '✓' : '📋'}
+                              </span>
+                            </div>
                           )}
                         </div>
                       )}
