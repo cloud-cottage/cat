@@ -1319,14 +1319,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }
                     }}
                   >
-                    <div style={{ fontWeight: 'bold' }}>{theme.name}</div>
-                    <div style={{ 
-                      fontSize: '0.75rem', 
-                      opacity: 0.7,
-                      marginTop: '0.25rem'
-                    }}>
-                      {theme.colors.primary}
-                    </div>
+                    {theme.name}
                   </button>
                 ))}
               </div>
