@@ -10,6 +10,12 @@ interface Web3ProfileProps {
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
   const { loading, user, links, currentTheme, setCurrentTheme } = useUserProfile({ username: propUsername })
   const [showThemeSelector, setShowThemeSelector] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editForm, setEditForm] = useState({
+    nickname: user?.nickname || '',
+    bio: user?.bio || '',
+    twitterHandle: user?.twitterHandle || ''
+  })
   
   // 应用主题到body元素
   useEffect(() => {
@@ -152,38 +158,161 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <div>
-                      <h2 style={{ 
-                        margin: '0 0 0.5rem 0', 
-                        fontSize: '1.5rem', 
-                        color: 'var(--theme-primary)',
-                        fontWeight: '600'
-                      }}>
-                        {user?.nickname || user?.username}
-                      </h2>
-                      {user?.nickname && user?.username && (
-                        <p style={{ 
-                          margin: '0 0 0.5rem 0', 
-                          fontSize: '0.875rem', 
-                          opacity: 0.7 
-                        }}>
-                          @{user.username}
-                        </p>
-                      )}
-                      {user?.walletAddress && (
-                        <p style={{ 
-                          margin: '0', 
-                          fontSize: '0.75rem', 
-                          opacity: 0.6,
-                          fontFamily: 'monospace',
-                          background: 'rgba(var(--theme-primary-rgb), 0.1)',
-                          padding: '0.25rem 0.5rem',
-                          borderRadius: '4px',
-                          display: 'inline-block'
-                        }}>
-                          {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                        </p>
+                      {isEditing ? (
+                        <div style={{ marginBottom: '1rem' }}>
+                          <input
+                            type="text"
+                            value={editForm.nickname}
+                            onChange={(e) => setEditForm({...editForm, nickname: e.target.value})}
+                            placeholder="昵称"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '1rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <textarea
+                            value={editForm.bio}
+                            onChange={(e) => setEditForm({...editForm, bio: e.target.value})}
+                            placeholder="个人简介"
+                            rows={3}
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem',
+                              resize: 'vertical'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.twitterHandle}
+                            onChange={(e) => setEditForm({...editForm, twitterHandle: e.target.value})}
+                            placeholder="Twitter 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                            <button
+                              onClick={() => {
+                                // TODO: 保存编辑内容的逻辑
+                                setIsEditing(false);
+                              }}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: 'var(--theme-primary)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              保存
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditForm({
+                                  nickname: user?.nickname || '',
+                                  bio: user?.bio || '',
+                                  twitterHandle: user?.twitterHandle || ''
+                                });
+                                setIsEditing(false);
+                              }}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: 'transparent',
+                                color: 'var(--theme-primary)',
+                                border: '1px solid var(--theme-primary)',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              取消
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <h2 style={{ 
+                            margin: '0 0 0.5rem 0', 
+                            fontSize: '1.5rem', 
+                            color: 'var(--theme-primary)',
+                            fontWeight: '600'
+                          }}>
+                            {user?.nickname || user?.username}
+                          </h2>
+                          {user?.nickname && user?.username && (
+                            <p style={{ 
+                              margin: '0 0 0.5rem 0', 
+                              fontSize: '0.875rem', 
+                              opacity: 0.7 
+                            }}>
+                              @{user.username}
+                            </p>
+                          )}
+                          {user?.bio && (
+                            <p style={{ 
+                              margin: '0 0 0.5rem 0', 
+                              fontSize: '0.875rem', 
+                              opacity: 0.8,
+                              lineHeight: '1.4'
+                            }}>
+                              {user.bio}
+                            </p>
+                          )}
+                          {user?.walletAddress && (
+                            <p style={{ 
+                              margin: '0', 
+                              fontSize: '0.75rem', 
+                              opacity: 0.6,
+                              fontFamily: 'monospace',
+                              background: 'rgba(var(--theme-primary-rgb), 0.1)',
+                              padding: '0.25rem 0.5rem',
+                              borderRadius: '4px',
+                              display: 'inline-block'
+                            }}>
+                              {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                            </p>
+                          )}
+                        </div>
                       )}
                     </div>
+                    
+                    {/* 编辑按钮 */}
+                    {!isEditing && (
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        style={{
+                          padding: '0.5rem 1rem',
+                          background: 'var(--theme-secondary)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '0.875rem',
+                          marginTop: '0.5rem'
+                        }}
+                      >
+                        ✏️ 编辑资料
+                      </button>
+                    )}
                   </div>
                 )}
                 
