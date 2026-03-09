@@ -14,6 +14,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [copySuccess, setCopySuccess] = useState(false)
   const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
   const [showAddLink, setShowAddLink] = useState(false)
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
+  const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -49,6 +51,53 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       } catch (error) {
         console.error('添加链接失败:', error);
         alert('添加链接失败，请重试');
+      }
+    }
+  };
+
+  // 开始编辑链接
+  const startEditLink = (link: any) => {
+    setEditingLinkId(link.id);
+    setEditLinkForm({ url: link.url, label: link.label });
+  };
+
+  // 保存编辑的链接
+  const saveEditLink = async () => {
+    if (editingLinkId && editLinkForm.url && editLinkForm.label) {
+      try {
+        const updatedLinks = (links || []).map(link => 
+          link.id === editingLinkId 
+            ? { ...link, ...editLinkForm, updatedAt: new Date().toISOString() }
+            : link
+        );
+        
+        await api.updateLinks(user?.username || '', updatedLinks);
+        setEditingLinkId(null);
+        setEditLinkForm({ url: '', label: '' });
+        window.location.reload();
+      } catch (error) {
+        console.error('更新链接失败:', error);
+        alert('更新链接失败，请重试');
+      }
+    }
+  };
+
+  // 取消编辑链接
+  const cancelEditLink = () => {
+    setEditingLinkId(null);
+    setEditLinkForm({ url: '', label: '' });
+  };
+
+  // 删除链接
+  const deleteLink = async (linkId: string) => {
+    if (confirm('确定要删除这个链接吗？')) {
+      try {
+        const updatedLinks = (links || []).filter(link => link.id !== linkId);
+        await api.updateLinks(user?.username || '', updatedLinks);
+        window.location.reload();
+      } catch (error) {
+        console.error('删除链接失败:', error);
+        alert('删除链接失败，请重试');
       }
     }
   };
@@ -692,36 +741,140 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     {module.data && module.data.length > 0 && (
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.slice(0, 3).map((link: any, linkIndex: number) => (
-                          <a
-                            key={link.id || linkIndex}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ 
-                              fontSize: '0.875rem', 
-                              opacity: 0.8,
-                              marginBottom: '0.25rem',
-                              display: 'block',
-                              color: 'var(--theme-primary)',
-                              textDecoration: 'none',
-                              padding: '0.25rem 0.5rem',
-                              borderRadius: '4px',
-                              transition: 'all 0.2s ease',
-                              border: '1px solid rgba(var(--theme-primary-rgb), 0.2)'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.opacity = '1';
-                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                              e.currentTarget.style.transform = 'translateX(4px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.opacity = '0.8';
-                              e.currentTarget.style.background = 'transparent';
-                              e.currentTarget.style.transform = 'translateX(0)';
-                            }}
-                          >
-                            🔗 {link.label || link.title || '无标题'}
-                          </a>
+                          <div key={link.id || linkIndex} style={{ marginBottom: '0.25rem' }}>
+                            {editingLinkId === link.id ? (
+                              <div style={{
+                                padding: '0.25rem',
+                                background: 'rgba(var(--theme-primary-rgb), 0.1)',
+                                borderRadius: '4px',
+                                border: '1px solid var(--theme-primary)'
+                              }}>
+                                <input
+                                  type="text"
+                                  value={editLinkForm.label}
+                                  onChange={(e) => setEditLinkForm({...editLinkForm, label: e.target.value})}
+                                  style={{
+                                    padding: '0.25rem',
+                                    border: '1px solid var(--theme-primary)',
+                                    borderRadius: '4px',
+                                    background: 'var(--theme-surface)',
+                                    color: 'var(--theme-primary)',
+                                    fontSize: '0.75rem',
+                                    width: '100%',
+                                    marginBottom: '0.25rem'
+                                  }}
+                                />
+                                <input
+                                  type="url"
+                                  value={editLinkForm.url}
+                                  onChange={(e) => setEditLinkForm({...editLinkForm, url: e.target.value})}
+                                  style={{
+                                    padding: '0.25rem',
+                                    border: '1px solid var(--theme-primary)',
+                                    borderRadius: '4px',
+                                    background: 'var(--theme-surface)',
+                                    color: 'var(--theme-primary)',
+                                    fontSize: '0.75rem',
+                                    width: '100%',
+                                    marginBottom: '0.25rem'
+                                  }}
+                                />
+                                <div style={{ display: 'flex', gap: '0.25rem' }}>
+                                  <button
+                                    onClick={saveEditLink}
+                                    disabled={!editLinkForm.url || !editLinkForm.label}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: editLinkForm.url && editLinkForm.label ? 'var(--theme-primary)' : '#ccc',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    保存
+                                  </button>
+                                  <button
+                                    onClick={cancelEditLink}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: 'transparent',
+                                      color: 'var(--theme-primary)',
+                                      border: '1px solid var(--theme-primary)',
+                                      borderRadius: '4px',
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    取消
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between', 
+                                alignItems: 'center',
+                                padding: '0.25rem 0.5rem',
+                                borderRadius: '4px',
+                                border: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'transparent';
+                              }}
+                              >
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ 
+                                    fontSize: '0.875rem', 
+                                    opacity: 0.8,
+                                    color: 'var(--theme-primary)',
+                                    textDecoration: 'none',
+                                    flex: 1
+                                  }}
+                                >
+                                  🔗 {link.label || link.title || '无标题'}
+                                </a>
+                                <div style={{ display: 'flex', gap: '0.25rem' }}>
+                                  <button
+                                    onClick={() => startEditLink(link)}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: 'transparent',
+                                      color: 'var(--theme-primary)',
+                                      border: '1px solid var(--theme-primary)',
+                                      borderRadius: '4px',
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    编辑
+                                  </button>
+                                  <button
+                                    onClick={() => deleteLink(link.id)}
+                                    style={{
+                                      padding: '0.25rem 0.5rem',
+                                      background: 'rgba(255, 0, 0, 0.1)',
+                                      color: '#d32f2f',
+                                      border: '1px solid rgba(255, 0, 0, 0.3)',
+                                      borderRadius: '4px',
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    删除
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         ))}
                         {module.data.length > 3 && (
                           <div style={{ 
