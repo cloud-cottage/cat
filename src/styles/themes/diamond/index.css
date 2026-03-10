@@ -2,6 +2,11 @@
 
 /* 主题变量定义 */
 .theme-diamond {
+  /* 主题基本信息 */
+  --theme-name: "diamond";
+  --theme-display-name: "钻石手";
+  
+  /* 主题颜色变量 */
   --theme-primary: #FF8C42;
   --theme-primary-rgb: 255, 140, 66;
   --theme-secondary: #1C6E9C;
@@ -18,6 +23,29 @@
   --theme-border-width: 2px;
   --theme-shadow: 0 8px 32px rgba(255, 140, 66, 0.15);
   --theme-text-shadow: 0 0 10px rgba(255, 140, 66, 0.5);
+  
+  /* === 网格配置 === */
+  --theme-grid-columns: 6;
+  --theme-grid-rows: 9;
+  --theme-grid-gap: 1rem;
+  --theme-grid-row-height: 280px;
+  
+  /* === 模块布局 - 纯CSS自定义属性 === */
+  --theme-module-1-area: "1";
+  --theme-module-1-order: 1;
+  --theme-module-2-area: "2";
+  --theme-module-2-order: 2;
+  --theme-module-3-area: "3";
+  --theme-module-3-order: 3;
+  --theme-module-4-area: "4";
+  --theme-module-4-order: 4;
+  --theme-module-5-area: "5";
+  --theme-module-5-order: 5;
+  --theme-module-6-area: "6";
+  --theme-module-6-order: 6;
+  
+  /* === 字体配置 === */
+  --theme-font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* 钻石手主题的body背景 */

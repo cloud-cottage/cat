@@ -2,10 +2,16 @@
 
 /* 主题变量定义 */
 .theme-hodl-blue {
+  /* 主题基本信息 */
+  --theme-name: "hodl-blue";
+  --theme-display-name: "HODL蓝";
+  
+  /* 主题颜色变量 */
   --theme-primary: #1C6E9C;
   --theme-primary-rgb: 28, 110, 156;
   --theme-secondary: #FF8C42;
   --theme-secondary-rgb: 255, 140, 66;
+  --theme-font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --theme-bg: transparent;
   --theme-surface: #FFFFFF;
   --theme-surface-rgb: 255, 255, 255;
