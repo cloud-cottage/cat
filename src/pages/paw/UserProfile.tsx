@@ -20,6 +20,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
   const [isEditingMode, setIsEditingMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -508,6 +509,36 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               }}
             >
               ⚙️
+            </button>
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              style={{
+                width: '100px',
+                height: '80px',
+                background: isDarkMode ? '#2c3e50' : '#f39c12',
+                color: 'white',
+                border: 'none',
+                borderRadius: '40px',
+                cursor: 'pointer',
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+              title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
+            >
+              {isDarkMode ? '🌙' : '☀️'}
             </button>
             {isEditingMode && (
               <button
