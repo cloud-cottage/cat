@@ -3,6 +3,8 @@
  * 从CSS自定义属性中读取主题布局信息
  */
 
+import { parseThemeLayoutFromCSS as parseFromCSSCustomProperties } from './css-parser';
+
 export interface Module {
   id: string
   name: string
@@ -26,6 +28,7 @@ export interface ThemeLayout {
  * 从CSS自定义属性中解析主题布局信息
  * @param themeId 主题ID
  * @param themeName 主题名称
+ * @param themeClassName 主题CSS类名
  * @returns Promise<ThemeLayout>
  */
 export async function parseThemeLayoutFromCSS(themeId: number, themeName: string, themeClassName: string): Promise<ThemeLayout> {
@@ -36,53 +39,26 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
       return getDefaultThemeLayout(themeId, themeName);
     }
 
-    // 创建临时元素来读取CSS元数据
+    // 创建临时元素来读取CSS自定义属性
     const tempElement = document.createElement('div');
-    tempElement.className = themeClassName; // 使用正确的className
+    tempElement.className = themeClassName;
     tempElement.style.display = 'none';
     document.body.appendChild(tempElement);
 
-    // 获取计算样式中的content内容
-    const computedStyle = window.getComputedStyle(tempElement, '::before');
-    const content = computedStyle.getPropertyValue('content');
-
+    // 使用新的CSS自定义属性解析器
+    const cssLayoutData = parseFromCSSCustomProperties(tempElement, themeName);
+    
     // 清理临时元素
     document.body.removeChild(tempElement);
 
-    if (content && content !== 'none' && content !== '') {
-      // 解析JSON字符串 - 处理CSS content的双重转义
-      let jsonStr = content;
-      
-      console.log(`Raw content from CSS:`, content);
-      console.log(`Raw content length:`, content.length);
-      
-      // 移除CSS content的引号包裹
-      if (jsonStr.startsWith('"') && jsonStr.endsWith('"')) {
-        jsonStr = jsonStr.slice(1, -1);
-      }
-      
-      // 处理转义字符 - 将 \" 转换为 "
-      jsonStr = jsonStr.replace(/\\"/g, '"');
-      
-      console.log(`Cleaned JSON string:`, jsonStr);
-      console.log(`Cleaned JSON length:`, jsonStr.length);
-      
-      // 检查JSON字符串的完整性
-      try {
-        const metadata = JSON.parse(jsonStr);
-        console.log(`Successfully parsed layout for theme ${themeName}:`, metadata);
-        
-        return {
-          themeId: themeId.toString(),
-          themeName,
-          modules: convertCSSToModules(metadata.layout?.modules || {}),
-          gridConfig: metadata.layout?.grid || { columns: 6, rows: 9, gap: '1rem' }
-        };
-      } catch (parseError) {
-        console.error(`JSON parse error for theme ${themeName}:`, parseError);
-        console.error(`JSON string at error position:`, jsonStr.substring(Math.max(0, (parseError as any).message?.match(/position (\d+)/)?.[1] - 50), ((parseError as any).message?.match(/position (\d+)/)?.[1] || 0) + 50));
-        throw parseError;
-      }
+    if (cssLayoutData) {
+      // 转换为Admin页面需要的格式
+      return {
+        themeId: themeId.toString(),
+        themeName: cssLayoutData.themeName,
+        modules: convertCSSToModules(cssLayoutData.modules),
+        gridConfig: cssLayoutData.gridConfig
+      };
     }
 
     // 如果无法从CSS读取，返回默认布局
