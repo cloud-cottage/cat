@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { api, type User } from '../paw/lib/api'
 import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
-import { parseThemeLayoutFromCSS, type Module } from './lib/layout-parser'
-import { saveLayoutToCSSFile, validateLayout } from './lib/layout-saver'
+import { parseThemeLayoutFromCSS, type Module } from '../../admin/lib/layout-parser'
+import { saveLayoutToCSSFile, validateLayout } from '../../admin/lib/layout-saver'
 
 // 导入主题CSS以确保主题样式可用
 import '../../styles/themes/index.css'

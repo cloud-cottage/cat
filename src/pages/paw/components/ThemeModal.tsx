@@ -1,4 +1,4 @@
-import { THEMES, type Theme } from '../../themes'
+import { THEMES, type Theme } from '../../../themes'
 import { useState } from 'react'
 
 interface ThemeModalProps {
@@ -18,7 +18,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
 }) => {
   const [selectedTheme, setSelectedTheme] = useState(currentTheme)
 
-  const handleThemeSelect = (theme: Theme) => {
+  const handleThemeSelect = (theme: typeof THEMES[0]) => {
     setSelectedTheme(theme)
     onThemeChange(theme)
   }
@@ -98,7 +98,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
           gap: '1rem',
           marginBottom: '2rem'
         }}>
-          {THEMES.map((theme) => (
+          {THEMES.map((theme: typeof THEMES[0]) => (
             <div
               key={theme.id}
               onClick={() => handleThemeSelect(theme)}

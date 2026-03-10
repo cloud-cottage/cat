@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 import { api, type User, type Link } from '../lib/api'
-import { THEMES } from '../../themes'
+import { THEMES } from '../../../themes'
 
 interface UserProfileProps {
   username?: string
@@ -65,7 +65,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
         setUser(userData.user)
         setLinks(userData.links)
         if (userData.user.layout) {
-          const theme = THEMES.find(t => t.id === userData.user.layout!.themeId)
+          const theme = THEMES.find((t: typeof THEMES[0]) => t.id === userData.user.layout!.themeId)
           if (theme) {
             setCurrentTheme(theme)
             setLayoutModules(userData.user.layout.modules || [])

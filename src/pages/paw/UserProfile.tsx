@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getThemeClassName, getThemeColors } from '../../../themes'
+import { getThemeClassName, getThemeColors } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { api, getUserAvatarUrl } from './lib/api'
 import { ThemeModal } from './components/ThemeModal'

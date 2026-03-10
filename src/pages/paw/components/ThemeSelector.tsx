@@ -1,19 +1,15 @@
-import { THEMES, type Theme } from '../../themes'
+import { THEMES, type Theme } from '../../../themes'
 import { useState } from 'react'
 
 interface ThemeSelectorProps {
   currentTheme: typeof THEMES[0]
   onThemeChange: (theme: typeof THEMES[0]) => void
-  onClose: () => void
-  onCustomThemeCreate?: (theme: Theme) => void
+  onClose?: () => void
+  onCustomThemeCreate?: (theme: any) => void
 }
 
-export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ 
-  currentTheme, 
-  onThemeChange, 
-  onClose,
-  onCustomThemeCreate
-}) => {
+export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onThemeChange, onClose, onCustomThemeCreate }) => {
+
   const [showCustomCreator, setShowCustomCreator] = useState(false)
   const [customTheme, setCustomTheme] = useState({
     name: '',
@@ -42,7 +38,6 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
     }
 
     onCustomThemeCreate?.(newTheme)
-    setShowCustomCreator(false)
     setCustomTheme({
       name: '',
       primary: '#FF6B35',
@@ -50,7 +45,9 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
       bg: '#0A0E27',
       surface: '#1A1F3A'
     })
+    setShowCustomCreator(false)
   }
+
   return (
     <div style={{
       position: 'fixed',
@@ -91,7 +88,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
               gap: '1rem',
               marginBottom: '2rem'
             }}>
-              {THEMES.map((theme) => {
+              {THEMES.map((theme: typeof THEMES[0]) => {
                 const isCurrentTheme = currentTheme.id === theme.id
                 
                 return (
@@ -99,7 +96,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
                     key={theme.id}
                     onClick={() => {
                       onThemeChange(theme)
-                      onClose()
+                      onClose?.()
                     }}
                     style={{
                       padding: '1rem',
@@ -432,7 +429,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
             </div>
           ) : (
             <button
-              onClick={onClose}
+              onClick={() => onClose?.()}
               style={{
                 padding: '0.8rem 2rem',
                 background: '#6c757d',
