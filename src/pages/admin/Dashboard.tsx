@@ -2,14 +2,27 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { api, type User } from '../../paw/lib/api'
 import { THEMES as SHARED_THEMES, getThemeClassName } from '../../themes'
-import { parseThemeLayoutFromCSS, type Module as LayoutModule } from '../lib/layout-parser'
-import { saveLayoutToCSSFile, validateLayout } from '../lib/layout-saver'
+import { parseThemeLayoutFromCSS, type Module } from '../../admin/lib/layout-parser'
+import { saveLayoutToCSSFile, validateLayout } from '../../admin/lib/layout-saver'
 
 // 导入主题CSS以确保主题样式可用
 import '../../styles/themes/index.css'
 
-interface Module extends LayoutModule {
-  // Admin页面特有的Module属性可以在这里扩展
+// 类型转换函数：将 Admin Module 转换为 User layout.modules 类型
+function convertToUserLayoutModules(modules: Module[]): Array<{
+  id: string
+  name: string
+  component: 'profile' | 'links' | 'twitter' | 'social' | 'mostfind'
+  position: { x: number; y: number }
+  size: { width: number; height: number }
+}> {
+  return modules.map(module => ({
+    id: module.id,
+    name: module.name,
+    component: module.component,
+    position: module.position,
+    size: module.size
+  }))
 }
 
 interface DashboardTheme {
@@ -417,7 +430,7 @@ export const Dashboard: React.FC = () => {
       // 保存到数据库（保持原有逻辑）
       const userLayout = {
         themeId: selectedTheme.id,
-        modules: modules,
+        modules: convertToUserLayoutModules(modules),
         updatedAt: new Date().toISOString(),
         cssLayout: cssResult.cssContent // 添加CSS布局数据
       }
