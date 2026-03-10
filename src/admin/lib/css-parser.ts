@@ -86,18 +86,23 @@ export function parseThemeLayoutFromCSS(element: HTMLElement, themeName: string)
     const columnSize = computedStyle.getPropertyValue('--theme-grid-column-size').trim() || undefined;
     const rowHeight = computedStyle.getPropertyValue('--theme-grid-row-height').trim() || undefined;
     
-    // 读取模块布局JSON
-    const modulesJson = computedStyle.getPropertyValue('--theme-modules').trim();
-    const modulesData = JSON.parse(modulesJson);
-    
-    // 转换模块数据格式
+    // 读取模块布局 - 使用CSS自定义属性而不是JSON
     const modules: Record<string, { area: string; order: number }> = {};
-    Object.entries(modulesData).forEach(([key, value]: [string, any]) => {
-      modules[key] = {
-        area: value.area,
-        order: value.order
-      };
-    });
+    
+    // 动态读取模块配置（支持1-6个模块）
+    for (let i = 1; i <= 6; i++) {
+      const area = computedStyle.getPropertyValue(`--theme-module-${i}-area`).trim();
+      const order = parseInt(computedStyle.getPropertyValue(`--theme-module-${i}-order`).trim());
+      
+      if (area && order) {
+        modules[i.toString()] = {
+          area: area.replace(/"/g, ''),
+          order: order
+        };
+      }
+    }
+    
+    console.log(`[DEBUG] Parsed modules for ${themeName}:`, modules);
     
     // 读取颜色配置
     const primary = computedStyle.getPropertyValue('--theme-primary').trim();

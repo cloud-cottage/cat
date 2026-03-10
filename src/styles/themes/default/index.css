@@ -68,8 +68,19 @@
   --theme-grid-gap: 1rem;
   --theme-grid-row-height: 280px;
   
-  /* === 模块布局 - JSON格式字符串 === */
-  --theme-modules: '{"1":{"area":"1","order":1},"2":{"area":"2","order":2},"3":{"area":"3","order":3},"4":{"area":"4","order":4},"5":{"area":"5","order":5},"6":{"area":"6","order":6}}';
+  /* === 模块布局 - 纯CSS自定义属性 === */
+  --theme-module-1-area: "1";
+  --theme-module-1-order: 1;
+  --theme-module-2-area: "2";
+  --theme-module-2-order: 2;
+  --theme-module-3-area: "3";
+  --theme-module-3-order: 3;
+  --theme-module-4-area: "4";
+  --theme-module-4-order: 4;
+  --theme-module-5-area: "5";
+  --theme-module-5-order: 5;
+  --theme-module-6-area: "6";
+  --theme-module-6-order: 6;
   
   /* === 字体配置 === */
   --theme-font-family: 'Inter', system-ui, -apple-system, sans-serif;
