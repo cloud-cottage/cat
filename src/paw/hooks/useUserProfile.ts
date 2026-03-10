@@ -82,7 +82,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
           ])
         }
         document.title = `${userData.user.nickname || userData.user.username}｜CAT｜Your Web3 Paws`
-        setIsOwner(!!(address && address.toLowerCase() === userData.user.walletAddress.toLowerCase()))
+        setIsOwner(!!(address && address.toLowerCase() === userData.user.walletAddress.toLowerCase()) || true) // 测试阶段让所有人都是所有者
       } catch (error) {
         console.error('Error loading user:', error)
         // 如果用户不存在，创建一个默认用户展示
@@ -107,7 +107,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
           { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
         ])
         document.title = `${username}｜CAT｜Your Web3 Paws`
-        setIsOwner(false) // 默认用户不是所有者
+        setIsOwner(true) // 测试阶段让所有人都是所有者
       } finally {
         setLoading(false)
       }

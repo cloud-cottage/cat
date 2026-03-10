@@ -400,13 +400,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           position: 'absolute',
           top: '20px',
           left: '20px',
-          width: '60px',
-          height: '69px',
+          '--size': '180px',
+          '--color': '#ff6b6b',
+          '--color-hover': '#ff8787',
+          '--color-shadow': '#e55a5a',
+          width: 'var(--size)',
+          height: 'calc(var(--size) * 1.15)',
           fontFamily: 'system-ui, sans-serif',
-          fontSize: '0.8rem',
+          fontSize: '1.1rem',
           fontWeight: 'bold',
           color: 'white',
-          background: '#ff6b6b',
+          background: 'var(--color)',
           border: 'none',
           borderRadius: '20px',
           cursor: 'pointer',
@@ -428,7 +432,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         }}
         title="点击查看更多"
       >
-        🐾
+        戳我喵～
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.35) 0%, transparent 40%)',
+          pointerEvents: 'none'
+        }} />
       </button>
 
       {/* 编辑模式按钮 */}
