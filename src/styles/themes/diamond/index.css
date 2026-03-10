@@ -1,8 +1,5 @@
 /* 钻石手主题 */
 
-/* 导入布局配置 */
-@import './layout.css';
-
 /* 主题变量定义 */
 .theme-diamond {
   --theme-primary: #FF8C42;

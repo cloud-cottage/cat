@@ -1,8 +1,5 @@
 /* HODL蓝主题 */
 
-/* 导入布局配置 */
-@import './layout.css';
-
 /* 主题变量定义 */
 .theme-hodl-blue {
   --theme-primary: #1C6E9C;

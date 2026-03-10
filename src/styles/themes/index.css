@@ -3,22 +3,13 @@
 /* 导入通用组件样式 */
 @import './common.css';
 
-/* 导入各主题样式 */
+/* 导入各主题样式 - 合并为单一文件 */
 @import './diamond/index.css';
-@import './diamond/layout.css';
 @import './hodl-blue/index.css';
-@import './hodl-blue/layout.css';
 @import './strawberry/index.css';
-@import './strawberry/layout.css';
 @import './cyber-orange/index.css';
-@import './cyber-orange/layout.css';
 @import './matrix/index.css';
-@import './matrix/layout.css';
 @import './latte-brown/index.css';
-@import './latte-brown/layout.css';
 @import './mystery-purple/index.css';
-@import './mystery-purple/layout.css';
 @import './guard/index.css';
-@import './guard/layout.css';
 @import './aurora/index.css';
-@import './aurora/layout.css';
