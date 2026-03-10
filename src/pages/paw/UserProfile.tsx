@@ -433,35 +433,55 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
       {/* 编辑模式按钮 */}
       {isOwner && (
-        <button
-          onClick={() => setIsEditingMode(!isEditingMode)}
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            padding: '0.75rem 1.5rem',
-            background: isEditingMode ? '#4CAF50' : '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '25px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: 'bold',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-            transition: 'all 0.3s',
-            zIndex: 1000
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-          }}
-        >
-          {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
-        </button>
+        <>
+          {/* 调试信息 */}
+          {process.env.NODE_ENV === 'development' && (
+            <div style={{
+              position: 'absolute',
+              top: '60px',
+              right: '20px',
+              background: 'rgba(0,0,0,0.8)',
+              color: 'white',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              fontSize: '0.8rem',
+              zIndex: 1001
+            }}>
+              isOwner: {isOwner ? 'true' : 'false'}<br/>
+              isEditingMode: {isEditingMode ? 'true' : 'false'}<br/>
+              user: {user?.username || 'null'}
+            </div>
+          )}
+          <button
+            onClick={() => setIsEditingMode(!isEditingMode)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              padding: '0.75rem 1.5rem',
+              background: isEditingMode ? '#4CAF50' : '#2196F3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '25px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s',
+              zIndex: 1000
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            }}
+          >
+            {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
+          </button>
+        </>
       )}
 
       {/* 猫爪模态框 */}

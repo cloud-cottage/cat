@@ -107,6 +107,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
           { id: 'twitter', name: '推特动态', component: 'twitter', position: { x: 0, y: 6 }, size: { width: 6, height: 4 } }
         ])
         document.title = `${username}｜CAT｜Your Web3 Paws`
+        setIsOwner(false) // 默认用户不是所有者
       } finally {
         setLoading(false)
       }
