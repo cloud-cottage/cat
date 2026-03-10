@@ -402,32 +402,49 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           left: '20px',
           width: '100px',
           height: '80px',
-          background: '#a6fbf5',
+          background: '#2c8c82',
           border: 'none',
           borderRadius: '40px',
           cursor: 'pointer',
           overflow: 'hidden',
           boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-          clipPath: 'polygon(50% 15%, 65% 10%, 75% 18%, 72% 30%, 85% 35%, 75% 50%, 70% 75%, 50% 85%, 30% 75%, 25% 50%, 15% 35%, 28% 30%, 25% 18%, 35% 10%, 50% 15%)',
           transition: 'all 0.3s',
           zIndex: 1000
         } as React.CSSProperties}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
-          e.currentTarget.style.background = '#b8fcf7';
+          e.currentTarget.style.background = '#3aa39a';
           e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.background = '#a6fbf5';
+          e.currentTarget.style.background = '#2c8c82';
           e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
         }}
         title="点击查看更多"
       >
+        {/* 白色猫爪形状 */}
         <div style={{
           position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.4) 0%, transparent 40%)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '60px',
+          height: '50px',
+          background: 'white',
+          clipPath: 'polygon(50% 15%, 65% 8%, 78% 20%, 72% 35%, 88% 42%, 75% 58%, 68% 82%, 50% 90%, 32% 82%, 25% 58%, 12% 42%, 28% 35%, 22% 20%, 35% 8%, 50% 15%)',
+          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+        }} />
+        {/* 肉球高光 */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '60px',
+          height: '50px',
+          background: 'radial-gradient(circle at 40% 30%, rgba(255,255,255,0.8) 0%, transparent 35%)',
+          clipPath: 'polygon(50% 15%, 65% 8%, 78% 20%, 72% 35%, 88% 42%, 75% 58%, 68% 82%, 50% 90%, 32% 82%, 25% 58%, 12% 42%, 28% 35%, 22% 20%, 35% 8%, 50% 15%)',
           pointerEvents: 'none'
         }} />
       </button>
