@@ -400,43 +400,34 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           position: 'absolute',
           top: '20px',
           left: '20px',
-          '--size': '180px',
-          '--color': '#ff6b6b',
-          '--color-hover': '#ff8787',
-          '--color-shadow': '#e55a5a',
-          width: 'var(--size)',
-          height: 'calc(var(--size) * 1.15)',
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '1.1rem',
-          fontWeight: 'bold',
-          color: 'white',
-          background: 'var(--color)',
+          width: '100px',
+          height: '80px',
+          background: '#a6fbf5',
           border: 'none',
-          borderRadius: '20px',
+          borderRadius: '40px',
           cursor: 'pointer',
           overflow: 'hidden',
           boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-          clipPath: 'polygon(50% 18%, 68% 8%, 82% 22%, 75% 38%, 90% 45%, 78% 62%, 65% 88%, 35% 88%, 22% 62%, 10% 45%, 25% 38%, 18% 22%, 32% 8%, 50% 18%)',
+          clipPath: 'polygon(50% 15%, 65% 10%, 75% 18%, 72% 30%, 85% 35%, 75% 50%, 70% 75%, 50% 85%, 30% 75%, 25% 50%, 15% 35%, 28% 30%, 25% 18%, 35% 10%, 50% 15%)',
           transition: 'all 0.3s',
           zIndex: 1000
         } as React.CSSProperties}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
-          e.currentTarget.style.background = 'var(--color-hover)';
+          e.currentTarget.style.background = '#b8fcf7';
           e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.background = 'var(--color)';
+          e.currentTarget.style.background = '#a6fbf5';
           e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
         }}
         title="点击查看更多"
       >
-        戳我喵～
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.35) 0%, transparent 40%)',
+          background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.4) 0%, transparent 40%)',
           pointerEvents: 'none'
         }} />
       </button>
@@ -473,27 +464,33 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             <button
               onClick={() => setIsEditingMode(!isEditingMode)}
               style={{
-                padding: '0.75rem 1.5rem',
-                background: isEditingMode ? '#4CAF50' : '#2196F3',
+                width: '100px',
+                height: '80px',
+                background: '#a6fbf5',
                 color: 'white',
                 border: 'none',
-                borderRadius: '25px',
+                borderRadius: '40px',
                 cursor: 'pointer',
-                fontSize: '0.9rem',
+                fontSize: '1.5rem',
                 fontWeight: 'bold',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.background = '#b8fcf7';
                 e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = '#a6fbf5';
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
               }}
             >
-              {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
+              ⚙️
             </button>
             {isEditingMode && (
               <button
