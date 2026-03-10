@@ -462,35 +462,65 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               user: {user?.username || 'null'}
             </div>
           )}
-          <button
-            onClick={() => setIsEditingMode(!isEditingMode)}
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              padding: '0.75rem 1.5rem',
-              background: isEditingMode ? '#4CAF50' : '#2196F3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: 'bold',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-              transition: 'all 0.3s',
-              zIndex: 1000
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-            }}
-          >
-            {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
-          </button>
+          <div style={{ 
+            position: 'absolute', 
+            top: '20px', 
+            right: '20px',
+            display: 'flex',
+            gap: '0.5rem',
+            zIndex: 1000
+          }}>
+            <button
+              onClick={() => setIsEditingMode(!isEditingMode)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: isEditingMode ? '#4CAF50' : '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '25px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+            >
+              {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
+            </button>
+            <button
+              onClick={() => setShowThemeSelector(!showThemeSelector)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: 'var(--theme-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '25px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+            >
+              🎨 切换主题
+            </button>
+          </div>
         </>
       )}
 
@@ -1466,33 +1496,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.7rem', opacity: 0.6 }}>
             Powered by CAT - Your Web3 Paws
           </p>
-          
-          {/* 主题切换按钮 */}
-          <div style={{ marginTop: '1rem' }}>
-            <button
-              onClick={() => setShowThemeSelector(!showThemeSelector)}
-              style={{
-                padding: '0.5rem 1rem',
-                background: 'var(--theme-primary)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '0.875rem',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              🎨 切换主题
-            </button>
-          </div>
           
           {/* 主题选择器模态框 */}
           {showThemeSelector && (
