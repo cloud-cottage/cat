@@ -8,6 +8,44 @@
   --shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
+/* 统一的猫猫按钮样式 */
+.cat-btn {
+  width: 100px !important;
+  height: 80px !important;
+  border: none !important;
+  border-radius: 40px !important;
+  cursor: pointer !important;
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  outline: none !important;
+}
+
+.cat-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
+}
+
+/* 猫爪按钮特殊样式 */
+.cat-paw-btn.cat-btn {
+  background: #2c8c82 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 20px !important;
+  z-index: 1000 !important;
+}
+
+.cat-paw-btn.cat-btn:hover {
+  background: #3aa39a !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25) !important;
+}
+
 /* 钻石手 - 简洁白色主题 */
 .theme-1 {
   --bg: #fafafa;

@@ -403,21 +403,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     }}>
       {/* 猫爪按钮 */}
       <button
-        className="cat-paw-btn"
+        className="cat-paw-btn cat-btn"
         onClick={() => setShowCatPawModal(true)}
         style={{
           position: 'absolute',
           top: '20px',
           left: '20px',
-          width: '100px',
-          height: '80px',
-          background: '#2c8c82',
-          border: 'none',
-          borderRadius: '40px',
-          cursor: 'pointer',
-          overflow: 'hidden',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-          transition: 'all 0.3s',
           zIndex: 1000
         } as React.CSSProperties}
         onMouseEnter={(e) => {
@@ -488,22 +479,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             zIndex: 1000
           }}>
             <button
+              className="cat-btn"
               onClick={() => setIsDarkMode(!isDarkMode)}
               style={{
-                width: '100px',
-                height: '80px',
                 background: isDarkMode ? '#2c3e50' : '#f39c12',
-                color: 'white',
-                border: 'none',
-                borderRadius: '40px',
-                cursor: 'pointer',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                color: 'white'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
@@ -541,26 +521,15 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
                 }}
               >
-                � 切换主题
+                🎨 切换主题
               </button>
             )}
             <button
+              className="cat-btn"
               onClick={() => setIsEditingMode(!isEditingMode)}
               style={{
-                width: '100px',
-                height: '80px',
                 background: '#a6fbf5',
-                color: 'white',
-                border: 'none',
-                borderRadius: '40px',
-                cursor: 'pointer',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                color: 'white'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
