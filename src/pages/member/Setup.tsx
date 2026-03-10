@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { api, validateUsername } from '../../paw/lib/api'
+import { api, validateUsername } from '../paw/lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
 export default function Setup() {

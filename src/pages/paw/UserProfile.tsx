@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getThemeClassName, getThemeColors } from '../../themes'
-import { useUserProfile } from '../../paw/hooks/useUserProfile'
-import { api, getUserAvatarUrl } from '../../paw/lib/api'
-import { ThemeModal } from '../../paw/components/ThemeModal'
+import { getThemeClassName, getThemeColors } from '../../../themes'
+import { useUserProfile } from './hooks/useUserProfile'
+import { api, getUserAvatarUrl } from './lib/api'
+import { ThemeModal } from './components/ThemeModal'
 
 interface Web3ProfileProps {
   username?: string
