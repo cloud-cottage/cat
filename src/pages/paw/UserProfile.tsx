@@ -9,7 +9,7 @@ interface Web3ProfileProps {
 }
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
-  const { loading, user, links, currentTheme, setCurrentTheme } = useUserProfile({ username: propUsername })
+  const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
@@ -19,6 +19,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
+  const [isEditingMode, setIsEditingMode] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -429,6 +430,39 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       >
         🐾
       </button>
+
+      {/* 编辑模式按钮 */}
+      {isOwner && (
+        <button
+          onClick={() => setIsEditingMode(!isEditingMode)}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            padding: '0.75rem 1.5rem',
+            background: isEditingMode ? '#4CAF50' : '#2196F3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '25px',
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+            fontWeight: 'bold',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+            transition: 'all 0.3s',
+            zIndex: 1000
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+          }}
+        >
+          {isEditingMode ? '✅ 完成编辑' : '✏️ 开始编辑'}
+        </button>
+      )}
 
       {/* 猫爪模态框 */}
       {showCatPawModal && (
@@ -1075,23 +1109,25 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <p>{module.content}</p>
-                      <button
-                        onClick={() => setShowAddLink(!showAddLink)}
-                        style={{
-                          padding: '0.25rem 0.5rem',
-                          background: 'var(--theme-primary)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        {showAddLink ? '取消' : '+ 添加链接'}
-                      </button>
+                      {isEditingMode && (
+                        <button
+                          onClick={() => setShowAddLink(!showAddLink)}
+                          style={{
+                            padding: '0.25rem 0.5rem',
+                            background: 'var(--theme-primary)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {showAddLink ? '取消' : '+ 添加链接'}
+                        </button>
+                      )}
                     </div>
                     
-                    {showAddLink && (
+                    {showAddLink && isEditingMode && (
                       <div style={{
                         padding: '0.5rem',
                         background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1171,7 +1207,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.map((link: any, linkIndex: number) => (
                           <div key={link.id || linkIndex} style={{ marginBottom: '0.25rem' }}>
-                            {editingLinkId === link.id ? (
+                            {editingLinkId === link.id && isEditingMode ? (
                               <div style={{
                                 padding: '0.25rem',
                                 background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1272,66 +1308,70 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   🔗 {link.label || link.title || '无标题'}
                                 </a>
                                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-                                  <button
-                                    onClick={() => moveLinkUp(link.id)}
-                                    disabled={linkIndex === 0}
-                                    style={{
-                                      padding: '0.25rem 0.5rem',
-                                      background: linkIndex === 0 ? '#ccc' : 'var(--theme-secondary)',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '4px',
-                                      cursor: linkIndex === 0 ? 'not-allowed' : 'pointer',
-                                      fontSize: '0.75rem',
-                                      opacity: linkIndex === 0 ? 0.5 : 1
-                                    }}
-                                  >
-                                    ↑
-                                  </button>
-                                  <button
-                                    onClick={() => moveLinkDown(link.id)}
-                                    disabled={linkIndex === module.data.length - 1}
-                                    style={{
-                                      padding: '0.25rem 0.5rem',
-                                      background: linkIndex === module.data.length - 1 ? '#ccc' : 'var(--theme-secondary)',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '4px',
-                                      cursor: linkIndex === module.data.length - 1 ? 'not-allowed' : 'pointer',
-                                      fontSize: '0.75rem',
-                                      opacity: linkIndex === module.data.length - 1 ? 0.5 : 1
-                                    }}
-                                  >
-                                    ↓
-                                  </button>
-                                  <button
-                                    onClick={() => startEditLink(link)}
-                                    style={{
-                                      padding: '0.25rem 0.5rem',
-                                      background: 'transparent',
-                                      color: 'var(--theme-primary)',
-                                      border: '1px solid var(--theme-primary)',
-                                      borderRadius: '4px',
-                                      cursor: 'pointer',
-                                      fontSize: '0.75rem'
-                                    }}
-                                  >
-                                    编辑
-                                  </button>
-                                  <button
-                                    onClick={() => deleteLink(link.id)}
-                                    style={{
-                                      padding: '0.25rem 0.5rem',
-                                      background: 'rgba(255, 0, 0, 0.1)',
-                                      color: '#d32f2f',
-                                      border: '1px solid rgba(255, 0, 0, 0.3)',
-                                      borderRadius: '4px',
-                                      cursor: 'pointer',
-                                      fontSize: '0.75rem'
-                                    }}
-                                  >
-                                    删除
-                                  </button>
+                                  {isEditingMode && (
+                                    <>
+                                      <button
+                                        onClick={() => moveLinkUp(link.id)}
+                                        disabled={linkIndex === 0}
+                                        style={{
+                                          padding: '0.25rem 0.5rem',
+                                          background: linkIndex === 0 ? '#ccc' : 'var(--theme-secondary)',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '4px',
+                                          cursor: linkIndex === 0 ? 'not-allowed' : 'pointer',
+                                          fontSize: '0.75rem',
+                                          opacity: linkIndex === 0 ? 0.5 : 1
+                                        }}
+                                      >
+                                        ↑
+                                      </button>
+                                      <button
+                                        onClick={() => moveLinkDown(link.id)}
+                                        disabled={linkIndex === module.data.length - 1}
+                                        style={{
+                                          padding: '0.25rem 0.5rem',
+                                          background: linkIndex === module.data.length - 1 ? '#ccc' : 'var(--theme-secondary)',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '4px',
+                                          cursor: linkIndex === module.data.length - 1 ? 'not-allowed' : 'pointer',
+                                          fontSize: '0.75rem',
+                                          opacity: linkIndex === module.data.length - 1 ? 0.5 : 1
+                                        }}
+                                      >
+                                        ↓
+                                      </button>
+                                      <button
+                                        onClick={() => startEditLink(link)}
+                                        style={{
+                                          padding: '0.25rem 0.5rem',
+                                          background: 'transparent',
+                                          color: 'var(--theme-primary)',
+                                          border: '1px solid var(--theme-primary)',
+                                          borderRadius: '4px',
+                                          cursor: 'pointer',
+                                          fontSize: '0.75rem'
+                                        }}
+                                      >
+                                        编辑
+                                      </button>
+                                      <button
+                                        onClick={() => deleteLink(link.id)}
+                                        style={{
+                                          padding: '0.25rem 0.5rem',
+                                          background: 'rgba(255, 0, 0, 0.1)',
+                                          color: '#d32f2f',
+                                          border: '1px solid rgba(255, 0, 0, 0.3)',
+                                          borderRadius: '4px',
+                                          cursor: 'pointer',
+                                          fontSize: '0.75rem'
+                                        }}
+                                      >
+                                        删除
+                                      </button>
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             )}
