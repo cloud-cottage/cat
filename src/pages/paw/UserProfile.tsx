@@ -21,6 +21,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showCatPawModal, setShowCatPawModal] = useState(false)
   const [isEditingMode, setIsEditingMode] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -476,7 +477,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             right: '20px',
             display: 'flex',
             gap: '0.5rem',
-            zIndex: 1000
+            zIndex: 1000,
+            flexWrap: 'wrap',
+            maxWidth: '400px',
+            justifyContent: 'flex-end'
           }}>
             <button
               className="cat-btn"
@@ -543,6 +547,25 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               }}
             >
               ⚙️
+            </button>
+            <button
+              className="cat-btn"
+              onClick={() => setShowShareModal(true)}
+              style={{
+                background: '#e74c3c',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+              title="分享个人页面"
+            >
+              📤
             </button>
           </div>
         </>
@@ -1533,6 +1556,112 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           )}
         </div>
       </div>
+    </div>
+
+      {/* 分享模态框 */}
+      {showShareModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center'
+          }}>
+            <h2 style={{ 
+              color: '#333',
+              margin: '0 0 1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>
+              📤 分享个人页面
+            </h2>
+            
+            <p style={{ 
+              color: '#666',
+              margin: '0 0 2rem 0',
+              fontSize: '1rem',
+              lineHeight: '1.5'
+            }}>
+              复制下方链接，分享给朋友吧！
+            </p>
+
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              marginBottom: '2rem'
+            }}>
+              <input
+                type="text"
+                readOnly
+                value={typeof window !== 'undefined' ? `${window.location.protocol}//${user?.username || 'username'}.catcat.meme` : ''}
+                style={{
+                  padding: '0.75rem',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  width: '100%',
+                  backgroundColor: '#f8f9fa',
+                  textAlign: 'center'
+                }}
+                onClick={(e) => e.currentTarget.select()}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <button
+                onClick={() => {
+                  const url = typeof window !== 'undefined' ? `${window.location.protocol}//${user?.username || 'username'}.catcat.meme` : '';
+                  navigator.clipboard.writeText(url);
+                  alert('链接已复制到剪贴板！');
+                }}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: '600'
+                }}
+              >
+                📋 复制链接
+              </button>
+              
+              <button
+                onClick={() => setShowShareModal(false)}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: '600'
+                }}
+              >
+                关闭
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
