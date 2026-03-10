@@ -1,113 +1,152 @@
-/* HODL蓝主题布局配置 - 专业布局 */
+/* HODL蓝主题布局配置 - 使用CSS自定义属性 */
+
+/* 主题布局数据 - CSS自定义属性 */
+.theme-hodl-blue {
+  /* 主题基本信息 */
+  --theme-name: "hodl-blue";
+  --theme-display-name: "HODL蓝";
+  --theme-description: "稳健的蓝色主题，适合价值投资者";
+  --theme-version: "1.0.0";
+  --theme-author: "Cloud Cottage";
+  
+  /* 网格配置 */
+  --theme-grid-columns: 6;
+  --theme-grid-rows: 9;
+  --theme-grid-gap: 1rem;
+  --theme-grid-column-size: 1fr;
+  --theme-grid-row-height: 280px;
+  
+  /* 模块布局 - JSON格式字符串 */
+  --theme-modules: '{"profile":{"area":"profile","order":1},"social":{"area":"social","order":2},"mostfind":{"area":"mostfind","order":3},"links":{"area":"links","order":4},"twitter":{"area":"twitter","order":5}}';
+  
+  /* 主题颜色配置 */
+  --theme-primary: #1C6E9C;
+  --theme-secondary: #FF8C42;
+  --theme-surface: #FFFFFF;
+  --theme-text-primary: #1A365D;
+  --theme-text-secondary: #2C5282;
+  --theme-text-muted: #4A5568;
+  --theme-text-white: #FFFFFF;
+  
+  /* 布局容器配置 */
+  --theme-container-width: 1800px;
+  --theme-container-max-width: 100%;
+  --theme-container-margin: 0 auto;
+  --theme-container-min-height: 100vh;
+  --theme-container-padding: 2rem 1rem;
+  
+  /* 模块样式配置 */
+  --theme-module-background: #E6E9E7;
+  --theme-module-border-radius: 12px;
+  --theme-module-border-width: 1px;
+  --theme-module-padding: 1.5rem;
+  
+  /* 背景配置 */
+  --theme-bg-type: gradient;
+  --theme-bg-value: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 50%, #EBF8FF 100%);
+  --theme-bg-attachment: fixed;
+  
+  /* 字体配置 */
+  --theme-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --theme-font-size: 16px;
+  --theme-line-height: 1.5;
+  
+  /* 阴影效果配置 */
+  --theme-shadow: 0 4px 16px rgba(26, 54, 93, 0.1);
+  --theme-hover-shadow: 0 8px 24px rgba(26, 54, 93, 0.15);
+  --theme-glow: 0 0 20px rgba(28, 110, 156, 0.3);
+  
+  /* 元数据配置 */
+  --theme-metadata-category: "professional";
+  --theme-metadata-tags: "blue, hodl, value, investment";
+  --theme-metadata-difficulty: "beginner";
+  --theme-metadata-popularity: "high";
+}
 
 /* 网格布局定义 */
 .theme-hodl-blue .grid-container {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(9, 280px);
-  gap: 1rem;
+  grid-template-columns: repeat(var(--theme-grid-columns), 1fr);
+  grid-template-rows: repeat(var(--theme-grid-rows), var(--theme-grid-row-height));
+  gap: var(--theme-grid-gap);
   min-height: 900px;
-}
 
-/* HODL蓝主题布局 - 更专业的排列 */
-.theme-hodl-blue .grid-container {
+  /* HODL蓝主题布局 */
   grid-template-areas: 
-    "profile profile profile stats stats stats"
-    "profile profile profile stats stats stats"
-    "portfolio portfolio portfolio portfolio portfolio portfolio"
-    "portfolio portfolio portfolio portfolio portfolio portfolio"
-    "nft nft nft activity activity activity"
-    "nft nft nft activity activity activity"
-    "blog blog blog blog blog blog"
-    "blog blog blog blog blog blog"
-    "social social social social social social";
+    "profile profile social social mostfind mostfind"
+    "profile profile social social mostfind mostfind"
+    "profile profile social social mostfind mostfind"
+    "links links links links twitter twitter"
+    "links links links links twitter twitter"
+    "links links links links twitter twitter"
+    "links links links links twitter twitter"
+    "links links links links twitter twitter"
+    "links links links links twitter twitter";
 }
 
-/* 具体模块位置 */
 .theme-hodl-blue .module-profile {
   grid-area: profile;
-}
-
-.theme-hodl-blue .module-stats {
-  grid-area: stats;
-}
-
-.theme-hodl-blue .module-portfolio {
-  grid-area: portfolio;
-}
-
-.theme-hodl-blue .module-nft {
-  grid-area: nft;
-}
-
-.theme-hodl-blue .module-blog {
-  grid-area: blog;
 }
 
 .theme-hodl-blue .module-social {
   grid-area: social;
 }
 
-.theme-hodl-blue .module-activity {
-  grid-area: activity;
+.theme-hodl-blue .module-mostfind {
+  grid-area: mostfind;
 }
 
-.theme-hodl-blue .module-settings {
-  /* HODL蓝主题将设置集成到profile中 */
-  display: none;
+.theme-hodl-blue .module-links {
+  grid-area: links;
+}
+
+.theme-hodl-blue .module-twitter {
+  grid-area: twitter;
 }
 
 /* 响应式调整 */
 @media (max-width: 1400px) {
   .theme-hodl-blue .grid-container {
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(12, 280px);
+    grid-template-rows: repeat(12, var(--theme-grid-row-height));
     grid-template-areas: 
-      "profile profile stats stats"
-      "profile profile stats stats"
-      "portfolio portfolio portfolio portfolio"
-      "portfolio portfolio portfolio portfolio"
-      "nft nft activity activity"
-      "nft nft activity activity"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "blog blog blog blog"
-      "social social social social"
-      "social social social social";
+      "profile profile social social"
+      "profile profile social social"
+      "mostfind mostfind mostfind mostfind"
+      "mostfind mostfind mostfind mostfind"
+      "links links links links"
+      "links links links links"
+      "links links links links"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter"
+      "twitter twitter twitter twitter";
   }
 }
 
 @media (max-width: 900px) {
   .theme-hodl-blue .grid-container {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(18, 280px);
+    grid-template-rows: repeat(18, var(--theme-grid-row-height));
     grid-template-areas: 
       "profile profile"
       "profile profile"
-      "stats stats"
-      "stats stats"
-      "portfolio portfolio"
-      "portfolio portfolio"
-      "portfolio portfolio"
-      "portfolio portfolio"
-      "nft nft"
-      "nft nft"
-      "activity activity"
-      "activity activity"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
-      "blog blog"
       "social social"
-      "social social";
+      "social social"
+      "social social"
+      "mostfind mostfind"
+      "mostfind mostfind"
+      "mostfind mostfind"
+      "mostfind mostfind"
+      "links links"
+      "links links"
+      "links links"
+      "links links"
+      "links links"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter"
+      "twitter twitter";
   }
-}
-
-/* 布局元数据 */
-.theme-hodl-blue::before {
-  content: '{"name":"hodl-blue","displayName":"HODL蓝","layout":{"type":"professional","focus":"portfolio","grid":{"columns":6,"rows":9,"gap":"1rem"},"modules":{"profile":{"area":"profile","order":1},"stats":{"area":"stats","order":2},"portfolio":{"area":"portfolio","order":3},"nft":{"area":"nft","order":4},"blog":{"area":"blog","order":5},"social":{"area":"social","order":6},"activity":{"area":"activity","order":7}}}}';
-  display: none;
 }
