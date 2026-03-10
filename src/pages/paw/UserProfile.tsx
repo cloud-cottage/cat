@@ -1008,7 +1008,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           🐦 Twitter: @{user.twitterHandle}
                         </a>
-                      ) : (
+                      ) : isEditingMode ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1018,7 +1018,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}>
                           Twitter: 未设置
                         </span>
-                      )}
+                      ) : null}
                       <a
                         href={`https://github.com/${user?.username}`}
                         target="_blank"
@@ -1078,7 +1078,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           💼 LinkedIn: @{user.linkedInHandle}
                         </a>
-                      ) : (
+                      ) : isEditingMode ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1088,7 +1088,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}>
                           LinkedIn: 未设置
                         </span>
-                      )}
+                      ) : null}
                       {user?.youtubeHandle ? (
                         <a
                           href={`https://youtube.com/@${user.youtubeHandle}`}
@@ -1115,7 +1115,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📺 YouTube: @{user.youtubeHandle}
                         </a>
-                      ) : (
+                      ) : isEditingMode ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1125,7 +1125,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}>
                           YouTube: 未设置
                         </span>
-                      )}
+                      ) : null}
                       {user?.instagramHandle ? (
                         <a
                           href={`https://instagram.com/${user.instagramHandle}`}
@@ -1152,7 +1152,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📷 Instagram: @{user.instagramHandle}
                         </a>
-                      ) : (
+                      ) : isEditingMode ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1162,7 +1162,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}>
                           Instagram: 未设置
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 )}
