@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getThemeClassName } from '../../themes'
+import { getThemeClassName, getThemeColors } from '../../themes'
 import { useUserProfile } from '../../paw/hooks/useUserProfile'
 import { api, getUserAvatarUrl } from '../../paw/lib/api'
 import { ThemeModal } from '../../paw/components/ThemeModal'
@@ -33,6 +33,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         console.error('复制失败:', error);
       }
     }
+  };
+
+  // 获取当前主题颜色
+  const getCurrentThemeColors = () => {
+    if (!currentTheme) return { primary: '#FF6B35', secondary: '#00D9FF', bg: '#0A0E27', surface: '#1A1F3A' };
+    return getThemeColors(currentTheme, isDarkMode);
   };
 
   // 添加新链接
@@ -389,8 +395,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       maxWidth: '100%',
       margin: '0 auto',
       minHeight: '100vh',
-      padding: '2rem 1rem',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      background: getCurrentThemeColors().bg,
+      color: isDarkMode ? '#ffffff' : '#000000',
+      fontFamily: 'system-ui, sans-serif',
+      padding: '2rem',
       position: 'relative'
     }}>
       {/* 猫爪按钮 */}
@@ -413,12 +421,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           zIndex: 1000
         } as React.CSSProperties}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
+          e.currentTarget.style.transform = 'translateY(-4px)';
           e.currentTarget.style.background = '#3aa39a';
           e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          e.currentTarget.style.transform = 'translateY(0)';
           e.currentTarget.style.background = '#2c8c82';
           e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
         }}
@@ -480,37 +488,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             zIndex: 1000
           }}>
             <button
-              onClick={() => setIsEditingMode(!isEditingMode)}
-              style={{
-                width: '100px',
-                height: '80px',
-                background: '#a6fbf5',
-                color: 'white',
-                border: 'none',
-                borderRadius: '40px',
-                cursor: 'pointer',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.background = '#b8fcf7';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.background = '#a6fbf5';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-              }}
-            >
-              ⚙️
-            </button>
-            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               style={{
                 width: '100px',
@@ -545,7 +522,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 onClick={() => setShowThemeSelector(!showThemeSelector)}
                 style={{
                   padding: '0.75rem 1.5rem',
-                  background: 'var(--theme-primary)',
+                  background: getCurrentThemeColors().primary,
                   color: 'white',
                   border: 'none',
                   borderRadius: '25px',
@@ -564,9 +541,40 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
                 }}
               >
-                🎨 切换主题
+                � 切换主题
               </button>
             )}
+            <button
+              onClick={() => setIsEditingMode(!isEditingMode)}
+              style={{
+                width: '100px',
+                height: '80px',
+                background: '#a6fbf5',
+                color: 'white',
+                border: 'none',
+                borderRadius: '40px',
+                cursor: 'pointer',
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.background = '#b8fcf7';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = '#a6fbf5';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+            >
+              ⚙️
+            </button>
           </div>
         </>
       )}
