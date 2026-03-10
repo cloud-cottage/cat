@@ -2,36 +2,12 @@ import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import './index.css'
 import './i18n'
-import './page/styles/globals.css'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Stats from './components/Stats'
-import Partners from './components/Partners'
-import Footer from './components/Footer'
-import { useTranslation } from 'react-i18next'
-import { BlogHome, Setup } from './page'
-import { Web3ProfileSimple as UserProfile } from './page/page'
-import { Dashboard } from './admin/pages/Dashboard'
-
-function HomePage() {
-  const { t, i18n } = useTranslation()
-
-  useEffect(() => {
-    document.title = t('meta.title')
-  }, [i18n.language, t])
-
-  return (
-    <div className="App">
-      <Navbar />
-      <main>
-        <Hero />
-        <Stats />
-      </main>
-      <Partners />
-      <Footer />
-    </div>
-  )
-}
+import './paw/styles/globals.css'
+import BlogHome from './pages/member/BlogHome'
+import Setup from './pages/member/Setup'
+import { Web3ProfileSimple as UserProfile } from './pages/paw/UserProfile'
+import { Dashboard } from './pages/admin/Dashboard'
+import HomePage from './pages/home/HomePage'
 
 function SubdomainRouter() {
   const [page, setPage] = useState<'home' | 'blog' | 'user' | 'admin'>('home')

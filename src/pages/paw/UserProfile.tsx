@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getThemeClassName } from '../themes'
-import { useUserProfile } from './hooks/useUserProfile'
-import { api, getUserAvatarUrl } from './lib/api'
-import { ThemeModal } from './components/ThemeModal'
+import { getThemeClassName } from '../../themes'
+import { useUserProfile } from '../../paw/hooks/useUserProfile'
+import { api, getUserAvatarUrl } from '../../paw/lib/api'
+import { ThemeModal } from '../../paw/components/ThemeModal'
 
 interface Web3ProfileProps {
   username?: string
@@ -18,6 +18,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
   const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   const [applyingTheme, setApplyingTheme] = useState(false)
+  const [showCatPawModal, setShowCatPawModal] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -67,7 +68,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const saveEditLink = async () => {
     if (editingLinkId && editLinkForm.url && editLinkForm.label) {
       try {
-        const updatedLinks = (links || []).map(link => 
+        const updatedLinks = (links || []).map((link: any) => 
           link.id === editingLinkId 
             ? { ...link, ...editLinkForm, updatedAt: new Date().toISOString() }
             : link
@@ -94,7 +95,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const deleteLink = async (linkId: string) => {
     if (confirm('确定要删除这个链接吗？')) {
       try {
-        const updatedLinks = (links || []).filter(link => link.id !== linkId);
+        const updatedLinks = (links || []).filter((link: any) => link.id !== linkId);
         await api.updateLinks(user?.username || '', updatedLinks);
         window.location.reload();
       } catch (error) {
@@ -108,7 +109,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const moveLinkUp = async (linkId: string) => {
     try {
       const linkList = [...(links || [])];
-      const currentIndex = linkList.findIndex(link => link.id === linkId);
+      const currentIndex = linkList.findIndex((link: any) => link.id === linkId);
       
       if (currentIndex > 0) {
         // 交换位置
@@ -135,7 +136,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const moveLinkDown = async (linkId: string) => {
     try {
       const linkList = [...(links || [])];
-      const currentIndex = linkList.findIndex(link => link.id === linkId);
+      const currentIndex = linkList.findIndex((link: any) => link.id === linkId);
       
       if (currentIndex < linkList.length - 1) {
         // 交换位置
@@ -292,7 +293,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   if (loading) {
     return (
-      <div className="blog-container" style={{ 
+      <div className="paw-container" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -317,7 +318,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
   if (!user) {
     return (
-      <div className="blog-container" style={{ 
+      <div className="paw-container" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -381,14 +382,132 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   ];
   
   return (
-    <div className={`blog-container ${themeClass}`} style={{ 
+    <div className={`paw-container ${themeClass}`} style={{ 
       width: '1800px',
       maxWidth: '100%',
       margin: '0 auto',
       minHeight: '100vh',
       padding: '2rem 1rem',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      position: 'relative'
     }}>
+      {/* 猫爪按钮 */}
+      <button
+        className="cat-paw-btn"
+        onClick={() => setShowCatPawModal(true)}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          width: '60px',
+          height: '69px',
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: '0.8rem',
+          fontWeight: 'bold',
+          color: 'white',
+          background: '#ff6b6b',
+          border: 'none',
+          borderRadius: '20px',
+          cursor: 'pointer',
+          overflow: 'hidden',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+          clipPath: 'polygon(50% 18%, 68% 8%, 82% 22%, 75% 38%, 90% 45%, 78% 62%, 65% 88%, 35% 88%, 22% 62%, 10% 45%, 25% 38%, 18% 22%, 32% 8%, 50% 18%)',
+          transition: 'all 0.3s',
+          zIndex: 1000
+        } as React.CSSProperties}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-4px) scale(1.08)';
+          e.currentTarget.style.background = 'var(--color-hover)';
+          e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          e.currentTarget.style.background = 'var(--color)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+        }}
+        title="点击查看更多"
+      >
+        🐾
+      </button>
+
+      {/* 猫爪模态框 */}
+      {showCatPawModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '400px',
+            textAlign: 'center',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setShowCatPawModal(false)}
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: '#666',
+                padding: '0.5rem',
+                borderRadius: '50%',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f0f0f0';
+                e.currentTarget.style.color = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#666';
+              }}
+            >
+              ×
+            </button>
+            
+            <div style={{
+              fontSize: '2rem',
+              marginBottom: '1rem'
+            }}>
+              🐾
+            </div>
+            
+            <h2 style={{
+              margin: '0 0 1rem 0',
+              color: '#333',
+              fontSize: '1.5rem',
+              fontWeight: 'bold'
+            }}>
+              你的链上身份聚合器
+            </h2>
+            
+            <p style={{
+              margin: '0',
+              color: '#666',
+              fontSize: '1rem',
+              lineHeight: '1.5'
+            }}>
+              整合你的Web3身份，展示完整的数字足迹
+            </p>
+          </div>
+        </div>
+      )}
+
       <div style={{
         display: 'flex',
         flexDirection: 'column'
