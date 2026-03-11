@@ -10,8 +10,9 @@
 
 /* 确保 paw-container 宽度正确应用 */
 .paw-container {
-  width: 1800px !important;
-  max-width: 100% !important;
+  width: 1200px !important;
+  max-width: none !important;
+  min-width: 1200px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
 }

@@ -398,8 +398,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   return (
     <div className={`paw-container ${themeClass}`} style={{ 
-      width: '1800px',
-      maxWidth: '100%',
+      width: '1200px',
+      maxWidth: 'none',
+      minWidth: '1200px',
       margin: '0 auto',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
@@ -409,6 +410,22 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       position: 'relative',
       boxSizing: 'border-box'
     }}>
+      {/* 调试信息 */}
+      <div style={{
+        position: 'fixed',
+        top: '10px',
+        right: '10px',
+        background: 'red',
+        color: 'white',
+        padding: '10px',
+        fontSize: '14px',
+        zIndex: 99999,
+        borderRadius: '4px',
+        border: '2px solid white'
+      }}>
+        调试: paw-container 宽度应为 1200px<br/>
+        当前实际宽度: {typeof window !== 'undefined' ? window.innerWidth + 'px' : '未知'}
+      </div>
       {/* 猫爪按钮 */}
       <button
         className="cat-paw-btn cat-btn"
