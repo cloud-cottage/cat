@@ -407,22 +407,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       <button
         className="cat-paw-btn cat-btn"
         onClick={() => setShowCatPawModal(true)}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          zIndex: 1000
-        } as React.CSSProperties}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-4px)';
-          e.currentTarget.style.background = '#3aa39a';
-          e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.background = '#2c8c82';
-          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
-        }}
         title="点击查看更多"
       >
         <Icon name="paw" size={40} />
@@ -506,38 +490,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             <button
               className="cat-btn"
               onClick={() => setIsEditingMode(!isEditingMode)}
-              style={{
-                background: '#a6fbf5',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.background = '#b8fcf7';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.background = '#a6fbf5';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-              }}
+              title="编辑模式"
             >
               <Icon name="edit" size={24} />
             </button>
             <button
               className="cat-btn"
               onClick={() => setShowShareModal(true)}
-              style={{
-                background: '#e74c3c',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-              }}
               title="分享个人页面"
             >
               <Icon name="share" size={24} />

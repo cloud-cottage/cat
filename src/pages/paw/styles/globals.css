@@ -36,6 +36,7 @@
   white-space: nowrap !important;
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
+  background: #f5f5f5 !important;
 }
 
 .cat-btn:hover {
@@ -45,7 +46,7 @@
 
 /* 猫爪按钮特殊样式 */
 .cat-paw-btn.cat-btn {
-  background: #2c8c82 !important;
+  background: #f5f5f5 !important;
   overflow: hidden !important;
   position: absolute !important;
   top: 20px !important;
@@ -54,7 +55,7 @@
 }
 
 .cat-paw-btn.cat-btn:hover {
-  background: #3aa39a !important;
+  background: #e8e8e8 !important;
   transform: translateY(-4px) !important;
   box-shadow: 0 15px 35px rgba(0,0,0,0.25) !important;
 }
