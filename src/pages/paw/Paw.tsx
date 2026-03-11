@@ -406,7 +406,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       color: isDarkMode ? '#ffffff' : '#000000',
       fontFamily: 'system-ui, sans-serif',
       padding: '2rem',
-      position: 'relative'
+      position: 'relative',
+      boxSizing: 'border-box'
     }}>
       {/* 猫爪按钮 */}
       <button

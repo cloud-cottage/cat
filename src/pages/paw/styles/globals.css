@@ -8,6 +8,14 @@
   --shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
+/* 确保 paw-container 宽度正确应用 */
+.paw-container {
+  width: 1800px !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+}
+
 /* 统一的猫猫按钮样式 */
 .cat-btn {
   width: 100px !important;
