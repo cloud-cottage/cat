@@ -3,6 +3,7 @@ import { getThemeClassName, getThemeColors } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { api, getUserAvatarUrl } from './lib/api'
 import { ThemeModal } from './components/ThemeModal'
+import { Icon } from './components/Icon'
 
 interface Web3ProfileProps {
   username?: string
@@ -424,30 +425,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         }}
         title="点击查看更多"
       >
-        {/* 白色猫爪形状 */}
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '60px',
-          height: '50px',
-          background: 'white',
-          clipPath: 'polygon(50% 15%, 65% 8%, 78% 20%, 72% 35%, 88% 42%, 75% 58%, 68% 82%, 50% 90%, 32% 82%, 25% 58%, 12% 42%, 28% 35%, 22% 20%, 35% 8%, 50% 15%)',
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
-        }} />
-        {/* 肉球高光 */}
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '60px',
-          height: '50px',
-          background: 'radial-gradient(circle at 40% 30%, rgba(255,255,255,0.8) 0%, transparent 35%)',
-          clipPath: 'polygon(50% 15%, 65% 8%, 78% 20%, 72% 35%, 88% 42%, 75% 58%, 68% 82%, 50% 90%, 32% 82%, 25% 58%, 12% 42%, 28% 35%, 22% 20%, 35% 8%, 50% 15%)',
-          pointerEvents: 'none'
-        }} />
+        <Icon name="paw" size={40} />
       </button>
 
       {/* 编辑模式按钮 */}
@@ -543,7 +521,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
               }}
             >
-              ⚙️
+              <Icon name="edit" size={24} />
             </button>
             <button
               className="cat-btn"
@@ -562,7 +540,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               }}
               title="分享个人页面"
             >
-              📤
+              <Icon name="share" size={24} />
             </button>
           </div>
         </>
