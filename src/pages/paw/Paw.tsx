@@ -1669,6 +1669,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             url={typeof window !== 'undefined' ? window.location.href : ''} 
             size={160} 
           />
+          {/* 二维码下方文字 */}
+          <div style={{
+            textAlign: 'center',
+            fontSize: '12px',
+            color: isDarkMode ? '#ffffff' : '#666666',
+            marginTop: '8px',
+            fontFamily: 'system-ui, sans-serif',
+            opacity: 0.8
+          }}>
+            View on mobile
+          </div>
         </div>
       </div>
 
