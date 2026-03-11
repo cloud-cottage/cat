@@ -27,6 +27,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [showExploreModal, setShowExploreModal] = useState(false)
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -1454,13 +1455,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           marginTop: '2rem'
         }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
-            <a
-              href="/privacy"
+            <button
+              onClick={() => setShowPrivacyModal(true)}
               className="theme-link"
-              style={{ color: 'var(--theme-primary)', textDecoration: 'none' }}
+              style={{ 
+                color: 'var(--theme-primary)', 
+                textDecoration: 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 'inherit'
+              }}
             >
               {t('privacy')}
-            </a>
+            </button>
             <a
               href="https://t.me/xCatKing"
               target="_blank"
@@ -1672,6 +1680,68 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
             <button
               onClick={() => setShowExploreModal(false)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}
+            >
+              {t('close')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 隐私条款模态框 */}
+      {showPrivacyModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }}>
+            <h2 style={{ 
+              color: '#333',
+              margin: '0 0 1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>
+              {t('privacyTitle')}
+            </h2>
+            
+            <div style={{
+              color: '#666',
+              lineHeight: '1.6',
+              fontSize: '0.95rem',
+              marginBottom: '2rem',
+              textAlign: 'left'
+            }}>
+              {t('privacyContent')}
+            </div>
+
+            <button
+              onClick={() => setShowPrivacyModal(false)}
               style={{
                 padding: '0.75rem 1.5rem',
                 background: '#6c757d',

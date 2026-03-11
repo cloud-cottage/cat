@@ -13,6 +13,8 @@ export interface Translations {
   copyLink: string
   close: string
   exploreTitle: string
+  privacyTitle: string
+  privacyContent: string
   
   // 其他
   clickToViewMore: string
@@ -32,6 +34,8 @@ export const locales = {
     copyLink: '📋 复制链接',
     close: '关闭',
     exploreTitle: '🔍 随变逛逛',
+    privacyTitle: '🔒 隐私条款',
+    privacyContent: '我们重视您的隐私。本应用收集的信息仅用于提供更好的服务体验。我们不会将您的个人信息出售、交易或转让给第三方。您有权随时访问、更正或删除您的个人信息。如果您对我们的隐私政策有任何疑问，请通过客服渠道联系我们。',
     clickToViewMore: '点击查看更多',
     editMode: '编辑模式'
   } as Translations,
@@ -48,6 +52,8 @@ export const locales = {
     copyLink: '📋 複製連結',
     close: '關閉',
     exploreTitle: '🔍 隨便逛逛',
+    privacyTitle: '🔒 隱私條款',
+    privacyContent: '我們重視您的隱私。本應用收集的資訊僅用於提供更好的服務體驗。我們不會將您的個人資訊出售、交易或轉讓給第三方。您有權隨時存取、更正或刪除您的個人資訊。如果您對我們的隱私政策有任何疑問，請透過客服渠道聯繫我們。',
     clickToViewMore: '點擊查看更多',
     editMode: '編輯模式'
   } as Translations,
@@ -64,6 +70,8 @@ export const locales = {
     copyLink: '📋 Sao chép liên kết',
     close: 'Đóng',
     exploreTitle: '🔍 Khám phá',
+    privacyTitle: '🔒 Điều khoản bảo mật',
+    privacyContent: 'Chúng tôi tôn trọng quyền riêng tư của bạn. Thông tin được thu thập bởi ứng dụng này chỉ được sử dụng để cung cấp trải nghiệm dịch vụ tốt hơn. Chúng tôi sẽ không bán, trao đổi hoặc chuyển giao thông tin cá nhân của bạn cho bên thứ ba. Bạn có quyền truy cập, chỉnh sửa hoặc xóa thông tin cá nhân của mình bất cứ lúc nào. Nếu bạn có câu hỏi nào về chính sách bảo mật của chúng tôi, vui lòng liên hệ qua kênh dịch vụ khách hàng.',
     clickToViewMore: 'Nhấn để xem thêm',
     editMode: 'Chế độ chỉnh sửa'
   } as Translations,
@@ -76,10 +84,12 @@ export const locales = {
     explore: 'Explore',
     privacy: 'Privacy',
     shareTitle: '📤 Share Profile',
-    shareDescription: 'Copy the link below and share with friends!',
+    shareDescription: 'Copy link below and share with friends!',
     copyLink: '📋 Copy Link',
     close: 'Close',
     exploreTitle: '🔍 Explore',
+    privacyTitle: '🔒 Privacy Policy',
+    privacyContent: 'We value your privacy. The information collected by this application is only used to provide a better service experience. We will not sell, trade, or transfer your personal information to third parties. You have the right to access, correct, or delete your personal information at any time. If you have any questions about our privacy policy, please contact us through customer service channels.',
     clickToViewMore: 'Click to view more',
     editMode: 'Edit Mode'
   } as Translations
