@@ -94,8 +94,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const currentWidth = container.getBoundingClientRect().width
+          const computedStyle = window.getComputedStyle(container)
+          console.log(`检测到样式修改:`, {
+            实际宽度: currentWidth,
+            计算样式宽度: computedStyle.width,
+            计算样式最大宽度: computedStyle.maxWidth,
+            计算样式最小宽度: computedStyle.minWidth,
+            内联样式: container.getAttribute('style'),
+            父容器宽度: container.parentElement?.getBoundingClientRect().width,
+            浏览器缩放: window.devicePixelRatio
+          })
           if (Math.abs(currentWidth - 1200) > 1) {
-            console.log(`检测到样式修改，容器宽度: ${currentWidth}px，立即修复`)
+            console.log(`容器宽度异常: ${currentWidth}px，立即修复`)
             container.style.cssText = `
               width: 1200px !important;
               max-width: 1200px !important;
