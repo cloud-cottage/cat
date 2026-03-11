@@ -418,13 +418,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       <div style={{
         position: 'absolute',
         top: '20px',
+        left: '20px',
         right: '20px',
         display: 'flex',
-        gap: '0.5rem',
+        justifyContent: 'space-between',
         alignItems: 'center',
         zIndex: 1000
       }}>
-        {/* 猫爪按钮 */}
+        {/* 左侧：猫爪按钮 */}
         <button
           className="cat-paw-btn cat-btn"
           onClick={() => setShowCatPawModal(true)}
@@ -433,9 +434,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           <Icon name="paw" size={40} />
         </button>
 
-        {/* 编辑模式按钮组 */}
+        {/* 右侧：编辑模式按钮组 */}
         {isOwner && (
-          <>
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem',
+            alignItems: 'center'
+          }}>
             {/* 主题切换按钮 */}
             <button
               className="cat-btn"
@@ -503,7 +508,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             >
               <Icon name="share" size={24} />
             </button>
-          </>
+          </div>
         )}
       </div>
 
