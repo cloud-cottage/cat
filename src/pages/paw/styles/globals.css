@@ -43,6 +43,28 @@ div[class*="paw-container"],
   min-width: 300px !important;
 }
 
+/* 大屏幕 - 确保 max-width 始终生效 */
+@media (min-width: 1801px) {
+  .paw-container,
+  div.paw-container,
+  div[class*="paw-container"],
+  [class*="paw-container"],
+  .theme-default .paw-container,
+  .theme-matrix .paw-container,
+  .theme-aurora .paw-container,
+  .theme-diamond .paw-container,
+  .theme-guard .paw-container,
+  .theme-hodl-blue .paw-container,
+  .theme-latte-brown .paw-container,
+  .theme-mystery-purple .paw-container,
+  .theme-strawberry .paw-container,
+  .theme-cyber-orange .paw-container {
+    width: 100% !important;
+    max-width: 1800px !important;
+    min-width: 300px !important;
+  }
+}
+
 /* 响应式规则 */
 @media (max-width: 1800px) {
   .paw-container,

@@ -45,6 +45,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         flex-shrink: 0 !important;
         flex-grow: 0 !important;
       `
+      
+      // 强制覆盖所有可能的样式
+      container.setAttribute('style', `
+        width: 100% !important;
+        max-width: 1800px !important;
+        min-width: 300px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+      `)
     }
   }, [currentTheme])
   
@@ -67,6 +79,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             flex-shrink: 0 !important;
             flex-grow: 0 !important;
           `
+          
+          // 强制覆盖所有可能的样式
+          container.setAttribute('style', `
+            width: 100% !important;
+            max-width: 1800px !important;
+            min-width: 300px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `)
         }
       }
     }, 100) // 每 100ms 检查一次
@@ -106,6 +130,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               flex-shrink: 0 !important;
               flex-grow: 0 !important;
             `
+            
+            // 强制覆盖所有可能的样式
+            container.setAttribute('style', `
+              width: 100% !important;
+              max-width: 1800px !important;
+              min-width: 300px !important;
+              margin: 0 auto !important;
+              box-sizing: border-box !important;
+              display: block !important;
+              flex-shrink: 0 !important;
+              flex-grow: 0 !important;
+            `)
           }
         }
       })
