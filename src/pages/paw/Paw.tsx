@@ -84,6 +84,40 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     
     return () => clearInterval(interval)
   }, [currentTheme])
+
+  // 使用 MutationObserver 监控样式变化
+  useEffect(() => {
+    const container = document.querySelector('.paw-container') as HTMLElement
+    if (!container) return
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const currentWidth = container.getBoundingClientRect().width
+          if (Math.abs(currentWidth - 1200) > 1) {
+            console.log(`检测到样式修改，容器宽度: ${currentWidth}px，立即修复`)
+            container.style.cssText = `
+              width: 1200px !important;
+              max-width: 1200px !important;
+              min-width: 1200px !important;
+              margin: 0 auto !important;
+              box-sizing: border-box !important;
+              display: block !important;
+              flex-shrink: 0 !important;
+              flex-grow: 0 !important;
+            `
+          }
+        }
+      })
+    })
+
+    observer.observe(container, {
+      attributes: true,
+      attributeFilter: ['style']
+    })
+
+    return () => observer.disconnect()
+  }, [currentTheme])
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {

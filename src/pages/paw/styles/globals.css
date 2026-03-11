@@ -98,6 +98,31 @@ html body [class*="paw-container"] {
   display: block !important;
 }
 
+/* 终极覆盖 - 使用更高的特异性 */
+body > div.paw-container,
+body > div[class*="paw-container"],
+body > [class*="paw-container"],
+#root > div.paw-container,
+#root > div[class*="paw-container"],
+#root > [class*="paw-container"] {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  min-width: 1200px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+/* 覆盖任何可能的父容器影响 */
+.paw-container,
+.paw-container *,
+.paw-container::before,
+.paw-container::after {
+  box-sizing: border-box !important;
+}
+
 /* 统一的猫猫按钮样式 */
 .cat-btn {
   width: 100px !important;
