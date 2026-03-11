@@ -29,279 +29,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
-  const [containerWidth, setContainerWidth] = useState(0)
-  const [windowWidth, setWindowWidth] = useState(0)
-  
-  // 强制设置容器宽度 - 改为响应式
-  useEffect(() => {
-    const container = document.querySelector('.paw-container') as HTMLElement
-    if (container) {
-      // 设置响应式样式
-      container.style.cssText = `
-        width: 100% !important;
-        max-width: 900px !important;
-        min-width: 300px !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-        display: block !important;
-        flex-shrink: 0 !important;
-        flex-grow: 0 !important;
-      `
-      
-      // 强制覆盖所有可能的样式
-      container.setAttribute('style', `
-        width: 100% !important;
-        max-width: 900px !important;
-        min-width: 300px !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-        display: block !important;
-        flex-shrink: 0 !important;
-        flex-grow: 0 !important;
-      `)
-    }
-  }, [currentTheme])
-
-  // 强制修复容器宽度 - 每次渲染都检查
-  useEffect(() => {
-    const forceFixWidth = () => {
-      const container = document.querySelector('.paw-container') as HTMLElement
-      if (container) {
-        // 使用 offsetWidth 而不是 getBoundingClientRect() 来避免 devicePixelRatio 影响
-        const width = container.offsetWidth
-        setContainerWidth(width)
-        
-        // 检测翻倍问题并修复 - 使用 offsetWidth 作为主要判断
-        if (width > 900) {
-          // 强制设置正确的尺寸
-          container.style.setProperty('width', '100%', 'important')
-          container.style.setProperty('max-width', '900px', 'important')
-          container.style.setProperty('min-width', '300px', 'important')
-          container.style.setProperty('margin', '0 auto', 'important')
-          container.style.setProperty('transform', 'none', 'important')
-          container.style.setProperty('zoom', '1', 'important')
-          
-          // 完全覆盖样式
-          container.style.cssText = `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-            transform: none !important;
-            zoom: 1 !important;
-          `
-          
-          container.setAttribute('style', `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-            transform: none !important;
-            zoom: 1 !important;
-          `)
-          
-          // 强制重排
-          container.style.display = 'none'
-          container.offsetHeight
-          container.style.display = 'block'
-          
-          // 更新显示的宽度
-          setTimeout(() => {
-            const newWidth = container.offsetWidth
-            setContainerWidth(newWidth)
-          }, 10)
-        }
-      }
-      
-      // 修复按钮尺寸问题 - 使用 offsetWidth/offsetHeight
-      const buttons = document.querySelectorAll('.cat-btn') as NodeListOf<HTMLElement>
-      buttons.forEach((button) => {
-        const btnWidth = button.offsetWidth
-        const btnHeight = button.offsetHeight
-        
-        // 使用 offsetWidth 作为判断标准
-        if (btnWidth > 50 || btnHeight > 40) {
-          button.style.setProperty('width', '50px', 'important')
-          button.style.setProperty('height', '40px', 'important')
-          button.style.setProperty('min-width', '50px', 'important')
-          button.style.setProperty('max-width', '50px', 'important')
-          button.style.setProperty('min-height', '40px', 'important')
-          button.style.setProperty('max-height', '40px', 'important')
-          button.style.setProperty('transform', 'none', 'important')
-          button.style.setProperty('zoom', '1', 'important')
-        }
-      })
-      
-      if (typeof window !== 'undefined') {
-        setWindowWidth(window.innerWidth)
-      }
-    }
-
-    // 立即执行一次
-    forceFixWidth()
-    
-    // 监听各种可能的事件
-    window.addEventListener('resize', forceFixWidth)
-    window.addEventListener('orientationchange', forceFixWidth)
-    
-    // 更频繁的定时检查
-    const interval = setInterval(forceFixWidth, 25)
-    
-    return () => {
-      window.removeEventListener('resize', forceFixWidth)
-      window.removeEventListener('orientationchange', forceFixWidth)
-      clearInterval(interval)
-    }
-  }, [currentTheme])
-
-  // 实时更新调试信息
-  useEffect(() => {
-    const updateWidths = () => {
-      const container = document.querySelector('.paw-container') as HTMLElement
-      if (container) {
-        const width = container.getBoundingClientRect().width
-        setContainerWidth(width)
-        
-        // 强制检查并修复宽度
-        if (width > 900) {
-          container.style.cssText = `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-          `
-          
-          container.setAttribute('style', `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-          `)
-        }
-      }
-      if (typeof window !== 'undefined') {
-        setWindowWidth(window.innerWidth)
-      }
-    }
-
-    // 初始更新
-    updateWidths()
-
-    // 监听窗口大小变化
-    const handleResize = () => {
-      updateWidths()
-    }
-
-    window.addEventListener('resize', handleResize)
-    
-    // 定时更新（确保实时性）
-    const interval = setInterval(updateWidths, 50)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      clearInterval(interval)
-    }
-  }, [currentTheme])
-  
-  // 持续监控容器宽度
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const container = document.querySelector('.paw-container') as HTMLElement
-      if (container) {
-        const currentWidth = container.getBoundingClientRect().width
-        // 检查是否在合理范围内 (300px - 900px)
-        if (currentWidth < 300 || currentWidth > 900) {
-          container.style.cssText = `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-          `
-          
-          // 强制覆盖所有可能的样式
-          container.setAttribute('style', `
-            width: 100% !important;
-            max-width: 900px !important;
-            min-width: 300px !important;
-            margin: 0 auto !important;
-            box-sizing: border-box !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-          `)
-        }
-      }
-    }, 100) // 每 100ms 检查一次
-    
-    return () => clearInterval(interval)
-  }, [currentTheme])
-
-  // 使用 MutationObserver 监控样式变化
-  useEffect(() => {
-    const container = document.querySelector('.paw-container') as HTMLElement
-    if (!container) return
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          const currentWidth = container.getBoundingClientRect().width
-          
-          // 检查是否在合理范围内
-          if (currentWidth < 300 || currentWidth > 900) {
-            container.style.cssText = `
-              width: 100% !important;
-              max-width: 900px !important;
-              min-width: 300px !important;
-              margin: 0 auto !important;
-              box-sizing: border-box !important;
-              display: block !important;
-              flex-shrink: 0 !important;
-              flex-grow: 0 !important;
-            `
-            
-            // 强制覆盖所有可能的样式
-            container.setAttribute('style', `
-              width: 100% !important;
-              max-width: 900px !important;
-              min-width: 300px !important;
-              margin: 0 auto !important;
-              box-sizing: border-box !important;
-              display: block !important;
-              flex-shrink: 0 !important;
-              flex-grow: 0 !important;
-            `)
-          }
-        }
-      })
-    })
-
-    observer.observe(container, {
-      attributes: true,
-      attributeFilter: ['style']
-    })
-
-    return () => observer.disconnect()
-  }, [currentTheme])
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -687,83 +414,29 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       flexShrink: 0,
       flexGrow: 0
     }}>
-      {/* 调试信息 */}
+      {/* 页眉容器 */}
       <div style={{
-        position: 'fixed',
-        top: '-190px',
-        right: '10px',
-        background: 'red',
-        color: 'white',
-        padding: '10px',
-        fontSize: '14px',
-        zIndex: 99999,
-        borderRadius: '4px',
-        border: '2px solid white'
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        display: 'flex',
+        gap: '0.5rem',
+        alignItems: 'center',
+        zIndex: 1000
       }}>
-        调试: paw-container 最大宽度应为 900px<br/>
-        最小宽度应为 300px<br/>
-        当前实际宽度: {containerWidth}px<br/>
-        窗口宽度: {windowWidth}px<br/>
-        设备像素比: {typeof window !== 'undefined' ? window.devicePixelRatio : '未知'}<br/>
-        浏览器缩放: {typeof window !== 'undefined' ? Math.round(window.outerWidth / window.innerWidth * 100) + '%' : '未知'}<br/>
-        容器CSS宽度: {(() => {
-          if (typeof window !== 'undefined') {
-            const container = document.querySelector('.paw-container') as HTMLElement
-            if (container) {
-              const styles = window.getComputedStyle(container)
-              return styles.width
-            }
-          }
-          return '未知'
-        })()}<br/>
-        容器offsetWidth: {(() => {
-          if (typeof window !== 'undefined') {
-            const container = document.querySelector('.paw-container') as HTMLElement
-            if (container) {
-              return container.offsetWidth + 'px'
-            }
-          }
-          return '未知'
-        })()}
-      </div>
-      {/* 猫爪按钮 */}
-      <button
-        className="cat-paw-btn cat-btn"
-        onClick={() => setShowCatPawModal(true)}
-        title={t('clickToViewMore')}
-      >
-        <Icon name="paw" size={40} />
-      </button>
+        {/* 猫爪按钮 */}
+        <button
+          className="cat-paw-btn cat-btn"
+          onClick={() => setShowCatPawModal(true)}
+          title={t('clickToViewMore')}
+        >
+          <Icon name="paw" size={40} />
+        </button>
 
-      {/* 编辑模式按钮 */}
-      {isOwner && (
-        <>
-          {/* 调试信息 */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{
-              position: 'absolute',
-              top: '60px',
-              right: '20px',
-              background: 'rgba(0,0,0,0.8)',
-              color: 'white',
-              padding: '0.5rem',
-              borderRadius: '4px',
-              fontSize: '0.8rem',
-              zIndex: 1001
-            }}>
-              isOwner: {isOwner ? 'true' : 'false'}<br/>
-              isEditingMode: {isEditingMode ? 'true' : 'false'}<br/>
-              user: {user?.username || 'null'}
-            </div>
-          )}
-          <div style={{ 
-            position: 'absolute', 
-            top: '20px', 
-            right: '20px',
-            display: 'flex',
-            gap: '0.5rem',
-            zIndex: 1000
-          }}>
+        {/* 编辑模式按钮组 */}
+        {isOwner && (
+          <>
+            {/* 主题切换按钮 */}
             <button
               className="cat-btn"
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -783,6 +456,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             >
               {isDarkMode ? '🌙' : '☀️'}
             </button>
+            
+            {/* 主题选择按钮 */}
             {isEditingMode && (
               <button
                 onClick={() => setShowThemeSelector(!showThemeSelector)}
@@ -810,6 +485,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 🎨 切换主题
               </button>
             )}
+            
+            {/* 编辑按钮 */}
             <button
               className="cat-btn"
               onClick={() => setIsEditingMode(!isEditingMode)}
@@ -817,6 +494,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             >
               <Icon name="edit" size={24} />
             </button>
+            
+            {/* 分享按钮 */}
             <button
               className="cat-btn"
               onClick={() => setShowShareModal(true)}
@@ -824,8 +503,27 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             >
               <Icon name="share" size={24} />
             </button>
-          </div>
-        </>
+          </>
+        )}
+      </div>
+
+      {/* 开发模式调试信息 */}
+      {isOwner && process.env.NODE_ENV === 'development' && (
+        <div style={{
+          position: 'absolute',
+          top: '60px',
+          right: '20px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '0.5rem',
+          borderRadius: '4px',
+          fontSize: '0.8rem',
+          zIndex: 1001
+        }}>
+          isOwner: {isOwner ? 'true' : 'false'}<br/>
+          isEditingMode: {isEditingMode ? 'true' : 'false'}<br/>
+          user: {user?.username || 'null'}
+        </div>
       )}
 
       {/* 猫爪模态框 */}

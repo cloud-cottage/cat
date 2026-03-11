@@ -341,13 +341,10 @@ button.cat-btn:hover {
   box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
 }
 
-/* 猫爪按钮特殊样式 */
+/* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
 .cat-paw-btn.cat-btn {
   background: #f5f5f5 !important;
   overflow: hidden !important;
-  position: absolute !important;
-  top: 20px !important;
-  right: 20px !important;
   z-index: 1000 !important;
 }
 
