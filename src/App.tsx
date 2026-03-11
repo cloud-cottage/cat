@@ -5,7 +5,7 @@ import './i18n'
 import './pages/paw/styles/globals.css'
 import BlogHome from './pages/member/BlogHome'
 import Setup from './pages/member/Setup'
-import { Web3ProfileSimple as UserProfile } from './pages/paw/UserProfile'
+import { Web3ProfileSimple as UserProfile } from './pages/paw/Paw'
 import { Dashboard } from './pages/admin/Dashboard'
 import HomePage from './pages/home/HomePage'
 
