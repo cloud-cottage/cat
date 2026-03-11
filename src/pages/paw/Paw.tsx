@@ -67,12 +67,30 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     const forceFixWidth = () => {
       const container = document.querySelector('.paw-container') as HTMLElement
       if (container) {
-        const width = container.getBoundingClientRect().width
+        // 使用 offsetWidth 而不是 getBoundingClientRect() 来避免 devicePixelRatio 影响
+        const width = container.offsetWidth
+        const boundingWidth = container.getBoundingClientRect().width
         setContainerWidth(width)
         
-        // 检测翻倍问题并修复
+        // 获取设备像素比和浏览器缩放
+        const dpr = window.devicePixelRatio || 1
+        const browserZoom = Math.round(window.outerWidth / window.innerWidth * 100)
+        const computedWidth = window.getComputedStyle(container).width
+        
+        console.log(`详细诊断信息:`, {
+          offsetWidth: width,
+          boundingWidth: boundingWidth,
+          computedWidth: computedWidth,
+          设备像素比: dpr,
+          浏览器缩放: browserZoom + '%',
+          窗口宽度: window.innerWidth,
+          外部宽度: window.outerWidth,
+          是否翻倍: width === 3600 || boundingWidth === 3600
+        })
+        
+        // 检测翻倍问题并修复 - 使用 offsetWidth 作为主要判断
         if (width > 1800) {
-          console.log(`检测到翻倍问题: ${width}px，强制修复到 1800px`)
+          console.log(`检测到翻倍问题: offsetWidth=${width}px，强制修复`)
           
           // 强制设置正确的尺寸
           container.style.setProperty('width', '100%', 'important')
@@ -116,19 +134,32 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           
           // 更新显示的宽度
           setTimeout(() => {
-            const newWidth = container.getBoundingClientRect().width
+            const newWidth = container.offsetWidth
+            const newBoundingWidth = container.getBoundingClientRect().width
             setContainerWidth(newWidth)
-            console.log(`修复后容器宽度: ${newWidth}px`)
+            console.log(`修复后容器宽度: offsetWidth=${newWidth}px, boundingWidth=${newBoundingWidth}px`)
           }, 10)
         }
       }
       
-      // 修复按钮尺寸问题
+      // 修复按钮尺寸问题 - 使用 offsetWidth/offsetHeight
       const buttons = document.querySelectorAll('.cat-btn') as NodeListOf<HTMLElement>
-      buttons.forEach(button => {
-        const btnWidth = button.getBoundingClientRect().width
-        const btnHeight = button.getBoundingClientRect().height
+      buttons.forEach((button, index) => {
+        const btnWidth = button.offsetWidth
+        const btnHeight = button.offsetHeight
+        const boundingWidth = button.getBoundingClientRect().width
+        const boundingHeight = button.getBoundingClientRect().height
+        const dpr = window.devicePixelRatio || 1
         
+        console.log(`按钮${index}诊断:`, {
+          offsetWidth: btnWidth,
+          offsetHeight: btnHeight,
+          boundingWidth: boundingWidth,
+          boundingHeight: boundingHeight,
+          设备像素比: dpr
+        })
+        
+        // 使用 offsetWidth 作为判断标准
         if (btnWidth > 100 || btnHeight > 80) {
           console.log(`检测到按钮翻倍问题: ${btnWidth}x${btnHeight}，强制修复`)
           
@@ -720,7 +751,26 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         当前实际宽度: {containerWidth}px<br/>
         窗口宽度: {windowWidth}px<br/>
         设备像素比: {typeof window !== 'undefined' ? window.devicePixelRatio : '未知'}<br/>
-        浏览器缩放: {typeof window !== 'undefined' ? Math.round(window.outerWidth / window.innerWidth * 100) + '%' : '未知'}
+        浏览器缩放: {typeof window !== 'undefined' ? Math.round(window.outerWidth / window.innerWidth * 100) + '%' : '未知'}<br/>
+        容器CSS宽度: {(() => {
+          if (typeof window !== 'undefined') {
+            const container = document.querySelector('.paw-container') as HTMLElement
+            if (container) {
+              const styles = window.getComputedStyle(container)
+              return styles.width
+            }
+          }
+          return '未知'
+        })()}<br/>
+        容器offsetWidth: {(() => {
+          if (typeof window !== 'undefined') {
+            const container = document.querySelector('.paw-container') as HTMLElement
+            if (container) {
+              return container.offsetWidth + 'px'
+            }
+          }
+          return '未知'
+        })()}
       </div>
       {/* 猫爪按钮 */}
       <button
