@@ -10,8 +10,8 @@
 
 /* 确保 paw-container 宽度正确应用 */
 .paw-container {
-  width: 1200px !important;
-  max-width: 1200px !important;
+  width: 1800px !important;
+  max-width: 1800px !important;
   min-width: 1200px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -20,8 +20,8 @@
 
 /* 强制使用 calc() 计算宽度 */
 .paw-container {
-  width: calc(1200px) !important;
-  max-width: calc(1200px) !important;
+  width: calc(1800px) !important;
+  max-width: calc(1800px) !important;
   min-width: calc(1200px) !important;
 }
 
@@ -29,8 +29,8 @@
 div.paw-container,
 div[class*="paw-container"],
 [class*="paw-container"] {
-  width: calc(1200px) !important;
-  max-width: calc(1200px) !important;
+  width: calc(1800px) !important;
+  max-width: calc(1800px) !important;
   min-width: calc(1200px) !important;
 }
 
@@ -45,8 +45,8 @@ div[class*="paw-container"],
 .theme-mystery-purple .paw-container,
 .theme-strawberry .paw-container,
 .theme-cyber-orange .paw-container {
-  width: calc(1200px) !important;
-  max-width: calc(1200px) !important;
+  width: calc(1800px) !important;
+  max-width: calc(1800px) !important;
   min-width: calc(1200px) !important;
 }
 
@@ -66,8 +66,8 @@ div[class*="paw-container"],
   .theme-mystery-purple .paw-container,
   .theme-strawberry .paw-container,
   .theme-cyber-orange .paw-container {
-    width: calc(1200px) !important;
-    max-width: calc(1200px) !important;
+    width: calc(1800px) !important;
+    max-width: calc(1800px) !important;
     min-width: calc(1200px) !important;
   }
 }
@@ -87,8 +87,8 @@ div[class*="paw-container"],
   .theme-mystery-purple .paw-container,
   .theme-strawberry .paw-container,
   .theme-cyber-orange .paw-container {
-    width: calc(1200px) !important;
-    max-width: calc(1200px) !important;
+    width: calc(1800px) !important;
+    max-width: calc(1800px) !important;
     min-width: calc(1200px) !important;
   }
 }
@@ -97,8 +97,8 @@ div[class*="paw-container"],
 html body div.paw-container,
 html body div[class*="paw-container"],
 html body [class*="paw-container"] {
-  width: calc(1200px) !important;
-  max-width: calc(1200px) !important;
+  width: calc(1800px) !important;
+  max-width: calc(1800px) !important;
   min-width: calc(1200px) !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -112,8 +112,8 @@ body > [class*="paw-container"],
 #root > div.paw-container,
 #root > div[class*="paw-container"],
 #root > [class*="paw-container"] {
-  width: calc(1200px) !important;
-  max-width: calc(1200px) !important;
+  width: calc(1800px) !important;
+  max-width: calc(1800px) !important;
   min-width: calc(1200px) !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -131,10 +131,10 @@ body > [class*="paw-container"],
 }
 
 /* 强制设置容器宽度为固定像素值 */
-@supports (width: 1200px) {
+@supports (width: 1800px) {
   .paw-container {
-    width: 1200px !important;
-    max-width: 1200px !important;
+    width: 1800px !important;
+    max-width: 1800px !important;
     min-width: 1200px !important;
   }
 }

@@ -36,8 +36,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     if (container) {
       // 直接设置内联样式
       container.style.cssText = `
-        width: 1200px !important;
-        max-width: 1200px !important;
+        width: 1800px !important;
+        max-width: 1800px !important;
         min-width: 1200px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
@@ -48,8 +48,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       
       // 强制覆盖所有可能的样式
       container.setAttribute('style', `
-        width: 1200px !important;
-        max-width: 1200px !important;
+        width: 1800px !important;
+        max-width: 1800px !important;
         min-width: 1200px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
@@ -66,11 +66,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       const container = document.querySelector('.paw-container') as HTMLElement
       if (container) {
         const currentWidth = container.getBoundingClientRect().width
-        if (Math.abs(currentWidth - 1200) > 1) {
-          console.log(`容器宽度异常: ${currentWidth}px，强制重置为 1200px`)
+        if (Math.abs(currentWidth - 1800) > 1) {
+          console.log(`容器宽度异常: ${currentWidth}px，强制重置为 1800px`)
           container.style.cssText = `
-            width: 1200px !important;
-            max-width: 1200px !important;
+            width: 1800px !important;
+            max-width: 1800px !important;
             min-width: 1200px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -104,11 +104,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             父容器宽度: container.parentElement?.getBoundingClientRect().width,
             浏览器缩放: window.devicePixelRatio
           })
-          if (Math.abs(currentWidth - 1200) > 1) {
+          if (Math.abs(currentWidth - 1800) > 1) {
             console.log(`容器宽度异常: ${currentWidth}px，立即修复`)
             container.style.cssText = `
-              width: 1200px !important;
-              max-width: 1200px !important;
+              width: 1800px !important;
+              max-width: 1800px !important;
               min-width: 1200px !important;
               margin: 0 auto !important;
               box-sizing: border-box !important;
@@ -498,8 +498,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   return (
     <div className={`paw-container ${themeClass}`} style={{ 
-      width: '1200px',
-      maxWidth: '1200px',
+      width: '1800px',
+      maxWidth: '1800px',
       minWidth: '1200px',
       margin: '0 auto',
       minHeight: '100vh',
@@ -526,7 +526,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         borderRadius: '4px',
         border: '2px solid white'
       }}>
-        调试: paw-container 宽度应为 1200px<br/>
+        调试: paw-container 最大宽度应为 1800px<br/>
         当前实际宽度: {(() => {
           if (typeof window !== 'undefined') {
             const container = document.querySelector('.paw-container') as HTMLElement
