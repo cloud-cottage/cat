@@ -29,6 +29,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const [windowWidth, setWindowWidth] = useState(0)
   
   // 强制设置容器宽度 - 改为响应式
   useEffect(() => {
@@ -57,6 +59,37 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         flex-shrink: 0 !important;
         flex-grow: 0 !important;
       `)
+    }
+  }, [currentTheme])
+
+  // 实时更新调试信息
+  useEffect(() => {
+    const updateWidths = () => {
+      const container = document.querySelector('.paw-container') as HTMLElement
+      if (container) {
+        setContainerWidth(container.getBoundingClientRect().width)
+      }
+      if (typeof window !== 'undefined') {
+        setWindowWidth(window.innerWidth)
+      }
+    }
+
+    // 初始更新
+    updateWidths()
+
+    // 监听窗口大小变化
+    const handleResize = () => {
+      updateWidths()
+    }
+
+    window.addEventListener('resize', handleResize)
+    
+    // 定时更新（确保实时性）
+    const interval = setInterval(updateWidths, 50)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      clearInterval(interval)
     }
   }, [currentTheme])
   
@@ -554,16 +587,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }}>
         调试: paw-container 最大宽度应为 1800px<br/>
         最小宽度应为 300px<br/>
-        当前实际宽度: {(() => {
-          if (typeof window !== 'undefined') {
-            const container = document.querySelector('.paw-container') as HTMLElement
-            if (container) {
-              return container.getBoundingClientRect().width + 'px'
-            }
-          }
-          return '未知'
-        })()}<br/>
-        窗口宽度: {typeof window !== 'undefined' ? window.innerWidth + 'px' : '未知'}
+        当前实际宽度: {containerWidth}px<br/>
+        窗口宽度: {windowWidth}px
       </div>
       {/* 猫爪按钮 */}
       <button
