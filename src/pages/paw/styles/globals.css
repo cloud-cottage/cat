@@ -11,7 +11,7 @@
 /* 确保 paw-container 宽度正确应用 - 响应式设计 */
 .paw-container {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -23,7 +23,7 @@ div.paw-container,
 div[class*="paw-container"],
 [class*="paw-container"] {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;
   min-width: 300px !important;
 }
 
@@ -39,12 +39,12 @@ div[class*="paw-container"],
 .theme-strawberry .paw-container,
 .theme-cyber-orange .paw-container {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;
   min-width: 300px !important;
 }
 
 /* 大屏幕 - 确保 max-width 始终生效 */
-@media (min-width: 1801px) {
+@media (min-width: 901px) {
   .paw-container,
   div.paw-container,
   div[class*="paw-container"],
@@ -60,7 +60,7 @@ div[class*="paw-container"],
   .theme-strawberry .paw-container,
   .theme-cyber-orange .paw-container {
     width: 100% !important;
-    max-width: 1800px !important;
+    max-width: 900px !important;
     min-width: 300px !important;
   }
 }
@@ -76,7 +76,7 @@ body > [class*="paw-container"],
 #root > div[class*="paw-container"],
 #root > [class*="paw-container"] {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -95,7 +95,7 @@ body > [class*="paw-container"],
 
 /* 防止容器被拉伸 */
 .paw-container {
-  max-width: 1800px !important;
+  max-width: 900px !important;
   width: auto !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -119,12 +119,12 @@ html,
 .cat-btn {
   transform: none !important;
   zoom: 1 !important;
-  width: 100px !important;
-  height: 80px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
+  width: 50px !important;
+  height: 40px !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
 }
 
 /* 响应式规则 */

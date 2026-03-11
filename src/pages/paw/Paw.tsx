@@ -39,7 +39,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       // 设置响应式样式
       container.style.cssText = `
         width: 100% !important;
-        max-width: 1800px !important;
+        max-width: 900px !important;
         min-width: 300px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
@@ -51,7 +51,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       // 强制覆盖所有可能的样式
       container.setAttribute('style', `
         width: 100% !important;
-        max-width: 1800px !important;
+        max-width: 900px !important;
         min-width: 300px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
@@ -69,32 +69,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       if (container) {
         // 使用 offsetWidth 而不是 getBoundingClientRect() 来避免 devicePixelRatio 影响
         const width = container.offsetWidth
-        const boundingWidth = container.getBoundingClientRect().width
         setContainerWidth(width)
         
-        // 获取设备像素比和浏览器缩放
-        const dpr = window.devicePixelRatio || 1
-        const browserZoom = Math.round(window.outerWidth / window.innerWidth * 100)
-        const computedWidth = window.getComputedStyle(container).width
-        
-        console.log(`详细诊断信息:`, {
-          offsetWidth: width,
-          boundingWidth: boundingWidth,
-          computedWidth: computedWidth,
-          设备像素比: dpr,
-          浏览器缩放: browserZoom + '%',
-          窗口宽度: window.innerWidth,
-          外部宽度: window.outerWidth,
-          是否翻倍: width === 3600 || boundingWidth === 3600
-        })
-        
         // 检测翻倍问题并修复 - 使用 offsetWidth 作为主要判断
-        if (width > 1800) {
-          console.log(`检测到翻倍问题: offsetWidth=${width}px，强制修复`)
-          
+        if (width > 900) {
           // 强制设置正确的尺寸
           container.style.setProperty('width', '100%', 'important')
-          container.style.setProperty('max-width', '1800px', 'important')
+          container.style.setProperty('max-width', '900px', 'important')
           container.style.setProperty('min-width', '300px', 'important')
           container.style.setProperty('margin', '0 auto', 'important')
           container.style.setProperty('transform', 'none', 'important')
@@ -103,7 +84,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           // 完全覆盖样式
           container.style.cssText = `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -116,7 +97,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           
           container.setAttribute('style', `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -135,40 +116,25 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           // 更新显示的宽度
           setTimeout(() => {
             const newWidth = container.offsetWidth
-            const newBoundingWidth = container.getBoundingClientRect().width
             setContainerWidth(newWidth)
-            console.log(`修复后容器宽度: offsetWidth=${newWidth}px, boundingWidth=${newBoundingWidth}px`)
           }, 10)
         }
       }
       
       // 修复按钮尺寸问题 - 使用 offsetWidth/offsetHeight
       const buttons = document.querySelectorAll('.cat-btn') as NodeListOf<HTMLElement>
-      buttons.forEach((button, index) => {
+      buttons.forEach((button) => {
         const btnWidth = button.offsetWidth
         const btnHeight = button.offsetHeight
-        const boundingWidth = button.getBoundingClientRect().width
-        const boundingHeight = button.getBoundingClientRect().height
-        const dpr = window.devicePixelRatio || 1
-        
-        console.log(`按钮${index}诊断:`, {
-          offsetWidth: btnWidth,
-          offsetHeight: btnHeight,
-          boundingWidth: boundingWidth,
-          boundingHeight: boundingHeight,
-          设备像素比: dpr
-        })
         
         // 使用 offsetWidth 作为判断标准
-        if (btnWidth > 100 || btnHeight > 80) {
-          console.log(`检测到按钮翻倍问题: ${btnWidth}x${btnHeight}，强制修复`)
-          
-          button.style.setProperty('width', '100px', 'important')
-          button.style.setProperty('height', '80px', 'important')
-          button.style.setProperty('min-width', '100px', 'important')
-          button.style.setProperty('max-width', '100px', 'important')
-          button.style.setProperty('min-height', '80px', 'important')
-          button.style.setProperty('max-height', '80px', 'important')
+        if (btnWidth > 50 || btnHeight > 40) {
+          button.style.setProperty('width', '50px', 'important')
+          button.style.setProperty('height', '40px', 'important')
+          button.style.setProperty('min-width', '50px', 'important')
+          button.style.setProperty('max-width', '50px', 'important')
+          button.style.setProperty('min-height', '40px', 'important')
+          button.style.setProperty('max-height', '40px', 'important')
           button.style.setProperty('transform', 'none', 'important')
           button.style.setProperty('zoom', '1', 'important')
         }
@@ -205,11 +171,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         setContainerWidth(width)
         
         // 强制检查并修复宽度
-        if (width > 1800) {
-          console.log(`容器宽度超限: ${width}px，强制修复`)
+        if (width > 900) {
           container.style.cssText = `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -220,7 +185,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           
           container.setAttribute('style', `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -260,12 +225,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       const container = document.querySelector('.paw-container') as HTMLElement
       if (container) {
         const currentWidth = container.getBoundingClientRect().width
-        // 检查是否在合理范围内 (300px - 1800px)
-        if (currentWidth < 300 || currentWidth > 1800) {
-          console.log(`容器宽度异常: ${currentWidth}px，重置为响应式`)
+        // 检查是否在合理范围内 (300px - 900px)
+        if (currentWidth < 300 || currentWidth > 900) {
           container.style.cssText = `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -277,7 +241,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           // 强制覆盖所有可能的样式
           container.setAttribute('style', `
             width: 100% !important;
-            max-width: 1800px !important;
+            max-width: 900px !important;
             min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
@@ -301,22 +265,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const currentWidth = container.getBoundingClientRect().width
-          const computedStyle = window.getComputedStyle(container)
-          console.log(`检测到样式修改:`, {
-            实际宽度: currentWidth,
-            计算样式宽度: computedStyle.width,
-            计算样式最大宽度: computedStyle.maxWidth,
-            计算样式最小宽度: computedStyle.minWidth,
-            内联样式: container.getAttribute('style'),
-            父容器宽度: container.parentElement?.getBoundingClientRect().width,
-            浏览器缩放: window.devicePixelRatio
-          })
+          
           // 检查是否在合理范围内
-          if (currentWidth < 300 || currentWidth > 1800) {
-            console.log(`容器宽度异常: ${currentWidth}px，立即修复为响应式`)
+          if (currentWidth < 300 || currentWidth > 900) {
             container.style.cssText = `
               width: 100% !important;
-              max-width: 1800px !important;
+              max-width: 900px !important;
               min-width: 300px !important;
               margin: 0 auto !important;
               box-sizing: border-box !important;
@@ -328,7 +282,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             // 强制覆盖所有可能的样式
             container.setAttribute('style', `
               width: 100% !important;
-              max-width: 1800px !important;
+              max-width: 900px !important;
               min-width: 300px !important;
               margin: 0 auto !important;
               box-sizing: border-box !important;
@@ -719,7 +673,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   return (
     <div className={`paw-container ${themeClass}`} style={{ 
       width: '100%',
-      maxWidth: '1800px',
+      maxWidth: '900px',
       minWidth: '300px',
       margin: '0 auto',
       minHeight: '100vh',
@@ -746,7 +700,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         borderRadius: '4px',
         border: '2px solid white'
       }}>
-        调试: paw-container 最大宽度应为 1800px<br/>
+        调试: paw-container 最大宽度应为 900px<br/>
         最小宽度应为 300px<br/>
         当前实际宽度: {containerWidth}px<br/>
         窗口宽度: {windowWidth}px<br/>
