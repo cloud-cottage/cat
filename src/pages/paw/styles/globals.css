@@ -99,6 +99,32 @@ body > [class*="paw-container"],
   width: auto !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  transform: none !important;
+  zoom: 1 !important;
+}
+
+/* 防止缩放问题 - 只针对可能受影响的元素 */
+.paw-container,
+.paw-container *,
+.cat-btn,
+.cat-btn *,
+body,
+html,
+#root {
+  transform: none !important;
+  zoom: 1 !important;
+}
+
+/* 确保按钮尺寸正确 */
+.cat-btn {
+  transform: none !important;
+  zoom: 1 !important;
+  width: 100px !important;
+  height: 80px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
 }
 
 /* 响应式规则 */

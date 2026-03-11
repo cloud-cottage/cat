@@ -70,17 +70,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         const width = container.getBoundingClientRect().width
         setContainerWidth(width)
         
-        // 如果宽度超过 1800px，立即强制修复
+        // 检测翻倍问题并修复
         if (width > 1800) {
-          console.log(`强制修复容器宽度: ${width}px -> 1800px`)
+          console.log(`检测到翻倍问题: ${width}px，强制修复到 1800px`)
           
-          // 方法1: 直接设置样式
+          // 强制设置正确的尺寸
           container.style.setProperty('width', '100%', 'important')
           container.style.setProperty('max-width', '1800px', 'important')
           container.style.setProperty('min-width', '300px', 'important')
           container.style.setProperty('margin', '0 auto', 'important')
+          container.style.setProperty('transform', 'none', 'important')
+          container.style.setProperty('zoom', '1', 'important')
           
-          // 方法2: cssText 覆盖
+          // 完全覆盖样式
           container.style.cssText = `
             width: 100% !important;
             max-width: 1800px !important;
@@ -90,9 +92,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             display: block !important;
             flex-shrink: 0 !important;
             flex-grow: 0 !important;
+            transform: none !important;
+            zoom: 1 !important;
           `
           
-          // 方法3: setAttribute 覆盖
           container.setAttribute('style', `
             width: 100% !important;
             max-width: 1800px !important;
@@ -102,11 +105,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             display: block !important;
             flex-shrink: 0 !important;
             flex-grow: 0 !important;
+            transform: none !important;
+            zoom: 1 !important;
           `)
           
-          // 方法4: 强制重新计算
+          // 强制重排
           container.style.display = 'none'
-          container.offsetHeight // 触发重排
+          container.offsetHeight
           container.style.display = 'block'
           
           // 更新显示的宽度
@@ -117,6 +122,27 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           }, 10)
         }
       }
+      
+      // 修复按钮尺寸问题
+      const buttons = document.querySelectorAll('.cat-btn') as NodeListOf<HTMLElement>
+      buttons.forEach(button => {
+        const btnWidth = button.getBoundingClientRect().width
+        const btnHeight = button.getBoundingClientRect().height
+        
+        if (btnWidth > 100 || btnHeight > 80) {
+          console.log(`检测到按钮翻倍问题: ${btnWidth}x${btnHeight}，强制修复`)
+          
+          button.style.setProperty('width', '100px', 'important')
+          button.style.setProperty('height', '80px', 'important')
+          button.style.setProperty('min-width', '100px', 'important')
+          button.style.setProperty('max-width', '100px', 'important')
+          button.style.setProperty('min-height', '80px', 'important')
+          button.style.setProperty('max-height', '80px', 'important')
+          button.style.setProperty('transform', 'none', 'important')
+          button.style.setProperty('zoom', '1', 'important')
+        }
+      })
+      
       if (typeof window !== 'undefined') {
         setWindowWidth(window.innerWidth)
       }
@@ -130,7 +156,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     window.addEventListener('orientationchange', forceFixWidth)
     
     // 更频繁的定时检查
-    const interval = setInterval(forceFixWidth, 25) // 25ms 检查
+    const interval = setInterval(forceFixWidth, 25)
     
     return () => {
       window.removeEventListener('resize', forceFixWidth)
@@ -692,7 +718,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         调试: paw-container 最大宽度应为 1800px<br/>
         最小宽度应为 300px<br/>
         当前实际宽度: {containerWidth}px<br/>
-        窗口宽度: {windowWidth}px
+        窗口宽度: {windowWidth}px<br/>
+        设备像素比: {typeof window !== 'undefined' ? window.devicePixelRatio : '未知'}<br/>
+        浏览器缩放: {typeof window !== 'undefined' ? Math.round(window.outerWidth / window.innerWidth * 100) + '%' : '未知'}
       </div>
       {/* 猫爪按钮 */}
       <button
