@@ -527,7 +527,15 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         border: '2px solid white'
       }}>
         调试: paw-container 宽度应为 1200px<br/>
-        当前实际宽度: {typeof window !== 'undefined' ? window.innerWidth + 'px' : '未知'}
+        当前实际宽度: {(() => {
+          if (typeof window !== 'undefined') {
+            const container = document.querySelector('.paw-container') as HTMLElement
+            if (container) {
+              return container.getBoundingClientRect().width + 'px'
+            }
+          }
+          return '未知'
+        })()}
       </div>
       {/* 猫爪按钮 */}
       <button
