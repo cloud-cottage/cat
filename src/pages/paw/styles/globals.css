@@ -12,10 +12,14 @@
 .cat-btn {
   width: 100px !important;
   height: 80px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
   border: none !important;
   border-radius: 40px !important;
   cursor: pointer !important;
-  font-size: 1.5rem !important;
+  font-size: 1rem !important;
   font-weight: bold !important;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
   transition: all 0.3s ease !important;
@@ -23,6 +27,15 @@
   align-items: center !important;
   justify-content: center !important;
   outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
 }
 
 .cat-btn:hover {
