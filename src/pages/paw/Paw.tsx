@@ -690,7 +690,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       {/* 调试信息 */}
       <div style={{
         position: 'fixed',
-        top: '10px',
+        top: '-190px',
         right: '10px',
         background: 'red',
         color: 'white',
