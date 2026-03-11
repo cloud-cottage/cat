@@ -18,26 +18,10 @@
   display: block !important;
 }
 
-/* 强制覆盖所有可能的响应式规则 */
-@media (max-width: 1400px) {
-  .paw-container {
-    width: 1200px !important;
-    max-width: 1200px !important;
-    min-width: 1200px !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .paw-container {
-    width: 1200px !important;
-    max-width: 1200px !important;
-    min-width: 1200px !important;
-  }
-}
-
 /* 超级强制覆盖 */
 div.paw-container,
-div[class*="paw-container"] {
+div[class*="paw-container"],
+[class*="paw-container"] {
   width: 1200px !important;
   max-width: 1200px !important;
   min-width: 1200px !important;
@@ -57,6 +41,61 @@ div[class*="paw-container"] {
   width: 1200px !important;
   max-width: 1200px !important;
   min-width: 1200px !important;
+}
+
+/* 强制覆盖所有可能的响应式规则 */
+@media (max-width: 1400px) {
+  .paw-container,
+  div.paw-container,
+  div[class*="paw-container"],
+  [class*="paw-container"],
+  .theme-default .paw-container,
+  .theme-matrix .paw-container,
+  .theme-aurora .paw-container,
+  .theme-diamond .paw-container,
+  .theme-guard .paw-container,
+  .theme-hodl-blue .paw-container,
+  .theme-latte-brown .paw-container,
+  .theme-mystery-purple .paw-container,
+  .theme-strawberry .paw-container,
+  .theme-cyber-orange .paw-container {
+    width: 1200px !important;
+    max-width: 1200px !important;
+    min-width: 1200px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .paw-container,
+  div.paw-container,
+  div[class*="paw-container"],
+  [class*="paw-container"],
+  .theme-default .paw-container,
+  .theme-matrix .paw-container,
+  .theme-aurora .paw-container,
+  .theme-diamond .paw-container,
+  .theme-guard .paw-container,
+  .theme-hodl-blue .paw-container,
+  .theme-latte-brown .paw-container,
+  .theme-mystery-purple .paw-container,
+  .theme-strawberry .paw-container,
+  .theme-cyber-orange .paw-container {
+    width: 1200px !important;
+    max-width: 1200px !important;
+    min-width: 1200px !important;
+  }
+}
+
+/* 最高优先级覆盖 */
+html body div.paw-container,
+html body div[class*="paw-container"],
+html body [class*="paw-container"] {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  min-width: 1200px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  display: block !important;
 }
 
 /* 统一的猫猫按钮样式 */

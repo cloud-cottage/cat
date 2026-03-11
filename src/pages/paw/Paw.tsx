@@ -30,6 +30,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
   
+  // 强制设置容器宽度
+  useEffect(() => {
+    const container = document.querySelector('.paw-container') as HTMLElement
+    if (container) {
+      container.style.setProperty('width', '1200px', 'important')
+      container.style.setProperty('max-width', '1200px', 'important')
+      container.style.setProperty('min-width', '1200px', 'important')
+      container.style.setProperty('margin', '0 auto', 'important')
+      container.style.setProperty('box-sizing', 'border-box', 'important')
+      container.style.setProperty('display', 'block', 'important')
+    }
+  }, [currentTheme])
+  
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
     if (user?.walletAddress) {
