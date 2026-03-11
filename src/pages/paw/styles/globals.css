@@ -11,10 +11,28 @@
 /* 确保 paw-container 宽度正确应用 */
 .paw-container {
   width: 1200px !important;
-  max-width: none !important;
+  max-width: 1200px !important;
   min-width: 1200px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
+  display: block !important;
+}
+
+/* 强制覆盖所有可能的响应式规则 */
+@media (max-width: 1400px) {
+  .paw-container {
+    width: 1200px !important;
+    max-width: 1200px !important;
+    min-width: 1200px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .paw-container {
+    width: 1200px !important;
+    max-width: 1200px !important;
+    min-width: 1200px !important;
+  }
 }
 
 /* 统一的猫猫按钮样式 */

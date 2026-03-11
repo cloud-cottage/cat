@@ -28,6 +28,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showShareModal, setShowShareModal] = useState(false)
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
+  const [showCreatePageModal, setShowCreatePageModal] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -398,17 +399,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   return (
     <div className={`paw-container ${themeClass}`} style={{ 
-      width: '1200px',
-      maxWidth: 'none',
-      minWidth: '1200px',
-      margin: '0 auto',
+      width: '1200px !important',
+      maxWidth: '1200px !important',
+      minWidth: '1200px !important',
+      margin: '0 auto !important',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
       color: isDarkMode ? '#ffffff' : '#000000',
       fontFamily: 'system-ui, sans-serif',
       padding: '2rem',
       position: 'relative',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      display: 'block !important'
     }}>
       {/* 调试信息 */}
       <div style={{
@@ -1639,14 +1641,33 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           bottom: '20px',
           right: '20px',
           zIndex: 1000,
-          cursor: 'pointer'
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          alignItems: 'flex-end'
         }}
-        title={t('viewOnMobile')}
       >
-        <QRCodeComponent 
-          url={typeof window !== 'undefined' ? window.location.href : ''} 
-          size={160} 
-        />
+        {/* 创建页面按钮 */}
+        <button
+          className="cat-btn"
+          onClick={() => setShowCreatePageModal(true)}
+          style={{
+            marginBottom: '10px'
+          }}
+          title={t('createOwnPage')}
+        >
+          {t('createOwnPage')}
+        </button>
+        
+        {/* 二维码 */}
+        <div
+          title={t('viewOnMobile')}
+        >
+          <QRCodeComponent 
+            url={typeof window !== 'undefined' ? window.location.href : ''} 
+            size={160} 
+          />
+        </div>
       </div>
 
       {/* 探索模态框 */}
@@ -1769,6 +1790,206 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 cursor: 'pointer',
                 fontSize: '0.875rem',
                 fontWeight: '600'
+              }}
+            >
+              {t('close')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 创建页面模态框 */}
+      {showCreatePageModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }}>
+            <h2 style={{ 
+              color: '#333',
+              margin: '0 0 1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>
+              {t('createOwnPageTitle')}
+            </h2>
+            
+            <div style={{
+              color: '#666',
+              lineHeight: '1.6',
+              fontSize: '0.95rem',
+              marginBottom: '2rem',
+              textAlign: 'left'
+            }}>
+              {t('createOwnPageContent')}
+            </div>
+
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              marginBottom: '2rem'
+            }}>
+              <a
+                href="https://degens.traders"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  background: '#007bff',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#0056b3';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#007bff';
+                }}
+              >
+                degens.traders
+              </a>
+              
+              <a
+                href="https://nftartists.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  background: '#28a745',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#218838';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#28a745';
+                }}
+              >
+                NFT artists
+              </a>
+              
+              <a
+                href="https://protocol.builders"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  background: '#6f42c1',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#5a3733';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#6f42c1';
+                }}
+              >
+                protocol builders
+              </a>
+              
+              <a
+                href="https://memecoin-launchers.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  background: '#dc3545',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#c82333';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#dc3545';
+                }}
+              >
+                memecoin launchers
+              </a>
+              
+              <a
+                href="https://web3creators.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  background: '#17a2b8',
+                  color: 'white',
+                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textAlign: 'center',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#138496';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#17a2b8';
+                }}
+              >
+                Web3 creators
+              </a>
+            </div>
+
+            <button
+              onClick={() => setShowCreatePageModal(false)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                width: '100%'
               }}
             >
               {t('close')}
