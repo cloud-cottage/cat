@@ -88,6 +88,20 @@ div[class*="paw-container"] {
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
   background: #f5f5f5 !important;
+  transform: none !important;
+}
+
+/* 覆盖主题按钮的悬停效果 */
+.cat-btn:hover,
+.theme-button.cat-btn:hover,
+button.cat-btn:hover {
+  transform: none !important;
+  width: 100px !important;
+  height: 80px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
 }
 
 .cat-btn:hover {

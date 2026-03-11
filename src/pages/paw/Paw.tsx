@@ -399,10 +399,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   return (
     <div className={`paw-container ${themeClass}`} style={{ 
-      width: '1200px !important',
-      maxWidth: '1200px !important',
-      minWidth: '1200px !important',
-      margin: '0 auto !important',
+      width: '1200px',
+      maxWidth: '1200px',
+      minWidth: '1200px',
+      margin: '0 auto',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
       color: isDarkMode ? '#ffffff' : '#000000',
@@ -410,7 +410,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       padding: '2rem',
       position: 'relative',
       boxSizing: 'border-box',
-      display: 'block !important'
+      display: 'block',
+      flexShrink: 0,
+      flexGrow: 0
     }}>
       {/* 调试信息 */}
       <div style={{
