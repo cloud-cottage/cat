@@ -34,13 +34,55 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   useEffect(() => {
     const container = document.querySelector('.paw-container') as HTMLElement
     if (container) {
-      container.style.setProperty('width', '1200px', 'important')
-      container.style.setProperty('max-width', '1200px', 'important')
-      container.style.setProperty('min-width', '1200px', 'important')
-      container.style.setProperty('margin', '0 auto', 'important')
-      container.style.setProperty('box-sizing', 'border-box', 'important')
-      container.style.setProperty('display', 'block', 'important')
+      // 直接设置内联样式
+      container.style.cssText = `
+        width: 1200px !important;
+        max-width: 1200px !important;
+        min-width: 1200px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+      `
+      
+      // 强制覆盖所有可能的样式
+      container.setAttribute('style', `
+        width: 1200px !important;
+        max-width: 1200px !important;
+        min-width: 1200px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+      `)
     }
+  }, [currentTheme])
+  
+  // 持续监控容器宽度
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const container = document.querySelector('.paw-container') as HTMLElement
+      if (container) {
+        const currentWidth = container.getBoundingClientRect().width
+        if (Math.abs(currentWidth - 1200) > 1) {
+          console.log(`容器宽度异常: ${currentWidth}px，强制重置为 1200px`)
+          container.style.cssText = `
+            width: 1200px !important;
+            max-width: 1200px !important;
+            min-width: 1200px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `
+        }
+      }
+    }, 100) // 每 100ms 检查一次
+    
+    return () => clearInterval(interval)
   }, [currentTheme])
   
   // 复制钱包地址功能
