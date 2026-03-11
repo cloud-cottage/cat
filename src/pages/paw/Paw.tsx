@@ -62,12 +62,116 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     }
   }, [currentTheme])
 
+  // 强制修复容器宽度 - 每次渲染都检查
+  useEffect(() => {
+    const forceFixWidth = () => {
+      const container = document.querySelector('.paw-container') as HTMLElement
+      if (container) {
+        const width = container.getBoundingClientRect().width
+        setContainerWidth(width)
+        
+        // 如果宽度超过 1800px，立即强制修复
+        if (width > 1800) {
+          console.log(`强制修复容器宽度: ${width}px -> 1800px`)
+          
+          // 方法1: 直接设置样式
+          container.style.setProperty('width', '100%', 'important')
+          container.style.setProperty('max-width', '1800px', 'important')
+          container.style.setProperty('min-width', '300px', 'important')
+          container.style.setProperty('margin', '0 auto', 'important')
+          
+          // 方法2: cssText 覆盖
+          container.style.cssText = `
+            width: 100% !important;
+            max-width: 1800px !important;
+            min-width: 300px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `
+          
+          // 方法3: setAttribute 覆盖
+          container.setAttribute('style', `
+            width: 100% !important;
+            max-width: 1800px !important;
+            min-width: 300px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `)
+          
+          // 方法4: 强制重新计算
+          container.style.display = 'none'
+          container.offsetHeight // 触发重排
+          container.style.display = 'block'
+          
+          // 更新显示的宽度
+          setTimeout(() => {
+            const newWidth = container.getBoundingClientRect().width
+            setContainerWidth(newWidth)
+            console.log(`修复后容器宽度: ${newWidth}px`)
+          }, 10)
+        }
+      }
+      if (typeof window !== 'undefined') {
+        setWindowWidth(window.innerWidth)
+      }
+    }
+
+    // 立即执行一次
+    forceFixWidth()
+    
+    // 监听各种可能的事件
+    window.addEventListener('resize', forceFixWidth)
+    window.addEventListener('orientationchange', forceFixWidth)
+    
+    // 更频繁的定时检查
+    const interval = setInterval(forceFixWidth, 25) // 25ms 检查
+    
+    return () => {
+      window.removeEventListener('resize', forceFixWidth)
+      window.removeEventListener('orientationchange', forceFixWidth)
+      clearInterval(interval)
+    }
+  }, [currentTheme])
+
   // 实时更新调试信息
   useEffect(() => {
     const updateWidths = () => {
       const container = document.querySelector('.paw-container') as HTMLElement
       if (container) {
-        setContainerWidth(container.getBoundingClientRect().width)
+        const width = container.getBoundingClientRect().width
+        setContainerWidth(width)
+        
+        // 强制检查并修复宽度
+        if (width > 1800) {
+          console.log(`容器宽度超限: ${width}px，强制修复`)
+          container.style.cssText = `
+            width: 100% !important;
+            max-width: 1800px !important;
+            min-width: 300px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `
+          
+          container.setAttribute('style', `
+            width: 100% !important;
+            max-width: 1800px !important;
+            min-width: 300px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
+          `)
+        }
       }
       if (typeof window !== 'undefined') {
         setWindowWidth(window.innerWidth)
