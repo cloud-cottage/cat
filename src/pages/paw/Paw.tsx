@@ -4,6 +4,7 @@ import { useUserProfile } from './hooks/useUserProfile'
 import { api, getUserAvatarUrl } from './lib/api'
 import { ThemeModal } from './components/ThemeModal'
 import { Icon } from './components/Icon'
+import { useLanguage } from '../../i18n/useLanguage'
 
 interface Web3ProfileProps {
   username?: string
@@ -11,6 +12,7 @@ interface Web3ProfileProps {
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
   const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
+  const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
@@ -23,6 +25,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [isEditingMode, setIsEditingMode] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
+  const [showExploreModal, setShowExploreModal] = useState(false)
+  const [showQRCode, setShowQRCode] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -407,7 +411,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       <button
         className="cat-paw-btn cat-btn"
         onClick={() => setShowCatPawModal(true)}
-        title="点击查看更多"
+        title={t('clickToViewMore')}
       >
         <Icon name="paw" size={40} />
       </button>
@@ -490,14 +494,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             <button
               className="cat-btn"
               onClick={() => setIsEditingMode(!isEditingMode)}
-              title="编辑模式"
+              title={t('editMode')}
             >
               <Icon name="edit" size={24} />
             </button>
             <button
               className="cat-btn"
               onClick={() => setShowShareModal(true)}
-              title="分享个人页面"
+              title={t('share')}
             >
               <Icon name="share" size={24} />
             </button>
@@ -1455,24 +1459,31 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               className="theme-link"
               style={{ color: 'var(--theme-primary)', textDecoration: 'none' }}
             >
-              隐私政策
+              {t('privacy')}
             </a>
             <a
-              href="/terms"
-              className="theme-link"
-              style={{ color: 'var(--theme-primary)', textDecoration: 'none' }}
-            >
-              使用条款
-            </a>
-            <a
-              href="https://github.com/cloud-cottage/cat"
+              href="https://t.me/xCatKing"
               target="_blank"
               rel="noopener noreferrer"
               className="theme-link"
               style={{ color: 'var(--theme-primary)', textDecoration: 'none' }}
             >
-              GitHub
+              {t('report')}
             </a>
+            <button
+              onClick={() => setShowExploreModal(true)}
+              className="theme-link"
+              style={{ 
+                color: 'var(--theme-primary)', 
+                textDecoration: 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 'inherit'
+              }}
+            >
+              {t('explore')}
+            </button>
           </div>
           <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.7rem', opacity: 0.6 }}>
             Powered by CAT - Your Web3 Paws
@@ -1519,7 +1530,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               fontSize: '1.5rem',
               fontWeight: '600'
             }}>
-              📤 分享个人页面
+              {t('shareTitle')}
             </h2>
             
             <p style={{ 
@@ -1528,7 +1539,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               fontSize: '1rem',
               lineHeight: '1.5'
             }}>
-              复制下方链接，分享给朋友吧！
+              {t('shareDescription')}
             </p>
 
             <div style={{
@@ -1572,7 +1583,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   fontWeight: '600'
                 }}
               >
-                📋 复制链接
+                {t('copyLink')}
               </button>
               
               <button
@@ -1588,9 +1599,155 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   fontWeight: '600'
                 }}
               >
-                关闭
+                {t('close')}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 二维码显示按钮 - 右下角 */}
+      <button
+        className="cat-btn"
+        onClick={() => setShowQRCode(!showQRCode)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 1000
+        }}
+        title={t('viewOnMobile')}
+      >
+        <Icon name="share" size={24} />
+      </button>
+
+      {/* 二维码模态框 */}
+      {showQRCode && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center'
+          }}>
+            <h2 style={{ 
+              color: '#333',
+              margin: '0 0 1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>
+              {t('viewOnMobile')}
+            </h2>
+            
+            <div style={{
+              width: '200px',
+              height: '200px',
+              backgroundColor: '#f5f5f5',
+              margin: '0 auto 1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.875rem',
+              color: '#666'
+            }}>
+              QR Code Placeholder
+            </div>
+
+            <button
+              onClick={() => setShowQRCode(false)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}
+            >
+              {t('close')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 探索模态框 */}
+      {showExploreModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            maxWidth: '400px',
+            width: '90%',
+            textAlign: 'center'
+          }}>
+            <h2 style={{ 
+              color: '#333',
+              margin: '0 0 1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>
+              {t('exploreTitle')}
+            </h2>
+            
+            <div style={{
+              width: '100%',
+              height: '200px',
+              backgroundColor: '#f5f5f5',
+              margin: '0 0 2rem 0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.875rem',
+              color: '#666',
+              borderRadius: '8px'
+            }}>
+              Content placeholder
+            </div>
+
+            <button
+              onClick={() => setShowExploreModal(false)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '600'
+              }}
+            >
+              {t('close')}
+            </button>
           </div>
         </div>
       )}
