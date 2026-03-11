@@ -35,6 +35,30 @@
   }
 }
 
+/* 超级强制覆盖 */
+div.paw-container,
+div[class*="paw-container"] {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  min-width: 1200px !important;
+}
+
+/* 主题相关覆盖 */
+.theme-default .paw-container,
+.theme-matrix .paw-container,
+.theme-aurora .paw-container,
+.theme-diamond .paw-container,
+.theme-guard .paw-container,
+.theme-hodl-blue .paw-container,
+.theme-latte-brown .paw-container,
+.theme-mystery-purple .paw-container,
+.theme-strawberry .paw-container,
+.theme-cyber-orange .paw-container {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  min-width: 1200px !important;
+}
+
 /* 统一的猫猫按钮样式 */
 .cat-btn {
   width: 100px !important;
@@ -46,7 +70,7 @@
   border: none !important;
   border-radius: 40px !important;
   cursor: pointer !important;
-  font-size: 1rem !important;
+  font-size: 0.8rem !important;
   font-weight: bold !important;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
   transition: all 0.3s ease !important;
