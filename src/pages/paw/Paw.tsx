@@ -38,7 +38,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       container.style.cssText = `
         width: 100% !important;
         max-width: 1800px !important;
-        min-width: 1200px !important;
+        min-width: 300px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
         display: block !important;
@@ -54,13 +54,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       const container = document.querySelector('.paw-container') as HTMLElement
       if (container) {
         const currentWidth = container.getBoundingClientRect().width
-        // 检查是否在合理范围内 (1200px - 1800px)
-        if (currentWidth < 1200 || currentWidth > 1800) {
+        // 检查是否在合理范围内 (300px - 1800px)
+        if (currentWidth < 300 || currentWidth > 1800) {
           console.log(`容器宽度异常: ${currentWidth}px，重置为响应式`)
           container.style.cssText = `
             width: 100% !important;
             max-width: 1800px !important;
-            min-width: 1200px !important;
+            min-width: 300px !important;
             margin: 0 auto !important;
             box-sizing: border-box !important;
             display: block !important;
@@ -94,12 +94,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             浏览器缩放: window.devicePixelRatio
           })
           // 检查是否在合理范围内
-          if (currentWidth < 1200 || currentWidth > 1800) {
+          if (currentWidth < 300 || currentWidth > 1800) {
             console.log(`容器宽度异常: ${currentWidth}px，立即修复为响应式`)
             container.style.cssText = `
               width: 100% !important;
               max-width: 1800px !important;
-              min-width: 1200px !important;
+              min-width: 300px !important;
               margin: 0 auto !important;
               box-sizing: border-box !important;
               display: block !important;
@@ -490,7 +490,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <div className={`paw-container ${themeClass}`} style={{ 
       width: '100%',
       maxWidth: '1800px',
-      minWidth: '1200px',
+      minWidth: '300px',
       margin: '0 auto',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
@@ -517,7 +517,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         border: '2px solid white'
       }}>
         调试: paw-container 最大宽度应为 1800px<br/>
-        最小宽度应为 1200px<br/>
+        最小宽度应为 300px<br/>
         当前实际宽度: {(() => {
           if (typeof window !== 'undefined') {
             const container = document.querySelector('.paw-container') as HTMLElement
