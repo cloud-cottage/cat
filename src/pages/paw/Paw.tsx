@@ -630,7 +630,23 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           flexDirection: 'column'
         }}>
           <div className={`grid-container ${themeClass}`} style={{
-            minHeight: '900px'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateRows: 'repeat(9, 280px)',
+            gap: '1rem',
+            minHeight: '900px',
+            // Default主题布局 - 用户自定义
+            gridTemplateAreas: `
+              "1 1 2 2 3 3"
+              "1 1 2 2 3 3"
+              "4 4 5 5 5 5"
+              "4 4 5 5 5 5"
+              "4 4 5 5 5 5"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+            `
           }}>
           {/* 调试信息 */}
           <div style={{ 
@@ -652,17 +668,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               // 将现有板块映射到 default 主题的网格区域
               switch (type) {
                 case 'profile':
-                  return { className: 'module-1' };  // 用户资料 -> 区域1
+                  return { gridArea: '1' };  // 用户资料 -> 区域1
                 case 'social':
-                  return { className: 'module-2' };  // 社交媒体 -> 区域2
+                  return { gridArea: '2' };  // 社交媒体 -> 区域2
                 case 'twitter':
-                  return { className: 'module-3' };  // 推特动态 -> 区域3
+                  return { gridArea: '3' };  // 推特动态 -> 区域3
                 case 'mostfind':
-                  return { className: 'module-4' };  // 我活跃在 -> 区域4
+                  return { gridArea: '4' };  // 我活跃在 -> 区域4
                 case 'links':
-                  return { className: 'module-5' };  // 注册链接 -> 区域5
+                  return { gridArea: '5' };  // 注册链接 -> 区域5
                 default:
-                  return { className: 'module-6' };  // 其他 -> 区域6
+                  return { gridArea: '6' };  // 其他 -> 区域6
               }
             };
 
@@ -671,8 +687,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             return (
               <div
                 key={`simple-${module.id}-${index}`}
-                className={`module ${position.className}`}
+                className="module"
                 style={{
+                  ...position,
                   background: 'rgba(255,255,255,0.1)',
                   padding: '1rem',
                   borderRadius: '8px',
@@ -690,7 +707,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   borderRadius: '2px',
                   zIndex: 1000
                 }}>
-                  {module.id} → {position.className}
+                  {module.id} → {position.gridArea}
                 </div>
                 <h3>{module.name}</h3>
                 
