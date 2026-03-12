@@ -623,22 +623,40 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <div className="grid-container">
+          <div className="grid-container" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateRows: 'repeat(9, 280px)',
+            gap: '1rem',
+            minHeight: '900px',
+            // Default主题布局 - 用户自定义
+            gridTemplateAreas: `
+              "1 1 2 2 3 3"
+              "1 1 2 2 3 3"
+              "4 4 5 5 5 5"
+              "4 4 5 5 5 5"
+              "4 4 5 5 5 5"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+              "6 6 6 6 6 6"
+            `
+          }}>
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
               // 按照 default 主题的 grid-template-areas 布局
               switch (type) {
                 case 'profile':
-                  return { className: 'module-1' };
+                  return { gridArea: '1' };
                 case 'social':
-                  return { className: 'module-2' };
+                  return { gridArea: '2' };
                 case 'links':
-                  return { className: 'module-3' };
+                  return { gridArea: '3' };
                 case 'mostfind':
-                  return { className: 'module-4' };
+                  return { gridArea: '4' };
                 default:
-                  return { className: 'module-5' };
+                  return { gridArea: '5' };
               }
             };
 
@@ -647,8 +665,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             return (
               <div
                 key={`simple-${module.id}-${index}`}
-                className={`module ${position.className}`}
+                className="module"
                 style={{
+                  ...position,
                   background: 'rgba(255,255,255,0.1)',
                   padding: '1rem',
                   borderRadius: '8px'
