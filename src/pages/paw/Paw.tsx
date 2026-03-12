@@ -619,42 +619,80 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         flex: 1,
         padding: '0 2rem'
       }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
           <div className="grid-container" style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',  // 响应式网格
-            gridAutoRows: 'minmax(250px, auto)',                  // 自适应行高
-            gap: '1.5rem',                                        // 增加间距
-            padding: '1rem 0',                                   // 添加内边距
-            minHeight: '600px'                                     // 减少最小高度
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateRows: 'repeat(9, 280px)',
+            gap: '1rem',
+            minHeight: '900px'
           }}>
           {modules.map((module, index) => {
-            // 使用自动网格布局，不需要手动定位
-            const getModuleStyle = () => {
-              // 所有模块使用统一的卡片样式
-              return {
-                background: 'var(--theme-card)',
-                borderRadius: '16px',
-                padding: '1.5rem',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-                border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                transition: 'all 0.3s ease',
-                display: 'flex' as const,
-                flexDirection: 'column' as const,
-                height: '100%',
-                overflow: 'hidden'
-              };
+            // 根据模块类型和屏幕尺寸设置网格位置
+            const getPosition = (type: string) => {
+              const isMobile = window.innerWidth < 768;
+              const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+              
+              if (isMobile) {
+                // 移动端：单列布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
+                  case 'social':
+                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
+                  case 'links':
+                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
+                  case 'mostfind':
+                    return { gridColumn: '1 / 2', gridRow: '4 / 5' };
+                  default:
+                    return { gridColumn: '1 / 2', gridRow: '5 / 6' };
+                }
+              } else if (isTablet) {
+                // 平板：双列布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
+                  case 'social':
+                    return { gridColumn: '2 / 3', gridRow: '1 / 2' };
+                  case 'links':
+                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
+                  case 'mostfind':
+                    return { gridColumn: '2 / 3', gridRow: '2 / 3' };
+                  default:
+                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
+                }
+              } else {
+                // 桌面：原始布局
+                switch (type) {
+                  case 'profile':
+                    return { gridColumn: '1 / 4', gridRow: '1 / 3' };
+                  case 'social':
+                    return { gridColumn: '4 / 7', gridRow: '1 / 3' };
+                  case 'links':
+                    return { gridColumn: '1 / 4', gridRow: '3 / 5' };
+                  case 'mostfind':
+                    return { gridColumn: '4 / 7', gridRow: '3 / 5' };
+                  default:
+                    return { gridColumn: '1 / 3', gridRow: '5 / 7' };
+                }
+              }
             };
+
+            const position = getPosition(module.type);
 
             return (
               <div
                 key={`simple-${module.id}-${index}`}
-                style={getModuleStyle()}>
-                <h3 style={{ 
-                  margin: '0 0 1rem 0', 
-                  color: 'var(--theme-primary)',
-                  fontSize: '1.1rem',
-                  fontWeight: '600'
-                }}>{module.name}</h3>
+                style={{
+                  ...position,
+                  background: 'rgba(255,255,255,0.1)',
+                  padding: '1rem',
+                  borderRadius: '8px'
+                }}>
+                <h3>{module.name}</h3>
                 
                 {module.type === 'profile' && (
                   <div style={{ textAlign: 'center' }}>
@@ -1438,6 +1476,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 
