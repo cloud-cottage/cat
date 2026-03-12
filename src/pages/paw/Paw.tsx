@@ -623,7 +623,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       {/* 主体内容 */}
       <div id="paw-body" style={{
         flex: 1,
-        padding: '0 2rem'
+        padding: '0 2rem',
+        width: '100%',  // 确保占满容器宽度
+        boxSizing: 'border-box'  // 包含padding在宽度内
       }}>
         <div style={{
           display: 'flex',
@@ -635,6 +637,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             gridTemplateRows: 'repeat(9, 280px)',
             gap: '1rem',
             minHeight: '900px',
+            width: '100%',  // 确保网格容器占满可用宽度
+            boxSizing: 'border-box',  // 包含padding在宽度内
             // Default主题布局 - 用户自定义
             gridTemplateAreas: `
               "1 1 2 2 3 3"
@@ -711,7 +715,21 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             borderRadius: '3px',
             zIndex: 1000
           }}>
-            网格: 6x9 | 间隙: 1rem | 行高: 280px
+            网格: 6x9 | 间隙: 1rem | 行高: 280px | 容器宽度: 100%
+          </div>
+          {/* 宽度计算调试 */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '-70px', 
+            left: '0', 
+            fontSize: '10px', 
+            color: 'purple',
+            background: 'lightblue',
+            padding: '2px 5px',
+            borderRadius: '3px',
+            zIndex: 1000
+          }}>
+            paw-container: max-800px | paw-body: padding-2rem | grid: 1/6可用宽度
           </div>
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
