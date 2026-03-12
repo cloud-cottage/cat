@@ -400,8 +400,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   return (
     <div id="paw-body" className={`${themeClass}`} style={{
       width: '100%',
-      maxWidth: '1800px',     // DPR=2 时显示为 3600px
-      minWidth: '600px',      // DPR=2 时显示为 1200px
+      maxWidth: '800px',      // DPR=2 时显示为 1600px
+      minWidth: '400px',      // DPR=2 时显示为 800px
       margin: '0 auto',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
