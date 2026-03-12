@@ -427,7 +427,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }}>
         {/* 左侧：猫爪按钮 */}
         <button
-          className="cat-paw-btn cat-btn"
+          className="cat-paw-btn cat-btn-fixed"
           onClick={() => setShowCatPawModal(true)}
           title={t('clickToViewMore')}
         >
@@ -443,7 +443,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           }}>
             {/* 主题切换按钮 */}
             <button
-              className="cat-btn"
+              className="cat-btn-fixed"
               onClick={() => setIsDarkMode(!isDarkMode)}
               style={{
                 background: isDarkMode ? '#2c3e50' : '#f39c12',
@@ -493,7 +493,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             
             {/* 编辑按钮 */}
             <button
-              className="cat-btn"
+              className="cat-btn-fixed"
               onClick={() => setIsEditingMode(!isEditingMode)}
               title={t('editMode')}
             >
@@ -502,7 +502,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             
             {/* 分享按钮 */}
             <button
-              className="cat-btn"
+              className="cat-btn-fixed"
               onClick={() => setShowShareModal(true)}
               title={t('share')}
             >
@@ -1650,7 +1650,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       >
         {/* 创建页面按钮 */}
         <button
-          className="cat-btn"
+          className="cat-btn-fixed"
           onClick={() => setShowCreatePageModal(true)}
           style={{
             marginBottom: '10px'
