@@ -130,16 +130,16 @@ html,
   zoom: 1 !important;
 }
 
-/* 确保按钮尺寸正确 */
+/* 确保按钮尺寸正确 - 使用 em 单位避免像素翻倍 */
 .cat-btn {
   transform: none !important;
   zoom: 1 !important;
-  width: 50px !important;
-  height: 40px !important;
-  min-width: 50px !important;
-  max-width: 50px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
+  width: 6.25em !important;  /* 100px ÷ 16px = 6.25em */
+  height: 5em !important;      /* 80px ÷ 16px = 5em */
+  min-width: 6.25em !important;
+  max-width: 6.25em !important;
+  min-height: 5em !important;
+  max-height: 5em !important;
 }
 
 /* 响应式规则 */
@@ -308,14 +308,14 @@ body > [class*="paw-container"],
 
 /* 统一的猫猫按钮样式 */
 .cat-btn {
-  width: 100px !important;
-  height: 80px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
+  width: 6.25em !important;  /* 100px ÷ 16px = 6.25em */
+  height: 5em !important;      /* 80px ÷ 16px = 5em */
+  min-width: 6.25em !important;
+  max-width: 6.25em !important;
+  min-height: 5em !important;
+  max-height: 5em !important;
   border: none !important;
-  border-radius: 40px !important;
+  border-radius: 2.5em !important;  /* 40px ÷ 16px = 2.5em */
   cursor: pointer !important;
   font-size: 0.8rem !important;
   font-weight: bold !important;
@@ -342,18 +342,18 @@ body > [class*="paw-container"],
 .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
-  transform: none !important;
-  width: 100px !important;
-  height: 80px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
+  transform: translateY(-0.125em) !important;  /* -2px ÷ 16px = -0.125em */
+  width: 6.25em !important;  /* 100px ÷ 16px = 6.25em */
+  height: 5em !important;      /* 80px ÷ 16px = 5em */
+  min-width: 6.25em !important;
+  max-width: 6.25em !important;
+  min-height: 5em !important;
+  max-height: 5em !important;
 }
 
 .cat-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;
+  transform: translateY(-0.125em) !important;  /* -2px ÷ 16px = -0.125em */
+  box-shadow: 0 0.375em 1.25em rgba(0,0,0,0.25) !important;  /* 6px 20px ÷ 16px */
 }
 
 /* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
@@ -365,8 +365,8 @@ button.cat-btn:hover {
 
 .cat-paw-btn.cat-btn:hover {
   background: #e8e8e8 !important;
-  transform: translateY(-4px) !important;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.25) !important;
+  transform: translateY(-0.25em) !important;  /* -4px ÷ 16px = -0.25em */
+  box-shadow: 0 0.9375em 2.1875em rgba(0,0,0,0.25) !important;  /* 15px 35px ÷ 16px */
 }
 
 /* 钻石手 - 简洁白色主题 */
