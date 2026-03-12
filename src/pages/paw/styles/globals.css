@@ -8,11 +8,11 @@
   --shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
-/* 确保 paw-container 宽度正确应用 - 容器样式 */
-#paw-container {
+/* 确保 paw-body 宽度正确应用 - 容器样式 */
+#paw-body {
   width: 100% !important;
-  max-width: 900px !important;
-  min-width: 300px !important;
+  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  min-width: 300px !important;  /* DPR=2 时显示为 600px */
   margin: 0 auto !important;
   box-sizing: border-box !important;
   display: block !important;
@@ -21,46 +21,59 @@
 }
 
 /* 超级强制覆盖 - 使用更高特异性 */
-div#paw-container,
-div[id*="paw-container"],
-[id*="paw-container"] {
+div#paw-body,
+div[id*="paw-body"],
+[id*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;
-  min-width: 300px !important;
+  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
 /* 主题相关容器样式 */
-.theme-default #paw-container,
-.theme-matrix #paw-container,
-.theme-aurora #paw-container,
-.theme-diamond #paw-container,
-.theme-guard #paw-container,
-.theme-hodl-blue #paw-container,
-.theme-latte-brown #paw-container,
-.theme-mystery-purple #paw-container,
-.theme-strawberry #paw-container,
-.theme-cyber-orange #paw-container {
+.theme-default #paw-body,
+.theme-matrix #paw-body,
+.theme-aurora #paw-body,
+.theme-diamond #paw-body,
+.theme-guard #paw-body,
+.theme-hodl-blue #paw-body,
+.theme-latte-brown #paw-body,
+.theme-mystery-purple #paw-body,
+.theme-strawberry #paw-body,
+.theme-cyber-orange #paw-body {
   width: 100% !important;
-  max-width: 900px !important;
-  min-width: 300px !important;
+  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
 /* 大屏幕 - 确保 max-width 始终生效 */
 @media (min-width: 901px) {
-  #paw-container,
-  div#paw-container,
-  div[id*="paw-container"],
-  [id*="paw-container"],
-  .theme-default #paw-container,
-  .theme-matrix #paw-container,
-  .theme-aurora #paw-container,
-  .theme-diamond #paw-container,
-  .theme-guard #paw-container,
-  .theme-hodl-blue #paw-container,
-  .theme-latte-brown #paw-container,
-  .theme-mystery-purple #paw-container,
-  .theme-strawberry #paw-container,
-  .theme-cyber-orange #paw-container {
+  #paw-body,
+  div#paw-body,
+  div[id*="paw-body"],
+  [id*="paw-body"],
+  .theme-default #paw-body,
+  .theme-matrix #paw-body,
+  .theme-aurora #paw-body,
+  .theme-diamond #paw-body,
+  .theme-guard #paw-body,
+  .theme-hodl-blue #paw-body,
+  .theme-latte-brown #paw-body,
+  .theme-mystery-purple #paw-body,
+  .theme-strawberry #paw-body,
+  .theme-cyber-orange #paw-body {
+  div#paw-body,
+  div[id*="paw-body"],
+  [id*="paw-body"],
+  .theme-default #paw-body,
+  .theme-matrix #paw-body,
+  .theme-aurora #paw-body,
+  .theme-diamond #paw-body,
+  .theme-guard #paw-body,
+  .theme-hodl-blue #paw-body,
+  .theme-latte-brown #paw-body,
+  .theme-mystery-purple #paw-body,
+  .theme-strawberry #paw-body,
+  .theme-cyber-orange #paw-body {
     width: 100% !important;
     max-width: 900px !important;
     min-width: 300px !important;
@@ -68,9 +81,9 @@ div[id*="paw-container"],
 }
 
 /* 终极强制覆盖 - 使用最高特异性 */
-html body div#paw-container,
-html body div[id*="paw-container"],
-html body [id*="paw-container"] {
+html body div#paw-body,
+html body div[id*="paw-body"],
+html body [id*="paw-body"] {
   width: 100% !important;
   max-width: 900px !important;
   min-width: 300px !important;
@@ -82,12 +95,12 @@ html body [id*="paw-container"] {
 }
 
 /* 终极覆盖 - 使用更高的特异性 */
-body > div#paw-container,
-body > div[id*="paw-container"],
-body > [id*="paw-container"],
-#root > div#paw-container,
-#root > div[id*="paw-container"],
-#root > [id*="paw-container"] {
+body > div#paw-body,
+body > div[id*="paw-body"],
+body > [id*="paw-body"],
+#root > div#paw-body,
+#root > div[id*="paw-body"],
+#root > [id*="paw-body"] {
   width: 100% !important;
   max-width: 900px !important;
   min-width: 300px !important;
@@ -99,15 +112,15 @@ body > [id*="paw-container"],
 }
 
 /* 覆盖任何可能的父容器影响 */
-#paw-container,
-#paw-container *,
-#paw-container::before,
-#paw-container::after {
+#paw-body,
+#paw-body *,
+#paw-body::before,
+#paw-body::after {
   box-sizing: border-box !important;
 }
 
 /* 防止容器被拉伸 */
-#paw-container {
+#paw-body {
   max-width: 900px !important;
   width: auto !important;
   margin-left: auto !important;
@@ -117,8 +130,8 @@ body > [id*="paw-container"],
 }
 
 /* 防止缩放问题 - 只针对可能受影响的元素 */
-#paw-container,
-#paw-container *,
+#paw-body,
+#paw-body *,
 #paw-header,
 #paw-header *,
 #paw-footer,
@@ -153,10 +166,10 @@ html,
 }
 
 /* 终极强制覆盖 - 使用最高特异性 */
-html body div#paw-container .cat-btn,
+html body div#paw-body .cat-btn,
 html body #paw-header .cat-btn,
 html body #paw-footer .cat-btn,
-#root #paw-container .cat-btn,
+#root #paw-body .cat-btn,
 #root #paw-header .cat-btn,
 #root #paw-footer .cat-btn {
   width: 100px !important;
@@ -222,20 +235,20 @@ button.cat-btn-fixed.theme-button {
 
 /* 响应式规则 */
 @media (max-width: 1800px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 1800px !important;
     min-width: 300px !important;
@@ -243,20 +256,20 @@ button.cat-btn-fixed.theme-button {
 }
 
 @media (max-width: 1400px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 1400px !important;
     min-width: 300px !important;
@@ -264,20 +277,20 @@ button.cat-btn-fixed.theme-button {
 }
 
 @media (max-width: 1200px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 1200px !important;
     min-width: 300px !important;
@@ -285,20 +298,20 @@ button.cat-btn-fixed.theme-button {
 }
 
 @media (max-width: 900px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 900px !important;
     min-width: 300px !important;
@@ -306,20 +319,20 @@ button.cat-btn-fixed.theme-button {
 }
 
 @media (max-width: 600px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 600px !important;
     min-width: 300px !important;
@@ -327,20 +340,20 @@ button.cat-btn-fixed.theme-button {
 }
 
 @media (max-width: 400px) {
-  .paw-container,
-  div.paw-container,
-  div[class*="paw-container"],
-  [class*="paw-container"],
-  .theme-default .paw-container,
-  .theme-matrix .paw-container,
-  .theme-aurora .paw-container,
-  .theme-diamond .paw-container,
-  .theme-guard .paw-container,
-  .theme-hodl-blue .paw-container,
-  .theme-latte-brown .paw-container,
-  .theme-mystery-purple .paw-container,
-  .theme-strawberry .paw-container,
-  .theme-cyber-orange .paw-container {
+  .paw-body,
+  div.paw-body,
+  div[class*="paw-body"],
+  [class*="paw-body"],
+  .theme-default .paw-body,
+  .theme-matrix .paw-body,
+  .theme-aurora .paw-body,
+  .theme-diamond .paw-body,
+  .theme-guard .paw-body,
+  .theme-hodl-blue .paw-body,
+  .theme-latte-brown .paw-body,
+  .theme-mystery-purple .paw-body,
+  .theme-strawberry .paw-body,
+  .theme-cyber-orange .paw-body {
     width: 100% !important;
     max-width: 400px !important;
     min-width: 300px !important;
@@ -348,9 +361,9 @@ button.cat-btn-fixed.theme-button {
 }
 
 /* 最高优先级覆盖 */
-html body div.paw-container,
-html body div[class*="paw-container"],
-html body [class*="paw-container"] {
+html body div.paw-body,
+html body div[class*="paw-body"],
+html body [class*="paw-body"] {
   width: 100% !important;
   max-width: 1800px !important;
   min-width: 300px !important;
@@ -360,12 +373,12 @@ html body [class*="paw-container"] {
 }
 
 /* 终极覆盖 - 使用更高的特异性 */
-body > div.paw-container,
-body > div[class*="paw-container"],
-body > [class*="paw-container"],
-#root > div.paw-container,
-#root > div[class*="paw-container"],
-#root > [class*="paw-container"] {
+body > div.paw-body,
+body > div[class*="paw-body"],
+body > [class*="paw-body"],
+#root > div.paw-body,
+#root > div[class*="paw-body"],
+#root > [class*="paw-body"] {
   width: 100% !important;
   max-width: 1800px !important;
   min-width: 300px !important;
@@ -377,23 +390,23 @@ body > [class*="paw-container"],
 }
 
 /* 覆盖任何可能的父容器影响 */
-.paw-container,
-.paw-container *,
-.paw-container::before,
-.paw-container::after {
+.paw-body,
+.paw-body *,
+.paw-body::before,
+.paw-body::after {
   box-sizing: border-box !important;
 }
 
-/* 统一的猫猫按钮样式 - 针对 DPR=2 调整 */
+/* 统一的猫猫按钮样式 - 视觉 50x40px (DPR=2 时 CSS 25x20px) */
 .cat-btn {
-  width: 50px !important;      /* DPR=2 时显示为 100px */
-  height: 40px !important;     /* DPR=2 时显示为 80px */
-  min-width: 50px !important;
-  max-width: 50px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
+  width: 25px !important;      /* DPR=2 时显示为 50px */
+  height: 20px !important;     /* DPR=2 时显示为 40px */
+  min-width: 25px !important;
+  max-width: 25px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
   border: none !important;
-  border-radius: 20px !important;  /* 40px ÷ 2 = 20px */
+  border-radius: 10px !important;  /* 20px ÷ 2 = 10px */
   cursor: pointer !important;
   font-size: 0.8rem !important;
   font-weight: bold !important;
@@ -420,18 +433,18 @@ body > [class*="paw-container"],
 .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  width: 50px !important;      /* DPR=2 时显示为 100px */
-  height: 40px !important;     /* DPR=2 时显示为 80px */
-  min-width: 50px !important;
-  max-width: 50px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
+  transform: translateY(-0.5px) !important;  /* -1px ÷ 2 = -0.5px */
+  width: 25px !important;      /* DPR=2 时显示为 50px */
+  height: 20px !important;     /* DPR=2 时显示为 40px */
+  min-width: 25px !important;
+  max-width: 25px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
 }
 
 .cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25) !important;  /* 6px 20px ÷ 2 = 3px 10px */
+  transform: translateY(-0.5px) !important;  /* -1px ÷ 2 = -0.5px */
+  box-shadow: 0 1.5px 5px rgba(0,0,0,0.25) !important;  /* 3px 10px ÷ 2 = 1.5px 5px */
 }
 
 /* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
@@ -443,8 +456,8 @@ button.cat-btn:hover {
 
 .cat-paw-btn.cat-btn:hover {
   background: #e8e8e8 !important;
-  transform: translateY(-2px) !important;  /* -4px 保持不变 */
-  box-shadow: 0 7px 17px rgba(0,0,0,0.25) !important;  /* 15px 35px ÷ 2 ≈ 7px 17px */
+  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
+  box-shadow: 0 3.5px 8.5px rgba(0,0,0,0.25) !important;  /* 7px 17px ÷ 2 = 3.5px 8.5px */
 }
 
 /* 钻石手 - 简洁白色主题 */

@@ -62,7 +62,7 @@ export const TwitterModule: React.FC<TwitterModuleProps> = ({ twitterHandle }) =
             target="_blank"
             rel="noopener noreferrer"
           >
-            @{twitterHandle} 的推文
+            @{twitterHandle} 推文
           </a>
         </blockquote>
       </div>

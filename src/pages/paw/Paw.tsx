@@ -309,7 +309,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   if (loading) {
     return (
-      <div id="paw-container" style={{ 
+      <div id="paw-body" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -334,7 +334,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
   if (!user) {
     return (
-      <div id="paw-container" style={{ 
+      <div id="paw-body" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -398,10 +398,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   ];
   
   return (
-    <div id="paw-container" className={`${themeClass}`} style={{
+    <div id="paw-body" className={`${themeClass}`} style={{
       width: '100%',
-      maxWidth: '900px',
-      minWidth: '300px',
+      maxWidth: '900px',      // DPR=2 时显示为 1800px
+      minWidth: '300px',       // DPR=2 时显示为 600px
       margin: '0 auto',
       minHeight: '100vh',
       background: getCurrentThemeColors().bg,
@@ -530,8 +530,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         <div>测试面板</div>
         <button
           style={{
-            width: '50px',      // DPR=2 时显示为 100px
-            height: '40px',     // DPR=2 时显示为 80px
+            width: '25px',      // DPR=2 时显示为 50px
+            height: '20px',     // DPR=2 时显示为 40px
             background: 'blue',
             color: 'white',
             border: 'none',
@@ -541,7 +541,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             margin: '5px 0'
           }}
         >
-          50×40
+          25×20
         </button>
         <div style={{ fontSize: '10px', marginTop: '5px' }}>
           DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'loading...'}
