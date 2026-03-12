@@ -398,23 +398,25 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   ];
   
   return (
-    <div id="paw-container" className={`${themeClass}`} style={{
-      width: '100%',
-      maxWidth: '800px',      // DPR=2 时显示为 1600px
-      minWidth: '400px',      // DPR=2 时显示为 800px
-      margin: '0 auto',
-      minHeight: '100vh',
-      background: getCurrentThemeColors().bg,
-      color: isDarkMode ? '#ffffff' : '#000000',
-      fontFamily: 'system-ui, sans-serif',
-      paddingTop: '40px',     // DPR=2 时显示为 80px
-      position: 'relative',
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      flexGrow: 0
+    <div id="root" style={{
+      paddingTop: '40px'     // DPR=2 时显示为 80px
     }}>
+      <div id="paw-container" className={`${themeClass}`} style={{
+        width: '100%',
+        maxWidth: '800px',      // DPR=2 时显示为 1600px
+        minWidth: '400px',      // DPR=2 时显示为 800px
+        margin: '0 auto',
+        minHeight: '100vh',
+        background: getCurrentThemeColors().bg,
+        color: isDarkMode ? '#ffffff' : '#000000',
+        fontFamily: 'system-ui, sans-serif',
+        position: 'relative',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+        flexGrow: 0
+      }}>
       {/* 页眉容器 */}
       <div id="paw-header" style={{
         display: 'flex',
@@ -2025,5 +2027,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       )}
       </div>
     </div>
-  )
+  </div>
+)
 }
