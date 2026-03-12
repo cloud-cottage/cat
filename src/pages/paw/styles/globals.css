@@ -8,38 +8,39 @@
   --shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
-/* 确保 paw-body 宽度正确应用 - 容器样式 */
-#paw-body {
+/* 确保 paw-container 宽度正确应用 - 容器样式 */
+#paw-container {
   width: 100% !important;
   max-width: 800px !important;  /* DPR=2 时显示为 1600px */
   min-width: 400px !important;   /* DPR=2 时显示为 800px */
   margin: 0 auto !important;
   box-sizing: border-box !important;
-  display: block !important;
+  display: flex !important;
+  flex-direction: column !important;
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
 }
 
 /* 超级强制覆盖 - 使用更高特异性 */
-div#paw-body,
-div[id*="paw-body"],
-[id*="paw-body"] {
+div#paw-container,
+div[id*="paw-container"],
+[id*="paw-container"] {
   width: 100% !important;
-  max-width: 800px !important;  /* DPR=2 时显示为 1600px */  /* DPR=2 时显示为 1800px */
+  max-width: 800px !important;  /* DPR=2 时显示为 1600px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
 /* 主题相关容器样式 */
-.theme-default #paw-body,
-.theme-matrix #paw-body,
-.theme-aurora #paw-body,
-.theme-diamond #paw-body,
-.theme-guard #paw-body,
-.theme-hodl-blue #paw-body,
-.theme-latte-brown #paw-body,
-.theme-mystery-purple #paw-body,
-.theme-strawberry #paw-body,
-.theme-cyber-orange #paw-body {
+.theme-default #paw-container,
+.theme-matrix #paw-container,
+.theme-aurora #paw-container,
+.theme-diamond #paw-container,
+.theme-guard #paw-container,
+.theme-hodl-blue #paw-container,
+.theme-latte-brown #paw-container,
+.theme-mystery-purple #paw-container,
+.theme-strawberry #paw-container,
+.theme-cyber-orange #paw-container {
   width: 100% !important;
   max-width: 800px !important;  /* DPR=2 时显示为 1600px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
@@ -47,33 +48,33 @@ div[id*="paw-body"],
 
 /* 大屏幕 - 确保 max-width 始终生效 */
 @media (min-width: 901px) {
-  #paw-body,
-  div#paw-body,
+  #paw-container,
+  div#paw-container,
   div[id*="paw-body"],
   [id*="paw-body"],
-  .theme-default #paw-body,
-  .theme-matrix #paw-body,
-  .theme-aurora #paw-body,
-  .theme-diamond #paw-body,
-  .theme-guard #paw-body,
-  .theme-hodl-blue #paw-body,
-  .theme-latte-brown #paw-body,
-  .theme-mystery-purple #paw-body,
-  .theme-strawberry #paw-body,
-  .theme-cyber-orange #paw-body {
-  div#paw-body,
+  .theme-default #paw-container,
+  .theme-matrix #paw-container,
+  .theme-aurora #paw-container,
+  .theme-diamond #paw-container,
+  .theme-guard #paw-container,
+  .theme-hodl-blue #paw-container,
+  .theme-latte-brown #paw-container,
+  .theme-mystery-purple #paw-container,
+  .theme-strawberry #paw-container,
+  .theme-cyber-orange #paw-container {
+  div#paw-container,
   div[id*="paw-body"],
   [id*="paw-body"],
-  .theme-default #paw-body,
-  .theme-matrix #paw-body,
-  .theme-aurora #paw-body,
-  .theme-diamond #paw-body,
-  .theme-guard #paw-body,
-  .theme-hodl-blue #paw-body,
-  .theme-latte-brown #paw-body,
-  .theme-mystery-purple #paw-body,
-  .theme-strawberry #paw-body,
-  .theme-cyber-orange #paw-body {
+  .theme-default #paw-container,
+  .theme-matrix #paw-container,
+  .theme-aurora #paw-container,
+  .theme-diamond #paw-container,
+  .theme-guard #paw-container,
+  .theme-hodl-blue #paw-container,
+  .theme-latte-brown #paw-container,
+  .theme-mystery-purple #paw-container,
+  .theme-strawberry #paw-container,
+  .theme-cyber-orange #paw-container {
     width: 100% !important;
     max-width: 800px !important;  /* DPR=2 时显示为 1600px */
     min-width: 300px !important;
@@ -81,7 +82,7 @@ div[id*="paw-body"],
 }
 
 /* 终极强制覆盖 - 使用最高特异性 */
-html body div#paw-body,
+html body div#paw-container,
 html body div[id*="paw-body"],
 html body [id*="paw-body"] {
   width: 100% !important;
@@ -95,10 +96,10 @@ html body [id*="paw-body"] {
 }
 
 /* 终极覆盖 - 使用更高的特异性 */
-body > div#paw-body,
+body > div#paw-container,
 body > div[id*="paw-body"],
 body > [id*="paw-body"],
-#root > div#paw-body,
+#root > div#paw-container,
 #root > div[id*="paw-body"],
 #root > [id*="paw-body"] {
   width: 100% !important;
@@ -112,15 +113,15 @@ body > [id*="paw-body"],
 }
 
 /* 覆盖任何可能的父容器影响 */
-#paw-body,
-#paw-body *,
-#paw-body::before,
-#paw-body::after {
+#paw-container,
+#paw-container *,
+#paw-container::before,
+#paw-container::after {
   box-sizing: border-box !important;
 }
 
 /* 防止容器被拉伸 */
-#paw-body {
+#paw-container {
   max-width: 800px !important;  /* DPR=2 时显示为 1600px */
   width: auto !important;
   margin-left: auto !important;
@@ -130,8 +131,8 @@ body > [id*="paw-body"],
 }
 
 /* 防止缩放问题 - 只针对可能受影响的元素 */
-#paw-body,
-#paw-body *,
+#paw-container,
+#paw-container *,
 #paw-header,
 #paw-header *,
 #paw-footer,
@@ -365,7 +366,7 @@ button.cat-btn,
 .cat-btn.cat-btn,
 html body .cat-btn,
 #root .cat-btn,
-#paw-body .cat-btn {
+#paw-container .cat-btn {
   width: 50px !important;      /* DPR=2 时显示为 100px */
   height: 40px !important;     /* DPR=2 时显示为 80px */
   min-width: 50px !important;
@@ -401,21 +402,23 @@ button.cat-btn:hover,
 .cat-btn.cat-btn:hover,
 html body .cat-btn:hover,
 #root .cat-btn:hover,
-#paw-body .cat-btn:hover,
+#paw-container .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  width: 50px !important;      /* DPR=2 时显示为 100px */
-  height: 40px !important;     /* DPR=2 时显示为 80px */
+  transform: none !important;  /* 位置不变 */
+  width: 50px !important;      /* 尺寸不变 */
+  height: 40px !important;     /* 尺寸不变 */
   min-width: 50px !important;
   max-width: 50px !important;
   min-height: 40px !important;
   max-height: 40px !important;
+  background: #f8f8f8 !important;  /* 底色变亮一点点 */
 }
 
 .cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25) !important;  /* 6px 20px ÷ 2 = 3px 10px */
+  transform: none !important;  /* 位置不变 */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;  /* 阴影不变 */
+  background: #f8f8f8 !important;  /* 底色变亮一点点 */
 }
 
 /* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
@@ -426,9 +429,9 @@ button.cat-btn:hover {
 }
 
 .cat-paw-btn.cat-btn:hover {
-  background: #e8e8e8 !important;
-  transform: translateY(-2px) !important;  /* -4px ÷ 2 = -2px */
-  box-shadow: 0 7px 17px rgba(0,0,0,0.25) !important;  /* 15px 35px ÷ 2 = 7px 17px */
+  background: #f8f8f8 !important;  /* 底色变亮一点点 */
+  transform: none !important;  /* 位置不变 */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;  /* 阴影不变 */
 }
 
 /* 钻石手 - 简洁白色主题 */

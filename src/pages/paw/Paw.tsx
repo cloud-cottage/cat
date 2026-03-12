@@ -398,7 +398,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   ];
   
   return (
-    <div id="paw-body" className={`${themeClass}`} style={{
+    <div id="paw-container" className={`${themeClass}`} style={{
       width: '100%',
       maxWidth: '800px',      // DPR=2 时显示为 1600px
       minWidth: '400px',      // DPR=2 时显示为 800px
@@ -407,22 +407,21 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       background: getCurrentThemeColors().bg,
       color: isDarkMode ? '#ffffff' : '#000000',
       fontFamily: 'system-ui, sans-serif',
-      padding: '80px 2rem 2rem 2rem', // 顶部留出80px给header
+      paddingTop: '40px',     // DPR=2 时显示为 80px
       position: 'relative',
       boxSizing: 'border-box',
-      display: 'block',
+      display: 'flex',
+      flexDirection: 'column',
       flexShrink: 0,
       flexGrow: 0
     }}>
       {/* 页眉容器 */}
       <div id="paw-header" style={{
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        right: '20px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        padding: '0 2rem',
+        marginBottom: '2rem',
         zIndex: 1000
       }}>
         {/* 左侧：猫爪按钮 */}
@@ -610,17 +609,22 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         </div>
       )}
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column'
+      {/* 主体内容 */}
+      <div id="paw-body" style={{
+        flex: 1,
+        padding: '0 2rem'
       }}>
-        <div className="grid-container" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gridTemplateRows: 'repeat(9, 280px)',
-          gap: '1rem',
-          minHeight: '900px'
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column'
         }}>
+          <div className="grid-container" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gridTemplateRows: 'repeat(9, 280px)',
+            gap: '1rem',
+            minHeight: '900px'
+          }}>
           {modules.map((module, index) => {
             // 根据模块类型和屏幕尺寸设置网格位置
             const getPosition = (type: string) => {
@@ -1468,7 +1472,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             );
           })}
         </div>
+        </div>
+      </div>
 
+      {/* 页脚 */}
+      <div id="paw-footer" style={{
+        padding: '2rem',
+        textAlign: 'center',
+        borderTop: '1px solid rgba(0,0,0,0.1)',
+        marginTop: '2rem'
+      }}>
         <div className="theme-text-muted" style={{ 
           textAlign: 'center', 
           padding: '1rem',
