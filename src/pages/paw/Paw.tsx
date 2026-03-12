@@ -399,7 +399,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   return (
     <div id="root" style={{
-      paddingTop: '40px'     // DPR=2 时显示为 80px
+      paddingTop: '40px',     // DPR=2 时显示为 80px
+      backgroundColor: '#362639'
     }}>
       <div id="paw-container" className={`${themeClass}`} style={{
         width: '100%',
@@ -415,7 +416,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0,
-        flexGrow: 0
+        flexGrow: 0,
+        paddingTop: '40px',     // DPR=2 时显示为 80px
+        borderRadius: '40px'     // DPR=2 时显示为 80px
       }}>
       {/* 页眉容器 */}
       <div id="paw-header" style={{
