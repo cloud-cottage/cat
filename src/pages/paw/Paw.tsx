@@ -648,6 +648,43 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               "6 6 6 6 6 6"
             `
           }}>
+          {/* 测试网格布局 */}
+          <div style={{ 
+            gridArea: '1',
+            background: 'rgba(255,0,0,0.3)',
+            border: '2px solid red',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域1
+          </div>
+          <div style={{ 
+            gridArea: '2',
+            background: 'rgba(0,255,0,0.3)',
+            border: '2px solid green',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域2
+          </div>
+          <div style={{ 
+            gridArea: '3',
+            background: 'rgba(0,0,255,0.3)',
+            border: '2px solid blue',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域3
+          </div>
           {/* 调试信息 */}
           <div style={{ 
             position: 'absolute', 
@@ -661,6 +698,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             zIndex: 1000
           }}>
             主题: {themeClass} | 模块数: {modules.length}
+          </div>
+          {/* 网格布局调试 */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '-50px', 
+            left: '0', 
+            fontSize: '10px', 
+            color: 'green',
+            background: 'yellow',
+            padding: '2px 5px',
+            borderRadius: '3px',
+            zIndex: 1000
+          }}>
+            网格: 6x9 | 间隙: 1rem | 行高: 280px
           </div>
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
