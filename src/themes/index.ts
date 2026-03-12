@@ -19,8 +19,8 @@ export interface Theme {
 export const THEMES: Theme[] = [
   {
     id: 1,
-    name: '赛博橙',
-    className: 'theme-cyber-orange',
+    name: '默认',
+    className: 'theme-default',
     colors: {
       primary: '#FF6B35',
       secondary: '#00D9FF',

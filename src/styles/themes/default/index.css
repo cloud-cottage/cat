@@ -258,14 +258,14 @@
 }
 
 /* 网格布局定义 */
-.theme-cyber-orange .grid-container {
+.theme-default .grid-container {
   display: grid;
   grid-template-columns: repeat(var(--theme-grid-columns), 1fr);
   grid-template-rows: repeat(var(--theme-grid-rows), var(--theme-grid-row-height));
   gap: var(--theme-grid-gap);
   min-height: 900px;
 
-  /* 赛博橙主题布局 - 用户自定义 */
+  /* Default主题布局 - 用户自定义 */
   grid-template-areas: 
     "1 1 2 2 3 3"
     "1 1 2 2 3 3"
@@ -278,33 +278,33 @@
     "6 6 6 6 6 6";
 }
 
-.theme-cyber-orange .module-1 {
+.theme-default .module-1 {
   grid-area: 1;
 }
 
-.theme-cyber-orange .module-2 {
+.theme-default .module-2 {
   grid-area: 2;
 }
 
-.theme-cyber-orange .module-3 {
+.theme-default .module-3 {
   grid-area: 3;
 }
 
-.theme-cyber-orange .module-4 {
+.theme-default .module-4 {
   grid-area: 4;
 }
 
-.theme-cyber-orange .module-5 {
+.theme-default .module-5 {
   grid-area: 5;
 }
 
-.theme-cyber-orange .module-6 {
+.theme-default .module-6 {
   grid-area: 6;
 }
 
 /* 响应式调整 */
 @media (max-width: 1400px) {
-  .theme-cyber-orange .grid-container {
+  .theme-default .grid-container {
     grid-template-columns: repeat(var(--theme-grid-columns), 1fr);
     grid-template-rows: repeat(var(--theme-grid-rows), var(--theme-grid-row-height));
     grid-template-areas: 
@@ -321,7 +321,7 @@
 }
 
 @media (max-width: 900px) {
-  .theme-cyber-orange .grid-container {
+  .theme-default .grid-container {
     grid-template-columns: repeat(var(--theme-grid-columns), 1fr);
     grid-template-rows: repeat(var(--theme-grid-rows), var(--theme-grid-row-height));
     grid-template-areas: 
@@ -337,8 +337,8 @@
   }
 }
 
-/* 网格容器背景 - 赛博橙渐变 */
-.theme-cyber-orange .blog-container {
+/* 网格容器背景 - 默认主题渐变 */
+.theme-default .blog-container {
   background: linear-gradient(135deg, 
     rgba(26, 31, 58, 0.9) 0%,
     rgba(10, 14, 39, 0.95) 25%,
@@ -352,8 +352,8 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* 赛博橙主题特殊样式 */
-.theme-cyber-orange .theme-module {
+/* 默认主题特殊样式 */
+.theme-default .theme-module {
   background: var(--theme-surface);
   border-radius: var(--theme-border-radius);
   border: var(--theme-border-width) solid var(--theme-primary);
@@ -361,13 +361,13 @@
   min-height: 200px;
 }
 
-.theme-cyber-orange .theme-module:hover {
+.theme-default .theme-module:hover {
   transform: translateY(-6px) scale(1.03) rotateX(2deg);
   filter: brightness(1.05);
   box-shadow: var(--theme-hover-shadow);
 }
 
-.theme-cyber-orange .theme-module-title {
+.theme-default .theme-module-title {
   background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 25%, var(--theme-primary) 50%, var(--theme-secondary) 75%, var(--theme-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

@@ -636,6 +636,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             gap: '1rem',
             minHeight: '900px'
           }}>
+          {/* 调试信息 */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '-30px', 
+            left: '0', 
+            fontSize: '12px', 
+            color: 'red',
+            background: 'white',
+            padding: '2px 5px',
+            borderRadius: '3px',
+            zIndex: 1000
+          }}>
+            主题: {themeClass} | 模块数: {modules.length}
+          </div>
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
