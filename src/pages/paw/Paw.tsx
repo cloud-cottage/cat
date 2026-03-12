@@ -513,35 +513,41 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       </div>
 
       {/* 测试按钮 - 临时调试 */}
-      <div style={{
-        position: 'fixed',
-        top: '100px',
-        left: '20px',
-        background: 'rgba(255,0,0,0.8)',
-        color: 'white',
-        padding: '1rem',
-        borderRadius: '8px',
-        zIndex: 2000
-      }}>
-        <div style={{ marginBottom: '0.5rem' }}>测试按钮:</div>
+      <div 
+        id="test-panel"
+        style={{
+          position: 'fixed',
+          top: '10px',
+          left: '10px',
+          background: 'red',
+          color: 'white',
+          padding: '10px',
+          borderRadius: '5px',
+          zIndex: 9999,
+          fontSize: '12px'
+        }}
+      >
+        <div>测试面板</div>
         <button
           style={{
             width: '100px',
             height: '80px',
-            background: '#007bff',
+            background: 'blue',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            display: 'block'
+            borderRadius: '5px',
+            fontSize: '12px',
+            display: 'block',
+            margin: '5px 0'
           }}
         >
           100×80
         </button>
-        <div style={{ marginTop: '0.5rem', fontSize: '12px' }}>
-          DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'unknown'}
+        <div style={{ fontSize: '10px', marginTop: '5px' }}>
+          DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'loading...'}
+        </div>
+        <div style={{ fontSize: '10px' }}>
+          屏幕宽: {typeof window !== 'undefined' ? window.innerWidth : 'loading...'}
         </div>
       </div>
 
