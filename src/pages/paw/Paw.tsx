@@ -640,85 +640,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             width: '100%',  // 确保网格容器占满可用宽度
             boxSizing: 'border-box'  // 包含padding在宽度内
           }}>
-          {/* 测试网格布局 */}
-          <div style={{ 
-            gridColumn: '1 / 3',
-            gridRow: '1 / 3',
-            background: 'rgba(255,0,0,0.3)',
-            border: '2px solid red',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域1 (1-3列, 1-3行)
-          </div>
-          <div style={{ 
-            gridColumn: '3 / 5',
-            gridRow: '1 / 3',
-            background: 'rgba(0,255,0,0.3)',
-            border: '2px solid green',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域2 (3-5列, 1-3行)
-          </div>
-          <div style={{ 
-            gridColumn: '5 / 7',
-            gridRow: '1 / 3',
-            background: 'rgba(0,0,255,0.3)',
-            border: '2px solid blue',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域3 (5-7列, 1-3行)
-          </div>
-          <div style={{ 
-            gridColumn: '1 / 3',
-            gridRow: '3 / 6',
-            background: 'rgba(255,255,0,0.3)',
-            border: '2px solid yellow',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域4 (1-3列, 3-6行)
-          </div>
-          <div style={{ 
-            gridColumn: '3 / 7',
-            gridRow: '3 / 6',
-            background: 'rgba(255,0,255,0.3)',
-            border: '2px solid magenta',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域5 (3-7列, 3-6行)
-          </div>
-          <div style={{ 
-            gridColumn: '1 / 7',
-            gridRow: '6 / 10',
-            background: 'rgba(0,255,255,0.3)',
-            border: '2px solid cyan',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
-          }}>
-            测试区域6 (1-7列, 6-10行)
-          </div>
           {/* 调试信息 */}
           <div style={{ 
             position: 'absolute', 
@@ -764,20 +685,38 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
-              // 将现有板块映射到 default 主题的网格区域
+              // 将现有板块映射到 default 主题的网格位置
               switch (type) {
                 case 'profile':
-                  return { gridArea: '1' };  // 用户资料 -> 区域1
+                  return { 
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
+                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
+                  };  
                 case 'social':
-                  return { gridArea: '2' };  // 社交媒体 -> 区域2
+                  return { 
+                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
+                  };  
                 case 'twitter':
-                  return { gridArea: '3' };  // 推特动态 -> 区域3
+                  return { 
+                    gridColumn: '5 / 7',  // 从第5列到第7列（占1列）
+                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
+                  };  
                 case 'mostfind':
-                  return { gridArea: '4' };  // 我活跃在 -> 区域4
+                  return { 
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占1列）
+                    gridRow: '3 / 6'      // 从第3行到第6行（占3行）
+                  };  
                 case 'links':
-                  return { gridArea: '5' };  // 注册链接 -> 区域5
+                  return { 
+                    gridColumn: '3 / 7',  // 从第3列到第7列（占2列）
+                    gridRow: '3 / 6'      // 从第3行到第6行（占3行）
+                  };  
                 default:
-                  return { gridArea: '6' };  // 其他 -> 区域6
+                  return { 
+                    gridColumn: '1 / 7',  // 从第1列到第7列（占全宽）
+                    gridRow: '6 / 10'     // 从第6行到第10行（占4行）
+                  };  
               }
             };
 
@@ -806,7 +745,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   borderRadius: '2px',
                   zIndex: 1000
                 }}>
-                  {module.id} → {position.gridArea}
+                  {module.id} → {position.gridColumn && position.gridRow ? 
+                    `${position.gridColumn} ${position.gridRow}` : 
+                    '未知位置'
+                  }
                 </div>
                 <h3>{module.name}</h3>
                 
