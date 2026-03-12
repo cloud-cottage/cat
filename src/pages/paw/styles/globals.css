@@ -397,16 +397,16 @@ body > [class*="paw-body"],
   box-sizing: border-box !important;
 }
 
-/* 统一的猫猫按钮样式 - 视觉 50x40px (DPR=2 时 CSS 25x20px) */
+/* 统一的猫猫按钮样式 - 视觉 100x80px (DPR=2 时 CSS 50x40px) */
 .cat-btn {
-  width: 25px !important;      /* DPR=2 时显示为 50px */
-  height: 20px !important;     /* DPR=2 时显示为 40px */
-  min-width: 25px !important;
-  max-width: 25px !important;
-  min-height: 20px !important;
-  max-height: 20px !important;
+  width: 50px !important;      /* DPR=2 时显示为 100px */
+  height: 40px !important;     /* DPR=2 时显示为 80px */
+  min-width: 50px !important;
+  max-width: 50px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
   border: none !important;
-  border-radius: 10px !important;  /* 20px ÷ 2 = 10px */
+  border-radius: 20px !important;  /* 视觉 40px 圆角半径 */
   cursor: pointer !important;
   font-size: 0.8rem !important;
   font-weight: bold !important;
@@ -433,18 +433,18 @@ body > [class*="paw-body"],
 .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
-  transform: translateY(-0.5px) !important;  /* -1px ÷ 2 = -0.5px */
-  width: 25px !important;      /* DPR=2 时显示为 50px */
-  height: 20px !important;     /* DPR=2 时显示为 40px */
-  min-width: 25px !important;
-  max-width: 25px !important;
-  min-height: 20px !important;
-  max-height: 20px !important;
+  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
+  width: 50px !important;      /* DPR=2 时显示为 100px */
+  height: 40px !important;     /* DPR=2 时显示为 80px */
+  min-width: 50px !important;
+  max-width: 50px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
 }
 
 .cat-btn:hover {
-  transform: translateY(-0.5px) !important;  /* -1px ÷ 2 = -0.5px */
-  box-shadow: 0 1.5px 5px rgba(0,0,0,0.25) !important;  /* 3px 10px ÷ 2 = 1.5px 5px */
+  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25) !important;  /* 6px 20px ÷ 2 = 3px 10px */
 }
 
 /* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
@@ -456,8 +456,8 @@ button.cat-btn:hover {
 
 .cat-paw-btn.cat-btn:hover {
   background: #e8e8e8 !important;
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  box-shadow: 0 3.5px 8.5px rgba(0,0,0,0.25) !important;  /* 7px 17px ÷ 2 = 3.5px 8.5px */
+  transform: translateY(-2px) !important;  /* -4px ÷ 2 = -2px */
+  box-shadow: 0 7px 17px rgba(0,0,0,0.25) !important;  /* 15px 35px ÷ 2 = 7px 17px */
 }
 
 /* 钻石手 - 简洁白色主题 */
