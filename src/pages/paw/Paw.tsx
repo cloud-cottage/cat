@@ -383,6 +383,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       type: 'social'
     },
     { 
+      id: 'twitter', 
+      name: '推特动态', 
+      content: user?.twitterHandle ? `@${user.twitterHandle}` : '未设置',
+      type: 'twitter'
+    },
+    { 
       id: 'links', 
       name: '注册链接', 
       content: `共 ${links.length} 个链接`,
@@ -645,18 +651,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
-              // 按照 default 主题的 grid-template-areas 布局
+              // 将现有板块映射到 default 主题的网格区域
               switch (type) {
                 case 'profile':
-                  return { gridArea: '1' };
+                  return { className: 'module-1' };  // 用户资料 -> 区域1
                 case 'social':
-                  return { gridArea: '2' };
-                case 'links':
-                  return { gridArea: '3' };
+                  return { className: 'module-2' };  // 社交媒体 -> 区域2
+                case 'twitter':
+                  return { className: 'module-3' };  // 推特动态 -> 区域3
                 case 'mostfind':
-                  return { gridArea: '4' };
+                  return { className: 'module-4' };  // 我活跃在 -> 区域4
+                case 'links':
+                  return { className: 'module-5' };  // 注册链接 -> 区域5
                 default:
-                  return { gridArea: '5' };
+                  return { className: 'module-6' };  // 其他 -> 区域6
               }
             };
 
@@ -665,9 +673,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             return (
               <div
                 key={`simple-${module.id}-${index}`}
-                className="module"
+                className={`module ${position.className}`}
                 style={{
-                  ...position,
                   background: 'rgba(255,255,255,0.1)',
                   padding: '1rem',
                   borderRadius: '8px'
