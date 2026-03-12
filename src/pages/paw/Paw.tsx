@@ -427,7 +427,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }}>
         {/* 左侧：猫爪按钮 */}
         <button
-          className="cat-paw-btn cat-btn-fixed"
+          className="cat-paw-btn cat-btn"
           onClick={() => setShowCatPawModal(true)}
           title={t('clickToViewMore')}
         >
@@ -443,7 +443,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           }}>
             {/* 主题切换按钮 */}
             <button
-              className="cat-btn-fixed"
+              className="cat-btn"
               onClick={() => setIsDarkMode(!isDarkMode)}
               style={{
                 background: isDarkMode ? '#2c3e50' : '#f39c12',
@@ -493,7 +493,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             
             {/* 编辑按钮 */}
             <button
-              className="cat-btn-fixed"
+              className="cat-btn"
               onClick={() => setIsEditingMode(!isEditingMode)}
               title={t('editMode')}
             >
@@ -502,7 +502,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             
             {/* 分享按钮 */}
             <button
-              className="cat-btn-fixed"
+              className="cat-btn"
               onClick={() => setShowShareModal(true)}
               title={t('share')}
             >
@@ -510,6 +510,39 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             </button>
           </div>
         )}
+      </div>
+
+      {/* 测试按钮 - 临时调试 */}
+      <div style={{
+        position: 'fixed',
+        top: '100px',
+        left: '20px',
+        background: 'rgba(255,0,0,0.8)',
+        color: 'white',
+        padding: '1rem',
+        borderRadius: '8px',
+        zIndex: 2000
+      }}>
+        <div style={{ marginBottom: '0.5rem' }}>测试按钮:</div>
+        <button
+          style={{
+            width: '100px',
+            height: '80px',
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            display: 'block'
+          }}
+        >
+          100×80
+        </button>
+        <div style={{ marginTop: '0.5rem', fontSize: '12px' }}>
+          DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'unknown'}
+        </div>
       </div>
 
       {/* 开发模式调试信息 */}
@@ -1650,7 +1683,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       >
         {/* 创建页面按钮 */}
         <button
-          className="cat-btn-fixed"
+          className="cat-btn"
           onClick={() => setShowCreatePageModal(true)}
           style={{
             marginBottom: '10px'
