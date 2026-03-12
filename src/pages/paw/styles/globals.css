@@ -142,6 +142,16 @@ html,
   max-height: 5em !important;
 }
 
+/* 强制覆盖 - 如果 em 单位有问题，使用 px 作为后备 */
+.cat-btn {
+  width: 100px !important;
+  height: 80px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+}
+
 /* 响应式规则 */
 @media (max-width: 1800px) {
   .paw-container,
