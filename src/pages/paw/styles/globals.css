@@ -143,43 +143,6 @@ html,
   zoom: 1 !important;
 }
 
-/* 确保按钮尺寸正确 - 使用 em 单位避免像素翻倍 */
-.cat-btn {
-  transform: none !important;
-  zoom: 1 !important;
-  width: 6.25em !important;  /* 100px ÷ 16px = 6.25em */
-  height: 5em !important;      /* 80px ÷ 16px = 5em */
-  min-width: 6.25em !important;
-  max-width: 6.25em !important;
-  min-height: 5em !important;
-  max-height: 5em !important;
-}
-
-/* 强制覆盖 - 如果 em 单位有问题，使用 px 作为后备 */
-.cat-btn {
-  width: 100px !important;
-  height: 80px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
-}
-
-/* 终极强制覆盖 - 使用最高特异性 */
-html body div#paw-body .cat-btn,
-html body #paw-header .cat-btn,
-html body #paw-footer .cat-btn,
-#root #paw-body .cat-btn,
-#root #paw-header .cat-btn,
-#root #paw-footer .cat-btn {
-  width: 100px !important;
-  height: 80px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
-  transform: none !important;
-  zoom: 1 !important;
   box-sizing: border-box !important;
 }
 
@@ -397,8 +360,12 @@ body > [class*="paw-body"],
   box-sizing: border-box !important;
 }
 
-/* 统一的猫猫按钮样式 - 视觉 50x40px (DPR=2 时 CSS 25x20px) */
-.cat-btn {
+/* 统一的猫猫按钮样式 - 视觉 50x40px (DPR=2 时 CSS 25x20px) - 强制覆盖 */
+button.cat-btn,
+.cat-btn.cat-btn,
+html body .cat-btn,
+#root .cat-btn,
+#paw-body .cat-btn {
   width: 25px !important;      /* DPR=2 时显示为 50px */
   height: 20px !important;     /* DPR=2 时显示为 40px */
   min-width: 25px !important;
@@ -429,8 +396,12 @@ body > [class*="paw-body"],
   transform: none !important;
 }
 
-/* 覆盖主题按钮的悬停效果 */
-.cat-btn:hover,
+/* 覆盖主题按钮的悬停效果 - 强制覆盖 */
+button.cat-btn:hover,
+.cat-btn.cat-btn:hover,
+html body .cat-btn:hover,
+#root .cat-btn:hover,
+#paw-body .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
   transform: translateY(-0.5px) !important;  /* -1px ÷ 2 = -0.5px */
