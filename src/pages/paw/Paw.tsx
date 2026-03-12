@@ -407,7 +407,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       background: getCurrentThemeColors().bg,
       color: isDarkMode ? '#ffffff' : '#000000',
       fontFamily: 'system-ui, sans-serif',
-      padding: '2rem',
+      padding: '80px 2rem 2rem 2rem', // 顶部留出80px给header
       position: 'relative',
       boxSizing: 'border-box',
       display: 'block',
