@@ -623,61 +623,22 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <div className="grid-container" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gridTemplateRows: 'repeat(9, 280px)',
-            gap: '1rem',
-            minHeight: '900px'
-          }}>
+          <div className="grid-container">
           {modules.map((module, index) => {
-            // 根据模块类型和屏幕尺寸设置网格位置
+            // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
-              const isMobile = window.innerWidth < 768;
-              const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-              
-              if (isMobile) {
-                // 移动端：单列布局
-                switch (type) {
-                  case 'profile':
-                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
-                  case 'social':
-                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
-                  case 'links':
-                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
-                  case 'mostfind':
-                    return { gridColumn: '1 / 2', gridRow: '4 / 5' };
-                  default:
-                    return { gridColumn: '1 / 2', gridRow: '5 / 6' };
-                }
-              } else if (isTablet) {
-                // 平板：双列布局
-                switch (type) {
-                  case 'profile':
-                    return { gridColumn: '1 / 2', gridRow: '1 / 2' };
-                  case 'social':
-                    return { gridColumn: '2 / 3', gridRow: '1 / 2' };
-                  case 'links':
-                    return { gridColumn: '1 / 2', gridRow: '2 / 3' };
-                  case 'mostfind':
-                    return { gridColumn: '2 / 3', gridRow: '2 / 3' };
-                  default:
-                    return { gridColumn: '1 / 2', gridRow: '3 / 4' };
-                }
-              } else {
-                // 桌面：原始布局
-                switch (type) {
-                  case 'profile':
-                    return { gridColumn: '1 / 4', gridRow: '1 / 3' };
-                  case 'social':
-                    return { gridColumn: '4 / 7', gridRow: '1 / 3' };
-                  case 'links':
-                    return { gridColumn: '1 / 4', gridRow: '3 / 5' };
-                  case 'mostfind':
-                    return { gridColumn: '4 / 7', gridRow: '3 / 5' };
-                  default:
-                    return { gridColumn: '1 / 3', gridRow: '5 / 7' };
-                }
+              // 按照 default 主题的 grid-template-areas 布局
+              switch (type) {
+                case 'profile':
+                  return { className: 'module-1' };
+                case 'social':
+                  return { className: 'module-2' };
+                case 'links':
+                  return { className: 'module-3' };
+                case 'mostfind':
+                  return { className: 'module-4' };
+                default:
+                  return { className: 'module-5' };
               }
             };
 
@@ -686,8 +647,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             return (
               <div
                 key={`simple-${module.id}-${index}`}
+                className={`module ${position.className}`}
                 style={{
-                  ...position,
                   background: 'rgba(255,255,255,0.1)',
                   padding: '1rem',
                   borderRadius: '8px'
