@@ -638,22 +638,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             gap: '1rem',
             minHeight: '900px',
             width: '100%',  // 确保网格容器占满可用宽度
-            boxSizing: 'border-box',  // 包含padding在宽度内
-            // Default主题布局 - 用户自定义
-            gridTemplateAreas: 
-              "1 1 2 2 3 3 " +
-              "1 1 2 2 3 3 " +
-              "4 4 5 5 5 5 " +
-              "4 4 5 5 5 5 " +
-              "4 4 5 5 5 5 " +
-              "6 6 6 6 6 6 " +
-              "6 6 6 6 6 6 " +
-              "6 6 6 6 6 6 " +
-              "6 6 6 6 6 6 "
+            boxSizing: 'border-box'  // 包含padding在宽度内
           }}>
           {/* 测试网格布局 */}
           <div style={{ 
-            gridArea: '1',
+            gridColumn: '1 / 3',
+            gridRow: '1 / 3',
             background: 'rgba(255,0,0,0.3)',
             border: '2px solid red',
             display: 'flex',
@@ -662,10 +652,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域1
+            测试区域1 (1-3列, 1-3行)
           </div>
           <div style={{ 
-            gridArea: '2',
+            gridColumn: '3 / 5',
+            gridRow: '1 / 3',
             background: 'rgba(0,255,0,0.3)',
             border: '2px solid green',
             display: 'flex',
@@ -674,10 +665,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域2
+            测试区域2 (3-5列, 1-3行)
           </div>
           <div style={{ 
-            gridArea: '3',
+            gridColumn: '5 / 7',
+            gridRow: '1 / 3',
             background: 'rgba(0,0,255,0.3)',
             border: '2px solid blue',
             display: 'flex',
@@ -686,10 +678,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域3
+            测试区域3 (5-7列, 1-3行)
           </div>
           <div style={{ 
-            gridArea: '4',
+            gridColumn: '1 / 3',
+            gridRow: '3 / 6',
             background: 'rgba(255,255,0,0.3)',
             border: '2px solid yellow',
             display: 'flex',
@@ -698,10 +691,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域4
+            测试区域4 (1-3列, 3-6行)
           </div>
           <div style={{ 
-            gridArea: '5',
+            gridColumn: '3 / 7',
+            gridRow: '3 / 6',
             background: 'rgba(255,0,255,0.3)',
             border: '2px solid magenta',
             display: 'flex',
@@ -710,10 +704,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域5
+            测试区域5 (3-7列, 3-6行)
           </div>
           <div style={{ 
-            gridArea: '6',
+            gridColumn: '1 / 7',
+            gridRow: '6 / 10',
             background: 'rgba(0,255,255,0.3)',
             border: '2px solid cyan',
             display: 'flex',
@@ -722,7 +717,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontSize: '20px',
             fontWeight: 'bold'
           }}>
-            测试区域6
+            测试区域6 (1-7列, 6-10行)
           </div>
           {/* 调试信息 */}
           <div style={{ 
