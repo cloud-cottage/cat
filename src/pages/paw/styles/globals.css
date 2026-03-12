@@ -11,7 +11,7 @@
 /* 确保 paw-body 宽度正确应用 - 容器样式 */
 #paw-body {
   width: 100% !important;
-  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -25,7 +25,7 @@ div#paw-body,
 div[id*="paw-body"],
 [id*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
@@ -41,7 +41,7 @@ div[id*="paw-body"],
 .theme-strawberry #paw-body,
 .theme-cyber-orange #paw-body {
   width: 100% !important;
-  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
@@ -75,7 +75,7 @@ div[id*="paw-body"],
   .theme-strawberry #paw-body,
   .theme-cyber-orange #paw-body {
     width: 100% !important;
-    max-width: 900px !important;
+    max-width: 450px !important;  /* DPR=2 时显示为 900px */
     min-width: 300px !important;
   }
 }
@@ -85,7 +85,7 @@ html body div#paw-body,
 html body div[id*="paw-body"],
 html body [id*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -102,7 +102,7 @@ body > [id*="paw-body"],
 #root > div[id*="paw-body"],
 #root > [id*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -121,7 +121,7 @@ body > [id*="paw-body"],
 
 /* 防止容器被拉伸 */
 #paw-body {
-  max-width: 900px !important;
+  max-width: 450px !important;  /* DPR=2 时显示为 900px */
   width: auto !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -233,7 +233,7 @@ button.cat-btn-fixed.theme-button {
   max-height: 80px !important;
 }
 
-/* 响应式规则 */
+/* 响应式规则 - DPR=2 适配 */
 @media (max-width: 1800px) {
   .paw-body,
   div.paw-body,
@@ -250,8 +250,8 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 1800px !important;
-    min-width: 300px !important;
+    max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
+    min-width: 300px !important;  /* DPR=2 时显示为 600px */
   }
 }
 
@@ -271,8 +271,8 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 1400px !important;
-    min-width: 300px !important;
+    max-width: 700px !important;  /* DPR=2 时显示为 1400px */
+    min-width: 300px !important;  /* DPR=2 时显示为 600px */
   }
 }
 
@@ -292,7 +292,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 1200px !important;
+    max-width: 300px !important;  /* DPR=2 时显示为 600px */  /* DPR=2 时显示为 1200px */
     min-width: 300px !important;
   }
 }
@@ -313,7 +313,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 900px !important;
+    max-width: 450px !important;  /* DPR=2 时显示为 900px */
     min-width: 300px !important;
   }
 }
@@ -334,7 +334,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 600px !important;
+    max-width: 300px !important;  /* DPR=2 时显示为 600px */
     min-width: 300px !important;
   }
 }
@@ -355,7 +355,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 400px !important;
+    max-width: 200px !important;  /* DPR=2 时显示为 400px */
     min-width: 300px !important;
   }
 }
@@ -365,7 +365,7 @@ html body div.paw-body,
 html body div[class*="paw-body"],
 html body [class*="paw-body"] {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -380,7 +380,7 @@ body > [class*="paw-body"],
 #root > div[class*="paw-body"],
 #root > [class*="paw-body"] {
   width: 100% !important;
-  max-width: 1800px !important;
+  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;

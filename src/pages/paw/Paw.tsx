@@ -512,45 +512,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         )}
       </div>
 
-      {/* 测试按钮 - 临时调试 */}
-      <div 
-        id="test-panel"
-        style={{
-          position: 'fixed',
-          top: '10px',
-          left: '10px',
-          background: 'red',
-          color: 'white',
-          padding: '10px',
-          borderRadius: '5px',
-          zIndex: 9999,
-          fontSize: '12px'
-        }}
-      >
-        <div>测试面板</div>
-        <button
-          style={{
-            width: '50px',      // DPR=2 时显示为 100px
-            height: '40px',     // DPR=2 时显示为 80px
-            background: 'blue',
-            color: 'white',
-            border: 'none',
-            borderRadius: '20px',   // 视觉 40px 圆角半径
-            fontSize: '12px',
-            display: 'block',
-            margin: '5px 0'
-          }}
-        >
-          50×40
-        </button>
-        <div style={{ fontSize: '10px', marginTop: '5px' }}>
-          DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'loading...'}
-        </div>
-        <div style={{ fontSize: '10px' }}>
-          屏幕宽: {typeof window !== 'undefined' ? window.innerWidth : 'loading...'}
-        </div>
-      </div>
-
+      
       {/* 开发模式调试信息 */}
       {isOwner && process.env.NODE_ENV === 'development' && (
         <div style={{
