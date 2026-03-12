@@ -530,8 +530,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         <div>测试面板</div>
         <button
           style={{
-            width: '100px',
-            height: '80px',
+            width: '50px',      // DPR=2 时显示为 100px
+            height: '40px',     // DPR=2 时显示为 80px
             background: 'blue',
             color: 'white',
             border: 'none',
@@ -541,7 +541,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             margin: '5px 0'
           }}
         >
-          100×80
+          50×40
         </button>
         <div style={{ fontSize: '10px', marginTop: '5px' }}>
           DPR: {typeof window !== 'undefined' ? window.devicePixelRatio : 'loading...'}
