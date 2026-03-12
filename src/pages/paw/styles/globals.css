@@ -11,8 +11,8 @@
 /* 确保 paw-body 宽度正确应用 - 容器样式 */
 #paw-body {
   width: 100% !important;
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
-  min-width: 300px !important;  /* DPR=2 时显示为 600px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */
+  min-width: 600px !important;   /* DPR=2 时显示为 1200px */
   margin: 0 auto !important;
   box-sizing: border-box !important;
   display: block !important;
@@ -25,7 +25,7 @@ div#paw-body,
 div[id*="paw-body"],
 [id*="paw-body"] {
   width: 100% !important;
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
@@ -41,7 +41,7 @@ div[id*="paw-body"],
 .theme-strawberry #paw-body,
 .theme-cyber-orange #paw-body {
   width: 100% !important;
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */  /* DPR=2 时显示为 1800px */
   min-width: 300px !important;  /* DPR=2 时显示为 600px */
 }
 
@@ -75,7 +75,7 @@ div[id*="paw-body"],
   .theme-strawberry #paw-body,
   .theme-cyber-orange #paw-body {
     width: 100% !important;
-    max-width: 450px !important;  /* DPR=2 时显示为 900px */
+    max-width: 1800px !important;  /* DPR=2 时显示为 3600px */
     min-width: 300px !important;
   }
 }
@@ -85,7 +85,7 @@ html body div#paw-body,
 html body div[id*="paw-body"],
 html body [id*="paw-body"] {
   width: 100% !important;
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -102,7 +102,7 @@ body > [id*="paw-body"],
 #root > div[id*="paw-body"],
 #root > [id*="paw-body"] {
   width: 100% !important;
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -121,7 +121,7 @@ body > [id*="paw-body"],
 
 /* 防止容器被拉伸 */
 #paw-body {
-  max-width: 450px !important;  /* DPR=2 时显示为 900px */
+  max-width: 1800px !important;  /* DPR=2 时显示为 3600px */
   width: auto !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -250,7 +250,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 450px !important;  /* DPR=2 时显示为 900px */  /* DPR=2 时显示为 1800px */
+    max-width: 1800px !important;  /* DPR=2 时显示为 3600px */  /* DPR=2 时显示为 1800px */
     min-width: 300px !important;  /* DPR=2 时显示为 600px */
   }
 }
@@ -271,7 +271,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 700px !important;  /* DPR=2 时显示为 1400px */
+    max-width: 1400px !important;  /* DPR=2 时显示为 2800px */
     min-width: 300px !important;  /* DPR=2 时显示为 600px */
   }
 }
@@ -292,7 +292,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 300px !important;  /* DPR=2 时显示为 600px */  /* DPR=2 时显示为 1200px */
+    max-width: 600px !important;  /* DPR=2 时显示为 1200px */  /* DPR=2 时显示为 1200px */
     min-width: 300px !important;
   }
 }
@@ -313,7 +313,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 450px !important;  /* DPR=2 时显示为 900px */
+    max-width: 900px !important;  /* DPR=2 时显示为 1800px */
     min-width: 300px !important;
   }
 }
@@ -334,7 +334,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 300px !important;  /* DPR=2 时显示为 600px */
+    max-width: 600px !important;  /* DPR=2 时显示为 1200px */
     min-width: 300px !important;
   }
 }
@@ -355,7 +355,7 @@ button.cat-btn-fixed.theme-button {
   .theme-strawberry .paw-body,
   .theme-cyber-orange .paw-body {
     width: 100% !important;
-    max-width: 200px !important;  /* DPR=2 时显示为 400px */
+    max-width: 400px !important;  /* DPR=2 时显示为 800px */
     min-width: 300px !important;
   }
 }
@@ -365,7 +365,7 @@ html body div.paw-body,
 html body div[class*="paw-body"],
 html body [class*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  max-width: 1200px !important;  /* DPR=2 时显示为 2400px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -380,7 +380,7 @@ body > [class*="paw-body"],
 #root > div[class*="paw-body"],
 #root > [class*="paw-body"] {
   width: 100% !important;
-  max-width: 900px !important;  /* DPR=2 时显示为 1800px */
+  max-width: 1200px !important;  /* DPR=2 时显示为 2400px */
   min-width: 300px !important;
   margin: 0 auto !important;
   box-sizing: border-box !important;
@@ -397,16 +397,16 @@ body > [class*="paw-body"],
   box-sizing: border-box !important;
 }
 
-/* 统一的猫猫按钮样式 - 视觉 100x80px (DPR=2 时 CSS 50x40px) */
+/* 统一的猫猫按钮样式 - 视觉 200x160px (DPR=2 时 CSS 100x80px) */
 .cat-btn {
-  width: 50px !important;      /* DPR=2 时显示为 100px */
-  height: 40px !important;     /* DPR=2 时显示为 80px */
-  min-width: 50px !important;
-  max-width: 50px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
+  width: 100px !important;     /* DPR=2 时显示为 200px */
+  height: 80px !important;     /* DPR=2 时显示为 160px */
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
   border: none !important;
-  border-radius: 20px !important;  /* 视觉 40px 圆角半径 */
+  border-radius: 40px !important;  /* 视觉 80px 圆角半径 */
   cursor: pointer !important;
   font-size: 0.8rem !important;
   font-weight: bold !important;
@@ -433,18 +433,18 @@ body > [class*="paw-body"],
 .cat-btn:hover,
 .theme-button.cat-btn:hover,
 button.cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  width: 50px !important;      /* DPR=2 时显示为 100px */
-  height: 40px !important;     /* DPR=2 时显示为 80px */
-  min-width: 50px !important;
-  max-width: 50px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
+  transform: translateY(-2px) !important;  /* -4px ÷ 2 = -2px */
+  width: 100px !important;     /* DPR=2 时显示为 200px */
+  height: 80px !important;     /* DPR=2 时显示为 160px */
+  min-width: 100px !important;
+  max-width: 100px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
 }
 
 .cat-btn:hover {
-  transform: translateY(-1px) !important;  /* -2px ÷ 2 = -1px */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25) !important;  /* 6px 20px ÷ 2 = 3px 10px */
+  transform: translateY(-2px) !important;  /* -4px ÷ 2 = -2px */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25) !important;  /* 12px 40px ÷ 2 = 6px 20px */
 }
 
 /* 猫爪按钮特殊样式 - 现在在页眉容器内，不需要绝对定位 */
@@ -456,8 +456,8 @@ button.cat-btn:hover {
 
 .cat-paw-btn.cat-btn:hover {
   background: #e8e8e8 !important;
-  transform: translateY(-2px) !important;  /* -4px ÷ 2 = -2px */
-  box-shadow: 0 7px 17px rgba(0,0,0,0.25) !important;  /* 15px 35px ÷ 2 = 7px 17px */
+  transform: translateY(-4px) !important;  /* -8px ÷ 2 = -4px */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25) !important;  /* 30px 70px ÷ 2 = 15px 35px */
 }
 
 /* 钻石手 - 简洁白色主题 */
