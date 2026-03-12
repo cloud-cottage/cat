@@ -629,24 +629,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <div className="grid-container" style={{
+          <div className={`grid-container ${themeClass}`} style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(6, 1fr)',
             gridTemplateRows: 'repeat(9, 280px)',
             gap: '1rem',
-            minHeight: '900px',
-            // Default主题布局 - 用户自定义
-            gridTemplateAreas: `
-              "1 1 2 2 3 3"
-              "1 1 2 2 3 3"
-              "4 4 5 5 5 5"
-              "4 4 5 5 5 5"
-              "4 4 5 5 5 5"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-            `
+            minHeight: '900px'
           }}>
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
