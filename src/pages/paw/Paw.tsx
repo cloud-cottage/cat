@@ -630,10 +630,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           flexDirection: 'column'
         }}>
           <div className={`grid-container ${themeClass}`} style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gridTemplateRows: 'repeat(9, 280px)',
-            gap: '1rem',
             minHeight: '900px'
           }}>
           {/* 调试信息 */}
@@ -679,8 +675,23 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 style={{
                   background: 'rgba(255,255,255,0.1)',
                   padding: '1rem',
-                  borderRadius: '8px'
+                  borderRadius: '8px',
+                  position: 'relative'
                 }}>
+                {/* 模块调试信息 */}
+                <div style={{ 
+                  position: 'absolute', 
+                  top: '-20px', 
+                  left: '0', 
+                  fontSize: '10px', 
+                  color: 'blue',
+                  background: 'yellow',
+                  padding: '1px 3px',
+                  borderRadius: '2px',
+                  zIndex: 1000
+                }}>
+                  {module.id} → {position.className}
+                </div>
                 <h3>{module.name}</h3>
                 
                 {module.type === 'profile' && (
