@@ -640,17 +640,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             width: '100%',  // 确保网格容器占满可用宽度
             boxSizing: 'border-box',  // 包含padding在宽度内
             // Default主题布局 - 用户自定义
-            gridTemplateAreas: `
-              "1 1 2 2 3 3"
-              "1 1 2 2 3 3"
-              "4 4 5 5 5 5"
-              "4 4 5 5 5 5"
-              "4 4 5 5 5 5"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-              "6 6 6 6 6 6"
-            `
+            gridTemplateAreas: 
+              "1 1 2 2 3 3 " +
+              "1 1 2 2 3 3 " +
+              "4 4 5 5 5 5 " +
+              "4 4 5 5 5 5 " +
+              "4 4 5 5 5 5 " +
+              "6 6 6 6 6 6 " +
+              "6 6 6 6 6 6 " +
+              "6 6 6 6 6 6 " +
+              "6 6 6 6 6 6 "
           }}>
           {/* 测试网格布局 */}
           <div style={{ 
@@ -688,6 +687,42 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             fontWeight: 'bold'
           }}>
             测试区域3
+          </div>
+          <div style={{ 
+            gridArea: '4',
+            background: 'rgba(255,255,0,0.3)',
+            border: '2px solid yellow',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域4
+          </div>
+          <div style={{ 
+            gridArea: '5',
+            background: 'rgba(255,0,255,0.3)',
+            border: '2px solid magenta',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域5
+          </div>
+          <div style={{ 
+            gridArea: '6',
+            background: 'rgba(0,255,255,0.3)',
+            border: '2px solid cyan',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }}>
+            测试区域6
           </div>
           {/* 调试信息 */}
           <div style={{ 
