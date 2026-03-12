@@ -309,7 +309,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   
   if (loading) {
     return (
-      <div className="paw-container" style={{ 
+      <div id="paw-container" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -334,7 +334,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
 
   if (!user) {
     return (
-      <div className="paw-container" style={{ 
+      <div id="paw-container" style={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
@@ -398,7 +398,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   ];
   
   return (
-    <div className={`paw-container ${themeClass}`} style={{ 
+    <div id="paw-container" className={`${themeClass}`} style={{
       width: '100%',
       maxWidth: '900px',
       minWidth: '300px',
@@ -415,7 +415,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       flexGrow: 0
     }}>
       {/* 页眉容器 */}
-      <div style={{
+      <div id="paw-header" style={{
         position: 'absolute',
         top: '20px',
         left: '20px',
@@ -1635,8 +1635,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         </div>
       )}
 
-      {/* 二维码显示 - 右下角 */}
-      <div
+      {/* 二维码显示 - 右下角页脚 */}
+      <div id="paw-footer"
         style={{
           position: 'fixed',
           bottom: '20px',
