@@ -29,6 +29,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
   
+  // 添加社交媒体功能状态
+  const [showAddSocial, setShowAddSocial] = useState(false)
+  const [newSocialForm, setNewSocialForm] = useState({ platform: '', username: '' })
+  
   // 各模块独立的编辑状态
   const [isProfileEditing, setIsProfileEditing] = useState(false)
   const [isSocialEditing, setIsSocialEditing] = useState(false)
@@ -88,6 +92,34 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       console.log(`自动保存 ${field} 成功`);
     } catch (error) {
       console.error(`自动保存 ${field} 失败:`, error);
+    }
+  };
+
+  // 保存新社交媒体
+  const saveNewSocial = async () => {
+    if (newSocialForm.platform && newSocialForm.username) {
+      try {
+        const updateData: any = {};
+        const platformMap: Record<string, string> = {
+          'twitter': 'twitterHandle',
+          'youtube': 'youtubeHandle',
+          'instagram': 'instagramHandle',
+          'linkedin': 'linkedInHandle'
+        };
+        
+        const field = platformMap[newSocialForm.platform.toLowerCase()];
+        if (field) {
+          updateData[field] = newSocialForm.username;
+          await api.updateUser(user?.username || '', updateData);
+          console.log('添加社交媒体成功:', newSocialForm.platform);
+          
+          // 重置表单
+          setNewSocialForm({ platform: '', username: '' });
+          setShowAddSocial(false);
+        }
+      } catch (error) {
+        console.error('添加社交媒体失败:', error);
+      }
     }
   };
 
@@ -1202,188 +1234,378 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <p>{module.content}</p>
-                    <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {user?.twitterHandle ? (
-                        <a
-                          href={`https://twitter.com/${user.twitterHandle}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ 
-                            padding: '0.25rem 0.5rem', 
-                            background: 'rgba(29, 161, 242, 0.2)', 
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            textDecoration: 'none',
-                            color: 'var(--theme-primary)',
-                            transition: 'all 0.2s ease',
-                            cursor: 'pointer'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(29, 161, 242, 0.3)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(29, 161, 242, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          🐦 Twitter: @{user.twitterHandle}
-                        </a>
-                      ) : isSocialEditing ? (
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(108, 117, 125, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          fontStyle: 'italic'
-                        }}>
-                          Twitter: 未设置
-                        </span>
-                      ) : null}
-                      <a
-                        href={`https://github.com/${user?.username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(51, 51, 51, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          textDecoration: 'none',
-                          color: 'var(--theme-primary)',
-                          transition: 'all 0.2s ease',
-                          cursor: 'pointer'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(51, 51, 51, 0.3)';
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(51, 51, 51, 0.2)';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }}
-                      >
-                        🐙 GitHub: {user?.username || '未设置'}
-                      </a>
-                      <span style={{ 
-                        padding: '0.25rem 0.5rem', 
-                        background: 'rgba(142, 36, 170, 0.2)', 
-                        borderRadius: '4px',
-                        fontSize: '0.75rem'
-                      }}>
-                        📡 Farcaster: {user?.username || '未设置'}
-                      </span>
-                      {user?.linkedInHandle ? (
-                        <a
-                          href={`https://linkedin.com/in/${user.linkedInHandle}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ 
-                            padding: '0.25rem 0.5rem', 
-                            background: 'rgba(0, 119, 181, 0.2)', 
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            textDecoration: 'none',
-                            color: 'var(--theme-primary)',
-                            transition: 'all 0.2s ease',
-                            cursor: 'pointer'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(0, 119, 181, 0.3)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(0, 119, 181, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          💼 LinkedIn: @{user.linkedInHandle}
-                        </a>
-                      ) : isSocialEditing ? (
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(108, 117, 125, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          fontStyle: 'italic'
-                        }}>
-                          LinkedIn: 未设置
-                        </span>
-                      ) : null}
-                      {user?.youtubeHandle ? (
-                        <a
-                          href={`https://youtube.com/@${user.youtubeHandle}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ 
-                            padding: '0.25rem 0.5rem', 
-                            background: 'rgba(255, 0, 0, 0.2)', 
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            textDecoration: 'none',
-                            color: 'var(--theme-primary)',
-                            transition: 'all 0.2s ease',
-                            cursor: 'pointer'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 0, 0, 0.3)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          📺 YouTube: @{user.youtubeHandle}
-                        </a>
-                      ) : isSocialEditing ? (
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(108, 117, 125, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          fontStyle: 'italic'
-                        }}>
-                          YouTube: 未设置
-                        </span>
-                      ) : null}
-                      {user?.instagramHandle ? (
-                        <a
-                          href={`https://instagram.com/${user.instagramHandle}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ 
-                            padding: '0.25rem 0.5rem', 
-                            background: 'rgba(225, 48, 108, 0.2)', 
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            textDecoration: 'none',
-                            color: 'var(--theme-primary)',
-                            transition: 'all 0.2s ease',
-                            cursor: 'pointer'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(225, 48, 108, 0.3)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(225, 48, 108, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          📷 Instagram: @{user.instagramHandle}
-                        </a>
-                      ) : isSocialEditing ? (
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          background: 'rgba(108, 117, 125, 0.2)', 
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          fontStyle: 'italic'
-                        }}>
-                          Instagram: 未设置
-                        </span>
-                      ) : null}
+                    <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                      {/* 非编辑状态 - 只显示可点击的图标 */}
+                      {!isSocialEditing && (
+                        <>
+                          {user?.twitterHandle && (
+                            <a
+                              href={`https://twitter.com/${user.twitterHandle}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: '#1DA1F2',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(29, 161, 242, 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="Twitter"
+                            >
+                              <i className="ri-twitter-x-fill" style={{ fontSize: '20px' }}></i>
+                            </a>
+                          )}
+                          
+                          {user?.youtubeHandle && (
+                            <a
+                              href={`https://youtube.com/@${user.youtubeHandle}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: '#FF0000',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 0, 0, 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="YouTube"
+                            >
+                              <i className="ri-youtube-fill" style={{ fontSize: '20px' }}></i>
+                            </a>
+                          )}
+                          
+                          <a
+                            href={`https://github.com/${user?.username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: '#333',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(51, 51, 51, 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="GitHub"
+                            >
+                              <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
+                          </a>
+                          
+                          {user?.instagramHandle && (
+                            <a
+                              href={`https://instagram.com/${user.instagramHandle}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(225, 48, 108, 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="Instagram"
+                            >
+                              <i className="ri-instagram-fill" style={{ fontSize: '20px' }}></i>
+                            </a>
+                          )}
+                          
+                          {user?.linkedInHandle && (
+                            <a
+                              href={`https://linkedin.com/in/${user.linkedInHandle}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: '#0077B5',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 119, 181, 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="LinkedIn"
+                            >
+                              <i className="ri-linkedin-box-fill" style={{ fontSize: '20px' }}></i>
+                            </a>
+                          )}
+                          
+                          {/* Telegram - 使用用户名作为默认 */}
+                          <a
+                            href={`https://t.me/${user?.username || user?.nickname}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '50%',
+                              background: '#0088CC',
+                              color: 'white',
+                              textDecoration: 'none',
+                              transition: 'all 0.2s ease',
+                              cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.transform = 'scale(1.1)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 136, 204, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = 'scale(1)';
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
+                            title="Telegram"
+                          >
+                            <i className="ri-telegram-fill" style={{ fontSize: '20px' }}></i>
+                          </a>
+                        </>
+                      )}
+                      
+                      {/* 编辑状态 - 保持当前显示方式 + 添加功能 */}
+                      {isSocialEditing && (
+                        <>
+                          {/* 保持当前的输入框显示 */}
+                          <input
+                            type="text"
+                            value={editForm.twitterHandle}
+                            onChange={(e) => {
+                              setEditForm({...editForm, twitterHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('twitterHandle', e.target.value);
+                            }}
+                            placeholder="Twitter 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.linkedInHandle}
+                            onChange={(e) => {
+                              setEditForm({...editForm, linkedInHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('linkedInHandle', e.target.value);
+                            }}
+                            placeholder="LinkedIn 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.youtubeHandle}
+                            onChange={(e) => {
+                              setEditForm({...editForm, youtubeHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('youtubeHandle', e.target.value);
+                            }}
+                            placeholder="YouTube 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={editForm.instagramHandle}
+                            onChange={(e) => {
+                              setEditForm({...editForm, instagramHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('instagramHandle', e.target.value);
+                            }}
+                            placeholder="Instagram 用户名"
+                            style={{
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              width: '100%',
+                              marginBottom: '0.5rem'
+                            }}
+                          />
+                          
+                          {/* 添加新社交媒体功能 */}
+                          {!showAddSocial ? (
+                            <div
+                              onClick={() => setShowAddSocial(true)}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: 'var(--theme-primary)',
+                                color: 'white',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(var(--theme-primary-rgb), 0.4)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                              title="添加社交媒体"
+                            >
+                              <i className="ri-add-circle-fill" style={{ fontSize: '20px' }}></i>
+                            </div>
+                          ) : (
+                            <div style={{
+                              display: 'flex',
+                              gap: '0.5rem',
+                              alignItems: 'center',
+                              padding: '0.5rem',
+                              border: '1px solid var(--theme-primary)',
+                              borderRadius: '4px',
+                              background: 'var(--theme-surface)',
+                              width: '100%'
+                            }}>
+                              <select
+                                value={newSocialForm.platform}
+                                onChange={(e) => setNewSocialForm({...newSocialForm, platform: e.target.value})}
+                                style={{
+                                  padding: '0.5rem',
+                                  border: '1px solid var(--theme-primary)',
+                                  borderRadius: '4px',
+                                  background: 'var(--theme-surface)',
+                                  color: 'var(--theme-primary)',
+                                  fontSize: '0.875rem'
+                                }}
+                              >
+                                <option value="">选择平台</option>
+                                <option value="twitter">Twitter</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="linkedin">LinkedIn</option>
+                              </select>
+                              <input
+                                type="text"
+                                value={newSocialForm.username}
+                                onChange={(e) => setNewSocialForm({...newSocialForm, username: e.target.value})}
+                                placeholder="用户名"
+                                style={{
+                                  flex: 1,
+                                  padding: '0.5rem',
+                                  border: '1px solid var(--theme-primary)',
+                                  borderRadius: '4px',
+                                  background: 'var(--theme-surface)',
+                                  color: 'var(--theme-primary)',
+                                  fontSize: '0.875rem'
+                                }}
+                              />
+                              <button
+                                onClick={saveNewSocial}
+                                disabled={!newSocialForm.platform || !newSocialForm.username}
+                                style={{
+                                  padding: '0.5rem 1rem',
+                                  background: newSocialForm.platform && newSocialForm.username ? 'var(--theme-primary)' : '#ccc',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: 'pointer',
+                                  fontSize: '0.875rem'
+                                }}
+                              >
+                                <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
+                                保存
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1962,9 +2184,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
+            )}
+            )}
+          </div>
         </div>
       </div>
 
