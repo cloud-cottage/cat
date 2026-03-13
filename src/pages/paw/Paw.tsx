@@ -15,7 +15,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
   const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
   const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
@@ -28,6 +27,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
+  
+  // 各模块独立的编辑状态
+  const [isProfileEditing, setIsProfileEditing] = useState(false)
+  const [isSocialEditing, setIsSocialEditing] = useState(false)
+  const [isLinksEditing, setIsLinksEditing] = useState(false)
+  const [isMostfindEditing, setIsMostfindEditing] = useState(false)
+  const [isAssetEditing, setIsAssetEditing] = useState(false)
+  const [isTwitterEditing, setIsTwitterEditing] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -523,7 +530,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             </button>
             
             {/* 主题选择按钮 */}
-            {isEditing && (
+            {isLinksEditing && (
               <button
                 onClick={() => setShowThemeSelector(!showThemeSelector)}
                 style={{
@@ -578,7 +585,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           zIndex: 1001
         }}>
           isOwner: {isOwner ? 'true' : 'false'}<br/>
-          isEditing: {isEditing ? 'true' : 'false'}<br/>
+          isProfileEditing: {isProfileEditing ? 'true' : 'false'}<br/>
           user: {user?.username || 'null'}
         </div>
       )}
@@ -846,7 +853,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsEditing(true);
+                        setIsProfileEditing(true);
                       }}
                       title="编辑资料"
                     >
@@ -892,7 +899,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <div>
-                      {isEditing ? (
+                      {isProfileEditing ? (
                         <div style={{ marginBottom: '1rem' }}>
                           <input
                             type="text"
@@ -1009,7 +1016,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   });
                                   
                                   console.log('保存成功:', updatedUser);
-                                  setIsEditing(false);
+                                  setIsProfileEditing(false);
                                   
                                   // TODO: 刷新用户数据或更新本地状态
                                   window.location.reload();
@@ -1043,7 +1050,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   youtubeHandle: user?.youtubeHandle || '',
                                   instagramHandle: user?.instagramHandle || ''
                                 });
-                                setIsEditing(false);
+                                setIsProfileEditing(false);
                               }}
                               disabled={isSaving}
                               style={{
@@ -1178,8 +1185,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // TODO: 实现社交媒体编辑功能
-                        alert('社交媒体编辑功能待实现');
+                        setIsSocialEditing(true);
                       }}
                       title="编辑社交媒体"
                     >
@@ -1214,7 +1220,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           🐦 Twitter: @{user.twitterHandle}
                         </a>
-                      ) : isEditing ? (
+                      ) : isSocialEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1284,7 +1290,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           💼 LinkedIn: @{user.linkedInHandle}
                         </a>
-                      ) : isEditing ? (
+                      ) : isSocialEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1321,7 +1327,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📺 YouTube: @{user.youtubeHandle}
                         </a>
-                      ) : isEditing ? (
+                      ) : isSocialEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1358,7 +1364,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📷 Instagram: @{user.instagramHandle}
                         </a>
-                      ) : isEditing ? (
+                      ) : isSocialEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1420,7 +1426,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setShowAddLink(!showAddLink);
+                        setIsLinksEditing(true);
                       }}
                       title="编辑链接"
                     >
@@ -1429,7 +1435,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <p>{module.content}</p>
-                      {isEditing && (
+                      {isLinksEditing && (
                         <button
                           onClick={() => setShowAddLink(!showAddLink)}
                           style={{
@@ -1447,7 +1453,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       )}
                     </div>
                     
-                    {showAddLink && isEditing && (
+                    {showAddLink && isLinksEditing && (
                       <div style={{
                         padding: '0.5rem',
                         background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1527,7 +1533,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.map((link: any, linkIndex: number) => (
                           <div key={link.id || linkIndex} style={{ marginBottom: '0.25rem' }}>
-                            {editingLinkId === link.id && isEditing ? (
+                            {editingLinkId === link.id && isLinksEditing ? (
                               <div style={{
                                 padding: '0.25rem',
                                 background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1628,7 +1634,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   🔗 {link.label || link.title || '无标题'}
                                 </a>
                                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-                                  {isEditing && (
+                                  {isLinksEditing && (
                                     <>
                                       <button
                                         onClick={() => moveLinkUp(link.id)}
@@ -1749,8 +1755,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // TODO: 实现活跃平台编辑功能
-                        alert('活跃平台编辑功能待实现');
+                        setIsMostfindEditing(true);
                       }}
                       title="编辑活跃平台"
                     >
@@ -1761,7 +1766,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <div style={{ 
                       marginTop: '0.5rem', 
                       fontSize: '0.875rem', 
-                      opacity: 0.8 
+                      opacity: isMostfindEditing ? 1 : 0.8 
                     }}>
                       <div>• Web3社区</div>
                       <div>• 开发者平台</div>
@@ -1817,8 +1822,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // TODO: 实现数字资产编辑功能
-                        alert('数字资产编辑功能待实现');
+                        setIsAssetEditing(true);
                       }}
                       title="编辑数字资产"
                     >
@@ -1829,7 +1833,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <div style={{ 
                       marginTop: '0.5rem', 
                       fontSize: '0.875rem', 
-                      opacity: 0.8 
+                      opacity: isAssetEditing ? 1 : 0.8 
                     }}>
                       <div>• NFT 收藏</div>
                       <div>• 代币资产</div>
@@ -1904,8 +1908,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // TODO: 实现推特动态编辑功能
-                        alert('推特动态编辑功能待实现');
+                        setIsTwitterEditing(true);
                       }}
                       title="编辑推特动态"
                     >
@@ -1916,7 +1919,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <div style={{ 
                       marginTop: '0.5rem', 
                       fontSize: '0.875rem', 
-                      opacity: 0.8 
+                      opacity: isTwitterEditing ? 1 : 0.8 
                     }}>
                       <div>• 推文内容</div>
                       <div>• 互动数据</div>
