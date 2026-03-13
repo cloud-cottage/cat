@@ -526,7 +526,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               }}
               title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
             >
-              {isDarkMode ? '🌙' : '☀️'}
+              {isDarkMode ? <i className="ri-moon-line"></i> : <i className="ri-sun-line"></i>}
             </button>
             
             {/* 主题选择按钮 */}
