@@ -213,7 +213,7 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
               }}
               title="GitHub"
             >
-              <i className="ri-github-fill" style={{ fontSize: '10px' }}></i>
+              <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
             </a>
             
             {user?.instagramHandle && (

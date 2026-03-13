@@ -644,25 +644,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       </div>
 
       
-      {/* 开发模式调试信息 */}
-      {isOwner && process.env.NODE_ENV === 'development' && (
-        <div style={{
-          position: 'absolute',
-          top: '60px',
-          right: '20px',
-          background: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          padding: '0.5rem',
-          borderRadius: '4px',
-          fontSize: '0.8rem',
-          zIndex: 1001
-        }}>
-          isOwner: {isOwner ? 'true' : 'false'}<br/>
-          isProfileEditing: {isProfileEditing ? 'true' : 'false'}<br/>
-          user: {user?.username || 'null'}
-        </div>
-      )}
-
       {/* 猫爪模态框 */}
       {showCatPawModal && (
         <div style={{
