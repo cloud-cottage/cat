@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { getThemeClassName, getThemeColors } from '../../themes'
+import { getThemeClassName } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
-import { api, getUserAvatarUrl } from './lib/api'
-import { ThemeModal } from './components/ThemeModal'
+import { getThemeColors } from '../../themes'
+import { api, PREDEFINED_ICONS, detectIconFromUrl, type Icon as IconType, getUserAvatarUrl } from './lib/api'
 import { Icon } from './components/Icon'
 import { QRCodeComponent } from './components/QRCode'
+import { ThemeModal } from './components/ThemeModal'
 import { useLanguage } from '../../i18n/useLanguage'
 
 interface Web3ProfileProps {
@@ -46,6 +47,30 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       } catch (error) {
         console.error('复制失败:', error);
       }
+    }
+  }
+
+  // 获取网站图标
+  const getFaviconUrl = (url: string): string => {
+    try {
+      const iconId = detectIconFromUrl(url);
+      const icon = PREDEFINED_ICONS.find((icon: IconType) => icon.id === iconId);
+      
+      // 如果有 ICO 文件，返回 ICO 文件路径
+      if (icon?.icoFile) {
+        return icon.icoFile;
+      }
+      
+      // 否则返回 emoji
+      if (icon?.emoji) {
+        return icon.emoji;
+      }
+      
+      // 默认返回链接 emoji
+      return '🔗';
+    } catch (error) {
+      console.error('解析URL失败:', error);
+      return '🔗';
     }
   };
 
@@ -1646,7 +1671,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                     flex: 1
                                   }}
                                 >
-                                  🔗 {link.label || link.title || '无标题'}
+                                  {getFaviconUrl(link.url)} {link.label || link.title || '无标题'}
                                 </a>
                                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                                   {isLinksEditing && (
@@ -2026,7 +2051,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           {showThemeSelector && (
             <ThemeModal
               currentTheme={currentTheme}
-              onThemeChange={(theme) => setCurrentTheme(theme)}
+              onThemeChange={(theme: any) => setCurrentTheme(theme)}
               onClose={() => setShowThemeSelector(false)}
               onApplyTheme={applyTheme}
               applyingTheme={applyingTheme}
