@@ -853,11 +853,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsProfileEditing(true);
+                        if (isProfileEditing) {
+                          // 保存逻辑
+                          setIsProfileEditing(false);
+                        } else {
+                          setIsProfileEditing(true);
+                        }
                       }}
-                      title="编辑资料"
+                      title={isProfileEditing ? "保存资料" : "编辑资料"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isProfileEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <div style={{ marginBottom: '1rem' }}>
@@ -1185,11 +1190,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsSocialEditing(true);
+                        if (isSocialEditing) {
+                          // 保存逻辑
+                          setIsSocialEditing(false);
+                        } else {
+                          setIsSocialEditing(true);
+                        }
                       }}
-                      title="编辑社交媒体"
+                      title={isSocialEditing ? "保存社交媒体" : "编辑社交媒体"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isSocialEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1426,11 +1436,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsLinksEditing(true);
+                        if (isLinksEditing) {
+                          // 保存逻辑
+                          setIsLinksEditing(false);
+                        } else {
+                          setIsLinksEditing(true);
+                        }
                       }}
-                      title="编辑链接"
+                      title={isLinksEditing ? "保存链接" : "编辑链接"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isLinksEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -1755,11 +1770,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsMostfindEditing(true);
+                        if (isMostfindEditing) {
+                          // 保存逻辑
+                          setIsMostfindEditing(false);
+                        } else {
+                          setIsMostfindEditing(true);
+                        }
                       }}
-                      title="编辑活跃平台"
+                      title={isMostfindEditing ? "保存活跃平台" : "编辑活跃平台"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isMostfindEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1822,11 +1842,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsAssetEditing(true);
+                        if (isAssetEditing) {
+                          // 保存逻辑
+                          setIsAssetEditing(false);
+                        } else {
+                          setIsAssetEditing(true);
+                        }
                       }}
-                      title="编辑数字资产"
+                      title={isAssetEditing ? "保存数字资产" : "编辑数字资产"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isAssetEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1908,11 +1933,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsTwitterEditing(true);
+                        if (isTwitterEditing) {
+                          // 保存逻辑
+                          setIsTwitterEditing(false);
+                        } else {
+                          setIsTwitterEditing(true);
+                        }
                       }}
-                      title="编辑推特动态"
+                      title={isTwitterEditing ? "保存推特动态" : "编辑推特动态"}
                     >
-                      <i className="ri-edit-line"></i>
+                      {isTwitterEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
