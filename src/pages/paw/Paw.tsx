@@ -471,10 +471,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           zIndex: 1000,
           boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
         }}
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
+        onClick={() => setShowThemeSelector(!showThemeSelector)}
+        title="切换主题"
       >
-        {isDarkMode ? '🌙' : '☀️'}
+        <i className="ri-edit-line"></i>
       </div>
       {/* 页眉容器 */}
       <div id="paw-header" style={{
@@ -1132,7 +1132,60 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'social' && (
-                  <div>
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: 实现社交媒体编辑功能
+                        alert('社交媒体编辑功能待实现');
+                      }}
+                      title="编辑社交媒体"
+                    >
+                      <i className="ri-edit-line"></i>
+                    </div>
+                    
                     <p>{module.content}</p>
                     <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {user?.twitterHandle ? (
@@ -1321,7 +1374,59 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'links' && (
-                  <div>
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowAddLink(!showAddLink);
+                      }}
+                      title="编辑链接"
+                    >
+                      <i className="ri-edit-line"></i>
+                    </div>
+                    
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <p>{module.content}</p>
                       {isEditing && (
@@ -1598,7 +1703,60 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'mostfind' && (
-                  <div>
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: 实现活跃平台编辑功能
+                        alert('活跃平台编辑功能待实现');
+                      }}
+                      title="编辑活跃平台"
+                    >
+                      <i className="ri-edit-line"></i>
+                    </div>
+                    
                     <p>{module.content}</p>
                     <div style={{ 
                       marginTop: '0.5rem', 
@@ -1613,7 +1771,60 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'asset' && (
-                  <div>
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: 实现数字资产编辑功能
+                        alert('数字资产编辑功能待实现');
+                      }}
+                      title="编辑数字资产"
+                    >
+                      <i className="ri-edit-line"></i>
+                    </div>
+                    
                     <p>{module.content}</p>
                     <div style={{ 
                       marginTop: '0.5rem', 
@@ -1642,6 +1853,75 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       >
                         查看详情
                       </button>
+                    </div>
+                  </div>
+                )}
+                
+                {module.type === 'twitter' && (
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: 实现推特动态编辑功能
+                        alert('推特动态编辑功能待实现');
+                      }}
+                      title="编辑推特动态"
+                    >
+                      <i className="ri-edit-line"></i>
+                    </div>
+                    
+                    <p>{module.content}</p>
+                    <div style={{ 
+                      marginTop: '0.5rem', 
+                      fontSize: '0.875rem', 
+                      opacity: 0.8 
+                    }}>
+                      <div>• 推文内容</div>
+                      <div>• 互动数据</div>
+                      <div>• 关注者统计</div>
+                      <div>• 热门话题</div>
                     </div>
                   </div>
                 )}
