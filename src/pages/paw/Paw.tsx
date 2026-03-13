@@ -691,7 +691,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           {modules.map((module, index) => {
             // 根据 default 主题的网格布局设置网格位置
             const getPosition = (type: string) => {
-              // 将现有板块映射到 default 主题的网格位置
+              // 将现有板块映射到 default 主题的网格位置（严格按CSS grid-template-areas）
               switch (type) {
                 case 'profile':
                   return { 
@@ -700,27 +700,27 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   };  
                 case 'social':
                   return { 
-                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
                     gridRow: '3 / 4'      // 从第3行到第4行（占1行）
                   };  
                 case 'twitter':
                   return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占1列）
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
                     gridRow: '4 / 5'      // 从第4行到第5行（占1行）
                   };  
                 case 'mostfind':
                   return { 
-                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridColumn: '3 / 6',  // 从第3列到第6列（占3列）
                     gridRow: '1 / 2'      // 从第1行到第2行（占1行）
                   };  
                 case 'links':
                   return { 
-                    gridColumn: '3 / 7',  // 从第3列到第7列（占2列）
+                    gridColumn: '3 / 6',  // 从第3列到第6列（占3列）
                     gridRow: '2 / 5'      // 从第2行到第5行（占3行）
                   };  
                 case 'asset':
                   return { 
-                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
                     gridRow: '5 / 10'     // 从第5行到第10行（占5行）
                   };  
                 default:
