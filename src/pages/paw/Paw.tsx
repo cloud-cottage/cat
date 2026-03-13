@@ -815,7 +815,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       title="编辑资料"
                     >
-                      ✏️
+                      <i className="ri-edit-line"></i>
                     </div>
                     
                     <div style={{ marginBottom: '1rem' }}>
