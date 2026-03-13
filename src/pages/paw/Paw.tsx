@@ -74,6 +74,69 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     }
   };
 
+  // 保存用户资料
+  const handleSaveProfile = async () => {
+    try {
+      console.log('保存用户资料:', editForm);
+      
+      // 调用API保存用户资料
+      const updatedUser = await api.updateUser(user?.username || '', {
+        nickname: editForm.nickname,
+        bio: editForm.bio,
+        twitterHandle: editForm.twitterHandle,
+        linkedInHandle: editForm.linkedInHandle,
+        youtubeHandle: editForm.youtubeHandle,
+        instagramHandle: editForm.instagramHandle
+      });
+      
+      console.log('保存成功:', updatedUser);
+      setIsProfileEditing(false);
+      
+      // TODO: 刷新用户数据或更新本地状态
+      window.location.reload();
+    } catch (error) {
+      console.error('保存失败:', error);
+      alert('保存失败，请重试');
+    }
+  };
+
+  // 取消编辑
+  const handleCancelEdit = () => {
+    setEditForm({
+      nickname: user?.nickname || '',
+      bio: user?.bio || '',
+      twitterHandle: user?.twitterHandle || '',
+      linkedInHandle: user?.linkedInHandle || '',
+      youtubeHandle: user?.youtubeHandle || '',
+      instagramHandle: user?.instagramHandle || ''
+    });
+    setIsProfileEditing(false);
+  };
+
+  // 键盘事件处理
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isProfileEditing) {
+          handleCancelEdit();
+        } else if (isSocialEditing) {
+          setIsSocialEditing(false);
+        } else if (isLinksEditing) {
+          setIsLinksEditing(false);
+        } else if (isMostfindEditing) {
+          setIsMostfindEditing(false);
+        } else if (isAssetEditing) {
+          setIsAssetEditing(false);
+        } else if (isTwitterEditing) {
+          setIsTwitterEditing(false);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isProfileEditing, isSocialEditing, isLinksEditing, isMostfindEditing, isAssetEditing, isTwitterEditing, user]);
+
   // 获取当前主题颜色
   const getCurrentThemeColors = () => {
     if (!currentTheme) return { primary: '#FF6B35', secondary: '#00D9FF', bg: '#0A0E27', surface: '#1A1F3A' };
@@ -235,7 +298,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       setApplyingTheme(false);
     }
   };
-  const [isSaving, setIsSaving] = useState(false)
   const [editForm, setEditForm] = useState({
     nickname: user?.nickname || '',
     bio: user?.bio || '',
@@ -880,7 +942,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         e.stopPropagation();
                         if (isProfileEditing) {
                           // 保存逻辑
-                          setIsProfileEditing(false);
+                          handleSaveProfile();
                         } else {
                           setIsProfileEditing(true);
                         }
@@ -1028,74 +1090,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               marginBottom: '0.5rem'
                             }}
                           />
-                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                            <button
-                              onClick={async () => {
-                                try {
-                                  setIsSaving(true);
-                                  console.log('保存用户资料:', editForm);
-                                  
-                                  // 调用API保存用户资料
-                                  const updatedUser = await api.updateUser(user?.username || '', {
-                                    nickname: editForm.nickname,
-                                    bio: editForm.bio,
-                                    twitterHandle: editForm.twitterHandle,
-                                    linkedInHandle: editForm.linkedInHandle,
-                                    youtubeHandle: editForm.youtubeHandle,
-                                    instagramHandle: editForm.instagramHandle
-                                  });
-                                  
-                                  console.log('保存成功:', updatedUser);
-                                  setIsProfileEditing(false);
-                                  
-                                  // TODO: 刷新用户数据或更新本地状态
-                                  window.location.reload();
-                                } catch (error) {
-                                  console.error('保存失败:', error);
-                                  alert('保存失败，请重试');
-                                } finally {
-                                  setIsSaving(false);
-                                }
-                              }}
-                              disabled={isSaving}
-                              style={{
-                                padding: '0.5rem 1rem',
-                                background: isSaving ? '#ccc' : 'var(--theme-primary)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: isSaving ? 'not-allowed' : 'pointer',
-                                opacity: isSaving ? 0.7 : 1
-                              }}
-                            >
-                              {isSaving ? '保存中...' : '保存'}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setEditForm({
-                                  nickname: user?.nickname || '',
-                                  bio: user?.bio || '',
-                                  twitterHandle: user?.twitterHandle || '',
-                                  linkedInHandle: user?.linkedInHandle || '',
-                                  youtubeHandle: user?.youtubeHandle || '',
-                                  instagramHandle: user?.instagramHandle || ''
-                                });
-                                setIsProfileEditing(false);
-                              }}
-                              disabled={isSaving}
-                              style={{
-                                padding: '0.5rem 1rem',
-                                background: 'transparent',
-                                color: 'var(--theme-primary)',
-                                border: '1px solid var(--theme-primary)',
-                                borderRadius: '4px',
-                                cursor: isSaving ? 'not-allowed' : 'pointer',
-                                opacity: isSaving ? 0.5 : 1
-                              }}
-                            >
-                              取消
-                            </button>
-                          </div>
                         </div>
                       ) : (
                         <div>
