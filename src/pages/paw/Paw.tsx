@@ -705,13 +705,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   };  
                 case 'twitter':
                   return { 
-                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
-                    gridRow: '5 / 10'     // 从第5行到第10行（占5行）
+                    gridColumn: '1 / 3',  // 从第1列到第3列（占1列）
+                    gridRow: '4 / 5'      // 从第4行到第5行（占1行）
                   };  
                 case 'mostfind':
                   return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占1列）
-                    gridRow: '4 / 5'      // 从第4行到第5行（占1行）
+                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridRow: '1 / 2'      // 从第1行到第2行（占1行）
                   };  
                 case 'links':
                   return { 
