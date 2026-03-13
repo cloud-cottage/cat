@@ -764,7 +764,60 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 <h3>{module.name}</h3>
                 
                 {module.type === 'profile' && (
-                  <div style={{ textAlign: 'center' }}>
+                  <div 
+                    style={{ 
+                      textAlign: 'center',
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
+                    {/* 编辑符号 - 悬停时显示 */}
+                    <div
+                      className="edit-icon"
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        width: '24px',
+                        height: '24px',
+                        background: 'var(--theme-primary)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: '0',
+                        pointerEvents: 'none',
+                        transition: 'all 0.2s ease',
+                        zIndex: 10,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsEditing(true);
+                      }}
+                      title="编辑资料"
+                    >
+                      ✏️
+                    </div>
+                    
                     <div style={{ marginBottom: '1rem' }}>
                       {getUserAvatarUrl(user) ? (
                         <img 
@@ -1040,25 +1093,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         </div>
                       )}
                     </div>
-                    
-                    {/* 编辑按钮 */}
-                    {!isEditing && (
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        style={{
-                          padding: '0.5rem 1rem',
-                          background: 'var(--theme-secondary)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '0.875rem',
-                          marginTop: '0.5rem'
-                        }}
-                      >
-                        ✏️ 编辑资料
-                      </button>
-                    )}
                   </div>
                 )}
                 
