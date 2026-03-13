@@ -400,6 +400,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       name: '我活跃在', 
       content: '活跃平台',
       type: 'mostfind'
+    },
+    { 
+      id: 'asset', 
+      name: '公开资产', 
+      content: '数字资产',
+      type: 'asset'
     }
   ];
   
@@ -695,22 +701,27 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 case 'social':
                   return { 
                     gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
-                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
+                    gridRow: '3 / 4'      // 从第3行到第4行（占1行）
                   };  
                 case 'twitter':
                   return { 
-                    gridColumn: '5 / 7',  // 从第5列到第7列（占1列）
-                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
+                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridRow: '5 / 10'     // 从第5行到第10行（占5行）
                   };  
                 case 'mostfind':
                   return { 
                     gridColumn: '1 / 3',  // 从第1列到第3列（占1列）
-                    gridRow: '3 / 6'      // 从第3行到第6行（占3行）
+                    gridRow: '4 / 5'      // 从第4行到第5行（占1行）
                   };  
                 case 'links':
                   return { 
                     gridColumn: '3 / 7',  // 从第3列到第7列（占2列）
-                    gridRow: '3 / 6'      // 从第3行到第6行（占3行）
+                    gridRow: '2 / 5'      // 从第2行到第5行（占3行）
+                  };  
+                case 'asset':
+                  return { 
+                    gridColumn: '3 / 5',  // 从第3列到第5列（占1列）
+                    gridRow: '5 / 10'     // 从第5行到第10行（占5行）
                   };  
                 default:
                   return { 
@@ -1528,6 +1539,40 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <div>• Web3社区</div>
                       <div>• 开发者平台</div>
                       <div>• 创作者生态</div>
+                    </div>
+                  </div>
+                )}
+                
+                {module.type === 'asset' && (
+                  <div>
+                    <p>{module.content}</p>
+                    <div style={{ 
+                      marginTop: '0.5rem', 
+                      fontSize: '0.875rem', 
+                      opacity: 0.8 
+                    }}>
+                      <div>• NFT 收藏</div>
+                      <div>• 代币资产</div>
+                      <div>• DeFi 仓位</div>
+                      <div>• 链上身份</div>
+                    </div>
+                    <div style={{ 
+                      marginTop: '1rem', 
+                      textAlign: 'center'
+                    }}>
+                      <button
+                        style={{
+                          padding: '0.5rem 1rem',
+                          background: 'var(--theme-primary)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.875rem'
+                        }}
+                      >
+                        查看详情
+                      </button>
                     </div>
                   </div>
                 )}
