@@ -16,6 +16,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
   const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
   const [showAddLink, setShowAddLink] = useState(false)
@@ -23,8 +24,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
-  const [isEditingMode, setIsEditingMode] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
@@ -431,7 +430,52 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         flexGrow: 0,
         paddingTop: '40px',     // DPR=2 时显示为 80px
         borderRadius: '40px'     // DPR=2 时显示为 80px
-      }}>
+      }}
+      onMouseEnter={(e) => {
+        // 显示主题切换按钮
+        const themeToggle = e.currentTarget.querySelector('.theme-toggle') as HTMLElement;
+        if (themeToggle) {
+          themeToggle.style.opacity = '1';
+          themeToggle.style.pointerEvents = 'auto';
+        }
+      }}
+      onMouseLeave={(e) => {
+        // 隐藏主题切换按钮
+        const themeToggle = e.currentTarget.querySelector('.theme-toggle') as HTMLElement;
+        if (themeToggle) {
+          themeToggle.style.opacity = '0';
+          themeToggle.style.pointerEvents = 'none';
+        }
+      }}
+    >
+      {/* 主题切换按钮 - 悬停时显示 */}
+      <div
+        className="theme-toggle"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          width: '40px',
+          height: '40px',
+          background: getCurrentThemeColors().primary,
+          color: 'white',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '16px',
+          opacity: '0',
+          pointerEvents: 'none',
+          transition: 'all 0.2s ease',
+          zIndex: 1000,
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+        }}
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
+      >
+        {isDarkMode ? '🌙' : '☀️'}
+      </div>
       {/* 页眉容器 */}
       <div id="paw-header" style={{
         display: 'flex',
@@ -479,7 +523,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             </button>
             
             {/* 主题选择按钮 */}
-            {isEditingMode && (
+            {isEditing && (
               <button
                 onClick={() => setShowThemeSelector(!showThemeSelector)}
                 style={{
@@ -506,15 +550,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 🎨 切换主题
               </button>
             )}
-            
-            {/* 编辑按钮 */}
-            <button
-              className="cat-btn"
-              onClick={() => setIsEditingMode(!isEditingMode)}
-              title={t('editMode')}
-            >
-              <Icon name="edit" size={24} />
-            </button>
             
             {/* 分享按钮 */}
             <button
@@ -543,7 +578,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           zIndex: 1001
         }}>
           isOwner: {isOwner ? 'true' : 'false'}<br/>
-          isEditingMode: {isEditingMode ? 'true' : 'false'}<br/>
+          isEditing: {isEditing ? 'true' : 'false'}<br/>
           user: {user?.username || 'null'}
         </div>
       )}
@@ -1126,7 +1161,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           🐦 Twitter: @{user.twitterHandle}
                         </a>
-                      ) : isEditingMode ? (
+                      ) : isEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1196,7 +1231,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           💼 LinkedIn: @{user.linkedInHandle}
                         </a>
-                      ) : isEditingMode ? (
+                      ) : isEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1233,7 +1268,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📺 YouTube: @{user.youtubeHandle}
                         </a>
-                      ) : isEditingMode ? (
+                      ) : isEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1270,7 +1305,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         >
                           📷 Instagram: @{user.instagramHandle}
                         </a>
-                      ) : isEditingMode ? (
+                      ) : isEditing ? (
                         <span style={{ 
                           padding: '0.25rem 0.5rem', 
                           background: 'rgba(108, 117, 125, 0.2)', 
@@ -1289,7 +1324,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <p>{module.content}</p>
-                      {isEditingMode && (
+                      {isEditing && (
                         <button
                           onClick={() => setShowAddLink(!showAddLink)}
                           style={{
@@ -1307,7 +1342,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       )}
                     </div>
                     
-                    {showAddLink && isEditingMode && (
+                    {showAddLink && isEditing && (
                       <div style={{
                         padding: '0.5rem',
                         background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1387,7 +1422,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <div style={{ marginTop: '0.5rem' }}>
                         {module.data.map((link: any, linkIndex: number) => (
                           <div key={link.id || linkIndex} style={{ marginBottom: '0.25rem' }}>
-                            {editingLinkId === link.id && isEditingMode ? (
+                            {editingLinkId === link.id && isEditing ? (
                               <div style={{
                                 padding: '0.25rem',
                                 background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1488,7 +1523,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                   🔗 {link.label || link.title || '无标题'}
                                 </a>
                                 <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-                                  {isEditingMode && (
+                                  {isEditing && (
                                     <>
                                       <button
                                         onClick={() => moveLinkUp(link.id)}
