@@ -637,7 +637,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               onClick={() => setShowShareModal(true)}
               title={t('share')}
             >
-              <Icon name="share" size={24} />
+              <i className="ri-share-box-fill" style={{ fontSize: '24px' }}></i>
             </button>
           </div>
         )}
@@ -1247,8 +1247,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '40px',
-                                height: '40px',
+                                width: '20px',
+                                height: '20px',
                                 borderRadius: '50%',
                                 background: '#1DA1F2',
                                 color: 'white',
@@ -1266,7 +1266,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               }}
                               title="Twitter"
                             >
-                              <i className="ri-twitter-x-fill" style={{ fontSize: '20px' }}></i>
+                              <i className="ri-twitter-x-fill" style={{ fontSize: '10px' }}></i>
                             </a>
                           )}
                           
@@ -1279,8 +1279,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '40px',
-                                height: '40px',
+                                width: '20px',
+                                height: '20px',
                                 borderRadius: '50%',
                                 background: '#FF0000',
                                 color: 'white',
@@ -1298,7 +1298,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               }}
                               title="YouTube"
                             >
-                              <i className="ri-youtube-fill" style={{ fontSize: '20px' }}></i>
+                              <i className="ri-youtube-fill" style={{ fontSize: '10px' }}></i>
                             </a>
                           )}
                           
@@ -1329,7 +1329,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               }}
                               title="GitHub"
                             >
-                              <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
+                              <i className="ri-github-fill" style={{ fontSize: '10px' }}></i>
                           </a>
                           
                           {user?.instagramHandle && (
@@ -1341,8 +1341,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '40px',
-                                height: '40px',
+                                width: '20px',
+                                height: '20px',
                                 borderRadius: '50%',
                                 background: 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
                                 color: 'white',
@@ -1360,7 +1360,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               }}
                               title="Instagram"
                             >
-                              <i className="ri-instagram-fill" style={{ fontSize: '20px' }}></i>
+                              <i className="ri-instagram-fill" style={{ fontSize: '10px' }}></i>
                             </a>
                           )}
                           
@@ -1373,8 +1373,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '40px',
-                                height: '40px',
+                                width: '20px',
+                                height: '20px',
                                 borderRadius: '50%',
                                 background: '#0077B5',
                                 color: 'white',
@@ -1392,7 +1392,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               }}
                               title="LinkedIn"
                             >
-                              <i className="ri-linkedin-box-fill" style={{ fontSize: '20px' }}></i>
+                              <i className="ri-linkedin-box-fill" style={{ fontSize: '10px' }}></i>
                             </a>
                           )}
                           
@@ -1424,7 +1424,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             }}
                             title="Telegram"
                           >
-                            <i className="ri-telegram-fill" style={{ fontSize: '20px' }}></i>
+                            <i className="ri-telegram-fill" style={{ fontSize: '10px' }}></i>
                           </a>
                         </>
                       )}
@@ -1522,8 +1522,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '40px',
-                                height: '40px',
+                                width: '20px',
+                                height: '20px',
                                 borderRadius: '50%',
                                 background: 'var(--theme-primary)',
                                 color: 'white',
