@@ -74,68 +74,22 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     }
   };
 
-  // 保存用户资料
-  const handleSaveProfile = async () => {
+  // 自动保存函数
+  const handleAutoSave = async (field: string, value: string) => {
+    if (!user?.username) return;
+    
     try {
-      console.log('保存用户资料:', editForm);
+      console.log(`自动保存 ${field}:`, value);
       
-      // 调用API保存用户资料
-      const updatedUser = await api.updateUser(user?.username || '', {
-        nickname: editForm.nickname,
-        bio: editForm.bio,
-        twitterHandle: editForm.twitterHandle,
-        linkedInHandle: editForm.linkedInHandle,
-        youtubeHandle: editForm.youtubeHandle,
-        instagramHandle: editForm.instagramHandle
-      });
+      const updateData: any = {};
+      updateData[field] = value;
       
-      console.log('保存成功:', updatedUser);
-      setIsProfileEditing(false);
-      
-      // TODO: 刷新用户数据或更新本地状态
-      window.location.reload();
+      await api.updateUser(user.username, updateData);
+      console.log(`自动保存 ${field} 成功`);
     } catch (error) {
-      console.error('保存失败:', error);
-      alert('保存失败，请重试');
+      console.error(`自动保存 ${field} 失败:`, error);
     }
   };
-
-  // 取消编辑
-  const handleCancelEdit = () => {
-    setEditForm({
-      nickname: user?.nickname || '',
-      bio: user?.bio || '',
-      twitterHandle: user?.twitterHandle || '',
-      linkedInHandle: user?.linkedInHandle || '',
-      youtubeHandle: user?.youtubeHandle || '',
-      instagramHandle: user?.instagramHandle || ''
-    });
-    setIsProfileEditing(false);
-  };
-
-  // 键盘事件处理
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (isProfileEditing) {
-          handleCancelEdit();
-        } else if (isSocialEditing) {
-          setIsSocialEditing(false);
-        } else if (isLinksEditing) {
-          setIsLinksEditing(false);
-        } else if (isMostfindEditing) {
-          setIsMostfindEditing(false);
-        } else if (isAssetEditing) {
-          setIsAssetEditing(false);
-        } else if (isTwitterEditing) {
-          setIsTwitterEditing(false);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isProfileEditing, isSocialEditing, isLinksEditing, isMostfindEditing, isAssetEditing, isTwitterEditing, user]);
 
   // 获取当前主题颜色
   const getCurrentThemeColors = () => {
@@ -941,15 +895,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isProfileEditing) {
-                          // 保存逻辑
-                          handleSaveProfile();
+                          // 关闭编辑模式
+                          setIsProfileEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsProfileEditing(true);
                         }
                       }}
-                      title={isProfileEditing ? "保存资料" : "编辑资料"}
+                      title={isProfileEditing ? "关闭编辑" : "编辑资料"}
                     >
-                      {isProfileEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isProfileEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <div style={{ marginBottom: '1rem' }}>
@@ -996,7 +951,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           <input
                             type="text"
                             value={editForm.nickname}
-                            onChange={(e) => setEditForm({...editForm, nickname: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, nickname: e.target.value});
+                              // 自动保存
+                              handleAutoSave('nickname', e.target.value);
+                            }}
                             placeholder="昵称"
                             style={{
                               padding: '0.5rem',
@@ -1011,7 +970,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           />
                           <textarea
                             value={editForm.bio}
-                            onChange={(e) => setEditForm({...editForm, bio: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, bio: e.target.value});
+                              // 自动保存
+                              handleAutoSave('bio', e.target.value);
+                            }}
                             placeholder="个人简介"
                             rows={3}
                             style={{
@@ -1029,7 +992,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           <input
                             type="text"
                             value={editForm.twitterHandle}
-                            onChange={(e) => setEditForm({...editForm, twitterHandle: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, twitterHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('twitterHandle', e.target.value);
+                            }}
                             placeholder="Twitter 用户名"
                             style={{
                               padding: '0.5rem',
@@ -1045,7 +1012,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           <input
                             type="text"
                             value={editForm.linkedInHandle}
-                            onChange={(e) => setEditForm({...editForm, linkedInHandle: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, linkedInHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('linkedInHandle', e.target.value);
+                            }}
                             placeholder="LinkedIn 用户名"
                             style={{
                               padding: '0.5rem',
@@ -1061,7 +1032,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           <input
                             type="text"
                             value={editForm.youtubeHandle}
-                            onChange={(e) => setEditForm({...editForm, youtubeHandle: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, youtubeHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('youtubeHandle', e.target.value);
+                            }}
                             placeholder="YouTube 用户名"
                             style={{
                               padding: '0.5rem',
@@ -1077,7 +1052,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           <input
                             type="text"
                             value={editForm.instagramHandle}
-                            onChange={(e) => setEditForm({...editForm, instagramHandle: e.target.value})}
+                            onChange={(e) => {
+                              setEditForm({...editForm, instagramHandle: e.target.value});
+                              // 自动保存
+                              handleAutoSave('instagramHandle', e.target.value);
+                            }}
                             placeholder="Instagram 用户名"
                             style={{
                               padding: '0.5rem',
@@ -1210,15 +1189,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isSocialEditing) {
-                          // 保存逻辑
+                          // 关闭编辑模式
                           setIsSocialEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsSocialEditing(true);
                         }
                       }}
-                      title={isSocialEditing ? "保存社交媒体" : "编辑社交媒体"}
+                      title={isSocialEditing ? "关闭编辑" : "编辑社交媒体"}
                     >
-                      {isSocialEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isSocialEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1456,15 +1436,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isLinksEditing) {
-                          // 保存逻辑
+                          // 关闭编辑模式
                           setIsLinksEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsLinksEditing(true);
                         }
                       }}
-                      title={isLinksEditing ? "保存链接" : "编辑链接"}
+                      title={isLinksEditing ? "关闭编辑" : "编辑链接"}
                     >
-                      {isLinksEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isLinksEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -1505,7 +1486,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             borderRadius: '4px',
                             background: 'var(--theme-surface)',
                             color: 'var(--theme-primary)',
-                            fontSize: '0.75rem',
+                            fontSize: '0.875rem',
                             width: '100%',
                             marginBottom: '0.25rem'
                           }}
@@ -1790,15 +1771,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isMostfindEditing) {
-                          // 保存逻辑
+                          // 关闭编辑模式
                           setIsMostfindEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsMostfindEditing(true);
                         }
                       }}
-                      title={isMostfindEditing ? "保存活跃平台" : "编辑活跃平台"}
+                      title={isMostfindEditing ? "关闭编辑" : "编辑活跃平台"}
                     >
-                      {isMostfindEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1862,15 +1844,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isAssetEditing) {
-                          // 保存逻辑
+                          // 关闭编辑模式
                           setIsAssetEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsAssetEditing(true);
                         }
                       }}
-                      title={isAssetEditing ? "保存数字资产" : "编辑数字资产"}
+                      title={isAssetEditing ? "关闭编辑" : "编辑数字资产"}
                     >
-                      {isAssetEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isAssetEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
@@ -1953,15 +1936,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isTwitterEditing) {
-                          // 保存逻辑
+                          // 关闭编辑模式
                           setIsTwitterEditing(false);
                         } else {
+                          // 进入编辑模式
                           setIsTwitterEditing(true);
                         }
                       }}
-                      title={isTwitterEditing ? "保存推特动态" : "编辑推特动态"}
+                      title={isTwitterEditing ? "关闭编辑" : "编辑推特动态"}
                     >
-                      {isTwitterEditing ? <i className="ri-save-line"></i> : <i className="ri-edit-line"></i>}
+                      {isTwitterEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
                     <p>{module.content}</p>
