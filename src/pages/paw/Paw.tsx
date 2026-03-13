@@ -716,7 +716,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 case 'links':
                   return { 
                     gridColumn: '3 / 7',  // 从第3列到第7列（占4列）
-                    gridRow: '2 / 9'      // 从第2行到第9行（占7行）
+                    gridRow: '2 / 10'     // 从第2行到第10行（占8行）
                   };  
                 case 'asset':
                   return { 
