@@ -15,7 +15,7 @@ interface Web3ProfileProps {
 }
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
-  const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
+  const { loading, user, links, currentTheme, setCurrentTheme, isOwner, refreshUser } = useUserProfile({ username: propUsername })
   const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('zh-CN') // 默认简体中文
@@ -25,7 +25,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     nickname: '',
     bio: ''
   })
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(true) // 默认深色模式
   const [copySuccess, setCopySuccess] = useState(false)
   const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
   const [showAddLink, setShowAddLink] = useState(false)
@@ -150,6 +150,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       if (Object.keys(updateData).length > 0) {
         await api.updateUser(user?.username || '', updateData);
         console.log('Profile 更新成功');
+        // 刷新用户数据
+        await refreshUser();
       }
       
       setShowProfileModal(false);

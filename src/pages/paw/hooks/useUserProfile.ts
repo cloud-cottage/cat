@@ -21,6 +21,19 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
   const [layoutModules, setLayoutModules] = useState<any[]>([])
   const [isOwner, setIsOwner] = useState(false)
 
+  // 刷新用户数据
+  const refreshUser = async () => {
+    if (!username) return
+    try {
+      const userData = await api.getUserByUsername(username)
+      if (userData) {
+        setUser(userData.user)
+      }
+    } catch (error) {
+      console.error('Error refreshing user:', error)
+    }
+  }
+
   // 加载用户数据
   useEffect(() => {
     if (!username) return // 简化条件，只检查username
@@ -124,6 +137,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
     layoutModules,
     isOwner,
     setCurrentTheme,
-    setLayoutModules
+    setLayoutModules,
+    refreshUser
   }
 }
