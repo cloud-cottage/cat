@@ -9,41 +9,35 @@ import { ThemeModal } from './components/ThemeModal'
 import { SocialModule } from './components/SocialModule'
 import { useLanguage } from '../../i18n/useLanguage'
 import { Modal } from './components/Modal'
+import { TwitterTimeline } from './components/TwitterTimeline'
 
 interface Web3ProfileProps {
   username?: string
 }
 
 export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUsername }) => {
-  const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
+  const { loading, user, links, currentTheme, setCurrentTheme, isOwner, refreshUser } = useUserProfile({ username: propUsername })
   const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('zh-CN') // 默认简体中文
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showLinksModal, setShowLinksModal] = useState(false)
   const [profileForm, setProfileForm] = useState({
     username: '',
     nickname: '',
     bio: ''
   })
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [linksForm, setLinksForm] = useState({
+    links: [] as Array<{ id: string; label: string; url: string }>
+  })
+  const [isDarkMode, setIsDarkMode] = useState(true) // 默认深色模式
   const [copySuccess, setCopySuccess] = useState(false)
-  const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
-  const [showAddLink, setShowAddLink] = useState(false)
-  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
-  const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [showExploreModal, setShowExploreModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
-  
-  // 各模块独立的编辑状态
-  const [isProfileEditing, setIsProfileEditing] = useState(false)
-  const [isLinksEditing, setIsLinksEditing] = useState(false)
-  const [isMostfindEditing, setIsMostfindEditing] = useState(false)
-  const [isAssetEditing, setIsAssetEditing] = useState(false)
-  const [isTwitterEditing, setIsTwitterEditing] = useState(false)
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -151,11 +145,51 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       if (Object.keys(updateData).length > 0) {
         await api.updateUser(user?.username || '', updateData);
         console.log('Profile 更新成功');
+        // 刷新用户数据
+        await refreshUser();
       }
       
       setShowProfileModal(false);
     } catch (error) {
       console.error('Profile 更新失败:', error);
+    }
+  };
+
+  // 打开 Links 编辑模态框
+  const openLinksModal = () => {
+    setLinksForm({
+      links: links.map(link => ({
+        id: link.id || '',
+        label: link.label || '',
+        url: link.url || ''
+      }))
+    });
+    setShowLinksModal(true);
+  };
+
+  // 保存 Links 更改
+  const saveLinksChanges = async () => {
+    try {
+      // 转换为 Link 类型，添加缺失的属性
+      const formattedLinks = linksForm.links.map(link => ({
+        id: link.id,
+        userId: user?.id || '',
+        label: link.label,
+        url: link.url,
+        order: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      
+      // 使用 updateLinks 方法更新所有链接
+      await api.updateLinks(user?.username || '', formattedLinks);
+      
+      console.log('Links 更新成功');
+      // 刷新用户数据
+      await refreshUser();
+      setShowLinksModal(false);
+    } catch (error) {
+      console.error('Links 更新失败:', error);
     }
   };
 
@@ -314,26 +348,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       setApplyingTheme(false);
     }
   };
-  const [editForm, setEditForm] = useState({
-    nickname: user?.nickname || '',
-    bio: user?.bio || '',
-    twitterHandle: user?.twitterHandle || '',
-    linkedInHandle: user?.linkedInHandle || '',
-    youtubeHandle: user?.youtubeHandle || '',
-    instagramHandle: user?.instagramHandle || ''
-  })
-  
+
   // 同步编辑表单数据
   useEffect(() => {
     if (user) {
-      setEditForm({
-        nickname: user.nickname || '',
-        bio: user.bio || '',
-        twitterHandle: user.twitterHandle || '',
-        linkedInHandle: user.linkedInHandle || '',
-        youtubeHandle: user.youtubeHandle || '',
-        instagramHandle: user.instagramHandle || ''
-      });
+      // Profile 数据现在在模态框中处理
     }
   }, [user]);
 
@@ -688,7 +707,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               title={`当前语言: ${getCurrentLanguage().name} (点击切换)`}
             >
               <i className={getCurrentLanguage().icon} style={{ fontSize: '16px', marginRight: '0.5rem' }}></i>
-              {getCurrentLanguage().name}
             </button>
             
             {/* 分享按钮 */}
@@ -954,195 +972,73 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <div>
-                      {isProfileEditing ? (
-                        <div style={{ marginBottom: '1rem' }}>
-                          <input
-                            type="text"
-                            value={editForm.nickname}
-                            onChange={(e) => {
-                              setEditForm({...editForm, nickname: e.target.value});
-                              // 自动保存
-                              handleAutoSave('nickname', e.target.value);
-                            }}
-                            placeholder="昵称"
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '1rem',
-                              width: '100%',
-                              marginBottom: '0.5rem'
-                            }}
-                          />
-                          <textarea
-                            value={editForm.bio}
-                            onChange={(e) => {
-                              setEditForm({...editForm, bio: e.target.value});
-                              // 自动保存
-                              handleAutoSave('bio', e.target.value);
-                            }}
-                            placeholder="个人简介"
-                            rows={3}
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
-                              width: '100%',
-                              marginBottom: '0.5rem',
-                              resize: 'vertical'
-                            }}
-                          />
-                          <input
-                            type="text"
-                            value={editForm.twitterHandle}
-                            onChange={(e) => {
-                              setEditForm({...editForm, twitterHandle: e.target.value});
-                              // 自动保存
-                              handleAutoSave('twitterHandle', e.target.value);
-                            }}
-                            placeholder="Twitter 用户名"
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
-                              width: '100%',
-                              marginBottom: '0.5rem'
-                            }}
-                          />
-                          <input
-                            type="text"
-                            value={editForm.linkedInHandle}
-                            onChange={(e) => {
-                              setEditForm({...editForm, linkedInHandle: e.target.value});
-                              // 自动保存
-                              handleAutoSave('linkedInHandle', e.target.value);
-                            }}
-                            placeholder="LinkedIn 用户名"
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
-                              width: '100%',
-                              marginBottom: '0.5rem'
-                            }}
-                          />
-                          <input
-                            type="text"
-                            value={editForm.youtubeHandle}
-                            onChange={(e) => {
-                              setEditForm({...editForm, youtubeHandle: e.target.value});
-                              // 自动保存
-                              handleAutoSave('youtubeHandle', e.target.value);
-                            }}
-                            placeholder="YouTube 用户名"
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
-                              width: '100%',
-                              marginBottom: '0.5rem'
-                            }}
-                          />
-                          <input
-                            type="text"
-                            value={editForm.instagramHandle}
-                            onChange={(e) => {
-                              setEditForm({...editForm, instagramHandle: e.target.value});
-                              // 自动保存
-                              handleAutoSave('instagramHandle', e.target.value);
-                            }}
-                            placeholder="Instagram 用户名"
-                            style={{
-                              padding: '0.5rem',
-                              border: '1px solid var(--theme-primary)',
-                              borderRadius: '4px',
-                              background: 'var(--theme-surface)',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
-                              width: '100%',
-                              marginBottom: '0.5rem'
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        <div>
-                          <h2 style={{ 
-                            margin: '0 0 0.5rem 0', 
-                            fontSize: '1.5rem', 
-                            color: 'var(--theme-primary)',
-                            fontWeight: '600'
+                      <h2 style={{
+                        margin: 0,
+                        fontSize: '1.2rem',
+                        fontWeight: '600',
+                        color: 'var(--theme-primary)',
+                        marginBottom: '1rem',
+                        paddingRight: '3rem' // 为关闭按钮留出空间
+                      }}>
+                        {user?.nickname || user?.username}
+                      </h2>
+                      {user?.nickname && user?.username && (
+                        <p style={{ 
+                          margin: '0 0 0.5rem 0', 
+                          fontSize: '0.875rem', 
+                          opacity: 0.7 
+                        }}>
+                          @{user.username}
+                        </p>
+                      )}
+                      {user?.bio && (
+                        <p style={{ 
+                          margin: '0 0 0.5rem 0', 
+                          fontSize: '0.875rem', 
+                          opacity: 0.8,
+                          lineHeight: '1.4'
+                        }}>
+                          {user.bio}
+                        </p>
+                      )}
+                      {user?.walletAddress && (
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          gap: '0.5rem',
+                          marginTop: '0.5rem'
+                        }}>
+                          <span style={{ 
+                            fontSize: '0.75rem', 
+                            opacity: 0.6 
                           }}>
-                            {user?.nickname || user?.username}
-                          </h2>
-                          {user?.nickname && user?.username && (
-                            <p style={{ 
-                              margin: '0 0 0.5rem 0', 
-                              fontSize: '0.875rem', 
-                              opacity: 0.7 
-                            }}>
-                              @{user.username}
-                            </p>
-                          )}
-                          {user?.bio && (
-                            <p style={{ 
-                              margin: '0 0 0.5rem 0', 
-                              fontSize: '0.875rem', 
-                              opacity: 0.8,
-                              lineHeight: '1.4'
-                            }}>
-                              {user.bio}
-                            </p>
-                          )}
-                          {user?.walletAddress && (
-                            <div 
-                              onClick={copyWalletAddress}
-                              style={{ 
-                                margin: '0', 
-                                fontSize: '0.75rem', 
-                                opacity: 0.6,
-                                fontFamily: 'monospace',
-                                background: 'rgba(var(--theme-primary-rgb), 0.1)',
-                                padding: '0.25rem 0.5rem',
-                                borderRadius: '4px',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.opacity = '0.8';
-                                e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.2)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.opacity = '0.6';
-                                e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                              }}
-                            >
-                              <span>{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</span>
-                              <span style={{ 
-                                fontSize: '0.875rem',
-                                opacity: copySuccess ? 1 : 0.5,
-                                transition: 'opacity 0.2s ease'
-                              }}>
-                                {copySuccess ? '✓' : '📋'}
-                              </span>
-                            </div>
-                          )}
+                            {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                          </span>
+                          <button
+                            onClick={copyWalletAddress}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: 'var(--theme-primary)',
+                              cursor: 'pointer',
+                              fontSize: '0.875rem',
+                              padding: '0.25rem',
+                              borderRadius: '4px',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--theme-primary)'
+                              e.currentTarget.style.color = 'white'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'transparent'
+                              e.currentTarget.style.color = 'var(--theme-primary)'
+                            }}
+                            title="复制钱包地址"
+                          >
+                            {copySuccess ? '✓' : '📋'}
+                          </button>
                         </div>
                       )}
                     </div>
@@ -1204,17 +1100,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (isLinksEditing) {
-                          // 关闭编辑模式
-                          setIsLinksEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsLinksEditing(true);
-                        }
+                        openLinksModal();
                       }}
-                      title={isLinksEditing ? "关闭编辑" : "编辑链接"}
+                      title="编辑链接"
                     >
-                      {isLinksEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
+                      <i className="ri-edit-line"></i>
                     </div>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -1236,8 +1126,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         </button>
                       )}
                     </div>
-                    
-                    {showAddLink && isLinksEditing && (
+                  </div>
+                )}
+                
+                {module.type === 'mostfind' && (
                       <div style={{
                         padding: '0.5rem',
                         background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1718,16 +1610,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <p>{module.content}</p>
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isTwitterEditing ? 1 : 0.8 
-                    }}>
-                      <div>• 推文内容</div>
-                      <div>• 互动数据</div>
-                      <div>• 关注者统计</div>
-                      <div>• 热门话题</div>
-                    </div>
+                    
+                    {/* 如果用户设置了 Twitter Handle，显示 Twitter 时间线 */}
+                    {user?.twitterHandle && (
+                      <div style={{ 
+                        marginTop: '1rem',
+                        maxWidth: '100%',
+                        overflow: 'hidden'
+                      }}>
+                        <TwitterTimeline twitterHandle={user.twitterHandle} />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -2292,13 +2185,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   onClose={() => setShowProfileModal(false)}
   title="编辑个人资料"
 >
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.8rem'
+  }}>
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         用户名
       </label>
@@ -2308,19 +2206,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         disabled
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid #ccc',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: '#f5f5f5',
           color: '#666',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           cursor: 'not-allowed'
         }}
       />
       <small style={{ 
         color: '#666', 
-        fontSize: '0.8rem',
-        marginTop: '0.25rem',
+        fontSize: '0.75rem',
+        marginTop: '0.2rem',
         display: 'block'
       }}>
         用户名一旦设定无法修改
@@ -2330,9 +2228,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         昵称
       </label>
@@ -2343,12 +2242,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         placeholder="输入昵称"
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid var(--theme-primary)',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: 'var(--theme-surface)',
           color: 'var(--theme-primary)',
-          fontSize: '1rem'
+          fontSize: '0.9rem'
         }}
       />
     </div>
@@ -2356,9 +2255,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         简介
       </label>
@@ -2369,14 +2269,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         rows={4}
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid var(--theme-primary)',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: 'var(--theme-surface)',
           color: 'var(--theme-primary)',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           resize: 'vertical',
-          minHeight: '100px'
+          minHeight: '80px'
         }}
       />
     </div>
@@ -2385,19 +2285,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   <div style={{
     display: 'flex',
     justifyContent: 'flex-end',
-    gap: '1rem',
-    marginTop: '1.5rem'
+    gap: '0.8rem',
+    marginTop: '1rem'
   }}>
     <button
       onClick={() => setShowProfileModal(false)}
       style={{
-        padding: '0.75rem 1.5rem',
+        padding: '0.6rem 1.2rem',
         background: '#6c757d',
         color: 'white',
         border: 'none',
-        borderRadius: '8px',
+        borderRadius: '6px',
         cursor: 'pointer',
-        fontSize: '1rem'
+        fontSize: '0.9rem'
       }}
     >
       取消
@@ -2405,20 +2305,188 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <button
       onClick={saveProfileChanges}
       style={{
-        padding: '0.75rem 1.5rem',
+        padding: '0.6rem 1.2rem',
         background: 'var(--theme-primary)',
         color: 'white',
         border: 'none',
-        borderRadius: '8px',
+        borderRadius: '6px',
         cursor: 'pointer',
-        fontSize: '1rem'
+        fontSize: '0.9rem'
       }}
     >
-      <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
+      <i className="ri-save-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
       保存更改
     </button>
   </div>
 </Modal>
+
+      {/* Links 编辑模态框 */}
+      <Modal
+        show={showLinksModal}
+        onClose={() => setShowLinksModal(false)}
+        title="编辑链接"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.4rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500',
+              fontSize: '0.9rem'
+            }}>
+              链接列表
+            </label>
+            <div style={{ 
+              maxHeight: '300px', 
+              overflowY: 'auto',
+              border: '1px solid var(--theme-primary)',
+              borderRadius: '6px',
+              background: 'var(--theme-surface)',
+              padding: '0.5rem'
+            }}>
+              {linksForm.links.length === 0 ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  color: '#666', 
+                  padding: '2rem',
+                  fontSize: '0.9rem'
+                }}>
+                  暂无链接，请添加链接
+                </div>
+              ) : (
+                linksForm.links.map((link, index) => (
+                  <div key={link.id || index} style={{ 
+                    marginBottom: '0.5rem',
+                    padding: '0.5rem',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: '#f9f9f9'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                      <input
+                        type="text"
+                        value={link.label}
+                        onChange={(e) => {
+                          const newLinks = [...linksForm.links];
+                          newLinks[index].label = e.target.value;
+                          setLinksForm({ links: newLinks });
+                        }}
+                        placeholder="链接标题"
+                        style={{
+                          flex: 1,
+                          padding: '0.4rem',
+                          border: '1px solid var(--theme-primary)',
+                          borderRadius: '4px',
+                          background: 'var(--theme-surface)',
+                          color: 'var(--theme-primary)',
+                          fontSize: '0.9rem',
+                          marginRight: '0.5rem'
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          const newLinks = linksForm.links.filter((_, i) => i !== index);
+                          setLinksForm({ links: newLinks });
+                        }}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#dc3545',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem'
+                        }}
+                      >
+                        删除
+                      </button>
+                    </div>
+                    <input
+                      type="url"
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...linksForm.links];
+                        newLinks[index].url = e.target.value;
+                        setLinksForm({ links: newLinks });
+                      }}
+                      placeholder="链接地址 (https://...)"
+                      style={{
+                        width: '100%',
+                        padding: '0.4rem',
+                        border: '1px solid var(--theme-primary)',
+                        borderRadius: '4px',
+                        background: 'var(--theme-surface)',
+                        color: 'var(--theme-primary)',
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <button
+              onClick={() => {
+                const newLinks = [...linksForm.links, { id: Date.now().toString(), label: '', url: '' }];
+                setLinksForm({ links: newLinks });
+              }}
+              style={{
+                padding: '0.6rem 1.2rem',
+                background: 'var(--theme-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              <i className="ri-add-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
+              添加链接
+            </button>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '0.8rem',
+          marginTop: '1rem'
+        }}>
+          <button
+            onClick={() => setShowLinksModal(false)}
+            style={{
+              padding: '0.6rem 1.2rem',
+              background: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            取消
+          </button>
+          <button
+            onClick={saveLinksChanges}
+            style={{
+              padding: '0.6rem 1.2rem',
+              background: 'var(--theme-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            <i className="ri-save-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
+            保存更改
+          </button>
+        </div>
+      </Modal>
+      </div>
     </div>
   </div>
 )

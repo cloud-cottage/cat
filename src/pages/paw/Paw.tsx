@@ -9,7 +9,6 @@ import { ThemeModal } from './components/ThemeModal'
 import { SocialModule } from './components/SocialModule'
 import { useLanguage } from '../../i18n/useLanguage'
 import { Modal } from './components/Modal'
-import { TwitterTimeline } from './components/TwitterTimeline'
 
 interface Web3ProfileProps {
   username?: string
@@ -21,17 +20,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('zh-CN') // 默认简体中文
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showLinksModal, setShowLinksModal] = useState(false)
   const [profileForm, setProfileForm] = useState({
     username: '',
     nickname: '',
     bio: ''
   })
+  const [linksForm, setLinksForm] = useState({
+    links: [] as Array<{ id: string; label: string; url: string }>
+  })
   const [isDarkMode, setIsDarkMode] = useState(true) // 默认深色模式
   const [copySuccess, setCopySuccess] = useState(false)
-  const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
-  const [showAddLink, setShowAddLink] = useState(false)
-  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
-  const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -40,10 +39,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
   
   // 各模块独立的编辑状态
-  const [isLinksEditing, setIsLinksEditing] = useState(false)
-  const [isMostfindEditing, setIsMostfindEditing] = useState(false)
-  const [isAssetEditing, setIsAssetEditing] = useState(false)
-  const [isTwitterEditing, setIsTwitterEditing] = useState(false)
+  const [isLinksEditing] = useState(false)
+  const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
+  const [showAddLink, setShowAddLink] = useState(false)
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
+  const [editLinkForm, setEditLinkForm] = useState({ url: '', label: '' })
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -158,6 +158,44 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       setShowProfileModal(false);
     } catch (error) {
       console.error('Profile 更新失败:', error);
+    }
+  };
+
+  // 打开 Links 编辑模态框
+  const openLinksModal = () => {
+    setLinksForm({
+      links: links.map(link => ({
+        id: link.id || '',
+        label: link.label || '',
+        url: link.url || ''
+      }))
+    });
+    setShowLinksModal(true);
+  };
+
+  // 保存 Links 更改
+  const saveLinksChanges = async () => {
+    try {
+      // 转换为 Link 类型，添加缺失的属性
+      const formattedLinks = linksForm.links.map(link => ({
+        id: link.id,
+        userId: user?.id || '',
+        label: link.label,
+        url: link.url,
+        order: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      
+      // 使用 updateLinks 方法更新所有链接
+      await api.updateLinks(user?.username || '', formattedLinks);
+      
+      console.log('Links 更新成功');
+      // 刷新用户数据
+      await refreshUser();
+      setShowLinksModal(false);
+    } catch (error) {
+      console.error('Links 更新失败:', error);
     }
   };
 
@@ -1068,17 +1106,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (isLinksEditing) {
-                          // 关闭编辑模式
-                          setIsLinksEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsLinksEditing(true);
-                        }
+                        openLinksModal();
                       }}
-                      title={isLinksEditing ? "关闭编辑" : "编辑链接"}
+                      title="编辑链接"
                     >
-                      {isLinksEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
+                      <i className="ri-edit-line"></i>
                     </div>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -1100,8 +1132,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         </button>
                       )}
                     </div>
-                    
-                    {showAddLink && isLinksEditing && (
+                  </div>
+                )}
+                
+                {module.type === 'mostfind' && (
                       <div style={{
                         padding: '0.5rem',
                         background: 'rgba(var(--theme-primary-rgb), 0.1)',
@@ -1356,247 +1390,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   </div>
                 )}
                 
-                {module.type === 'mostfind' && (
-                  <div 
-                    style={{ 
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      // 显示编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // 隐藏编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                    }}
-                  >
-                    {/* 编辑符号 - 悬停时显示 */}
-                    <div
-                      className="edit-icon"
-                      style={{
-                        position: 'absolute',
-                        top: '-8px',
-                        right: '-8px',
-                        width: '24px',
-                        height: '24px',
-                        background: 'var(--theme-primary)',
-                        color: 'white',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        opacity: '0',
-                        pointerEvents: 'none',
-                        transition: 'all 0.2s ease',
-                        zIndex: 10,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isMostfindEditing) {
-                          // 关闭编辑模式
-                          setIsMostfindEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsMostfindEditing(true);
-                        }
-                      }}
-                      title={isMostfindEditing ? "关闭编辑" : "编辑活跃平台"}
-                    >
-                      {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
-                    </div>
-                    
-                    <p>{module.content}</p>
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isMostfindEditing ? 1 : 0.8 
-                    }}>
-                      <div>• Web3社区</div>
-                      <div>• 开发者平台</div>
-                      <div>• 创作者生态</div>
-                    </div>
-                  </div>
-                )}
-                
-                {module.type === 'asset' && (
-                  <div 
-                    style={{ 
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      // 显示编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // 隐藏编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                    }}
-                  >
-                    {/* 编辑符号 - 悬停时显示 */}
-                    <div
-                      className="edit-icon"
-                      style={{
-                        position: 'absolute',
-                        top: '-8px',
-                        right: '-8px',
-                        width: '24px',
-                        height: '24px',
-                        background: 'var(--theme-primary)',
-                        color: 'white',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        opacity: '0',
-                        pointerEvents: 'none',
-                        transition: 'all 0.2s ease',
-                        zIndex: 10,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isAssetEditing) {
-                          // 关闭编辑模式
-                          setIsAssetEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsAssetEditing(true);
-                        }
-                      }}
-                      title={isAssetEditing ? "关闭编辑" : "编辑数字资产"}
-                    >
-                      {isAssetEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
-                    </div>
-                    
-                    <p>{module.content}</p>
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isAssetEditing ? 1 : 0.8 
-                    }}>
-                      <div>• NFT 收藏</div>
-                      <div>• 代币资产</div>
-                      <div>• DeFi 仓位</div>
-                      <div>• 链上身份</div>
-                    </div>
-                    <div style={{ 
-                      marginTop: '1rem', 
-                      textAlign: 'center'
-                    }}>
-                      <button
-                        style={{
-                          padding: '0.5rem 1rem',
-                          background: 'var(--theme-primary)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '0.875rem'
-                        }}
-                      >
-                        查看详情
-                      </button>
-                    </div>
-                  </div>
-                )}
-                
-                {module.type === 'twitter' && (
-                  <div 
-                    style={{ 
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      // 显示编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // 隐藏编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                    }}
-                  >
-                    {/* 编辑符号 - 悬停时显示 */}
-                    <div
-                      className="edit-icon"
-                      style={{
-                        position: 'absolute',
-                        top: '-8px',
-                        right: '-8px',
-                        width: '24px',
-                        height: '24px',
-                        background: 'var(--theme-primary)',
-                        color: 'white',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        opacity: '0',
-                        pointerEvents: 'none',
-                        transition: 'all 0.2s ease',
-                        zIndex: 10,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isTwitterEditing) {
-                          // 关闭编辑模式
-                          setIsTwitterEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsTwitterEditing(true);
-                        }
-                      }}
-                      title={isTwitterEditing ? "关闭编辑" : "编辑推特动态"}
-                    >
-                      {isTwitterEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
-                    </div>
-                    
-                    <p>{module.content}</p>
-                    
-                    {/* 如果用户设置了 Twitter Handle，显示 Twitter 时间线 */}
-                    {user?.twitterHandle && (
-                      <div style={{ 
-                        marginTop: '1rem',
-                        maxWidth: '100%',
-                        overflow: 'hidden'
-                      }}>
-                        <TwitterTimeline twitterHandle={user.twitterHandle} />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
             )}
           </div>
         </div>
@@ -1607,7 +1400,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         padding: '2rem',
         textAlign: 'center',
         borderTop: '1px solid rgba(0,0,0,0.1)',
-        marginTop: '2rem'
+        marginTop: '2rem',
+        backgroundColor: 'var(--theme-surface)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
         <div className="theme-text-muted" style={{ 
           textAlign: 'center', 
@@ -2291,6 +2086,173 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     </button>
   </div>
 </Modal>
+
+      {/* Links 编辑模态框 */}
+      <Modal
+        show={showLinksModal}
+        onClose={() => setShowLinksModal(false)}
+        title="编辑链接"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.4rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500',
+              fontSize: '0.9rem'
+            }}>
+              链接列表
+            </label>
+            <div style={{ 
+              maxHeight: '300px', 
+              overflowY: 'auto',
+              border: '1px solid var(--theme-primary)',
+              borderRadius: '6px',
+              background: 'var(--theme-surface)',
+              padding: '0.5rem'
+            }}>
+              {linksForm.links.length === 0 ? (
+                <div style={{ 
+                  textAlign: 'center', 
+                  color: '#666', 
+                  padding: '2rem',
+                  fontSize: '0.9rem'
+                }}>
+                  暂无链接，请添加链接
+                </div>
+              ) : (
+                linksForm.links.map((link, index) => (
+                  <div key={link.id || index} style={{ 
+                    marginBottom: '0.5rem',
+                    padding: '0.5rem',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: '#f9f9f9'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                      <input
+                        type="text"
+                        value={link.label}
+                        onChange={(e) => {
+                          const newLinks = [...linksForm.links];
+                          newLinks[index].label = e.target.value;
+                          setLinksForm({ links: newLinks });
+                        }}
+                        placeholder="链接标题"
+                        style={{
+                          flex: 1,
+                          padding: '0.4rem',
+                          border: '1px solid var(--theme-primary)',
+                          borderRadius: '4px',
+                          background: 'var(--theme-surface)',
+                          color: 'var(--theme-primary)',
+                          fontSize: '0.9rem',
+                          marginRight: '0.5rem'
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          const newLinks = linksForm.links.filter((_, i) => i !== index);
+                          setLinksForm({ links: newLinks });
+                        }}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#dc3545',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem'
+                        }}
+                      >
+                        删除
+                      </button>
+                    </div>
+                    <input
+                      type="url"
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...linksForm.links];
+                        newLinks[index].url = e.target.value;
+                        setLinksForm({ links: newLinks });
+                      }}
+                      placeholder="链接地址 (https://...)"
+                      style={{
+                        width: '100%',
+                        padding: '0.4rem',
+                        border: '1px solid var(--theme-primary)',
+                        borderRadius: '4px',
+                        background: 'var(--theme-surface)',
+                        color: 'var(--theme-primary)',
+                        fontSize: '0.9rem'
+                      }}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <button
+              onClick={() => {
+                const newLinks = [...linksForm.links, { id: Date.now().toString(), label: '', url: '' }];
+                setLinksForm({ links: newLinks });
+              }}
+              style={{
+                padding: '0.6rem 1.2rem',
+                background: 'var(--theme-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              <i className="ri-add-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
+              添加链接
+            </button>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '0.8rem',
+          marginTop: '1rem'
+        }}>
+          <button
+            onClick={() => setShowLinksModal(false)}
+            style={{
+              padding: '0.6rem 1.2rem',
+              background: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            取消
+          </button>
+          <button
+            onClick={saveLinksChanges}
+            style={{
+              padding: '0.6rem 1.2rem',
+              background: 'var(--theme-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            <i className="ri-save-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
+            保存更改
+          </button>
+        </div>
+      </Modal>
       </div>
     </div>
   </div>
