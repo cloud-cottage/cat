@@ -940,11 +940,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <div>
-                      <h2 style={{ 
-                        margin: '0 0 0.5rem 0', 
-                        fontSize: '1.5rem', 
+                      <h2 style={{
+                        margin: 0,
+                        fontSize: '1.2rem',
+                        fontWeight: '600',
                         color: 'var(--theme-primary)',
-                        fontWeight: '600'
+                        marginBottom: '1rem',
+                        paddingRight: '3rem' // 为关闭按钮留出空间
                       }}>
                         {user?.nickname || user?.username}
                       </h2>
@@ -2155,13 +2157,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   onClose={() => setShowProfileModal(false)}
   title="编辑个人资料"
 >
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.8rem'
+  }}>
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         用户名
       </label>
@@ -2171,19 +2178,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         disabled
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid #ccc',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: '#f5f5f5',
           color: '#666',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           cursor: 'not-allowed'
         }}
       />
       <small style={{ 
         color: '#666', 
-        fontSize: '0.8rem',
-        marginTop: '0.25rem',
+        fontSize: '0.75rem',
+        marginTop: '0.2rem',
         display: 'block'
       }}>
         用户名一旦设定无法修改
@@ -2193,9 +2200,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         昵称
       </label>
@@ -2206,12 +2214,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         placeholder="输入昵称"
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid var(--theme-primary)',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: 'var(--theme-surface)',
           color: 'var(--theme-primary)',
-          fontSize: '1rem'
+          fontSize: '0.9rem'
         }}
       />
     </div>
@@ -2219,9 +2227,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <div>
       <label style={{ 
         display: 'block', 
-        marginBottom: '0.5rem',
+        marginBottom: '0.4rem',
         color: 'var(--theme-primary)',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: '0.9rem'
       }}>
         简介
       </label>
@@ -2232,14 +2241,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         rows={4}
         style={{
           width: '100%',
-          padding: '0.75rem',
+          padding: '0.6rem',
           border: '1px solid var(--theme-primary)',
-          borderRadius: '8px',
+          borderRadius: '6px',
           background: 'var(--theme-surface)',
           color: 'var(--theme-primary)',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           resize: 'vertical',
-          minHeight: '100px'
+          minHeight: '80px'
         }}
       />
     </div>
@@ -2248,19 +2257,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   <div style={{
     display: 'flex',
     justifyContent: 'flex-end',
-    gap: '1rem',
-    marginTop: '1.5rem'
+    gap: '0.8rem',
+    marginTop: '1rem'
   }}>
     <button
       onClick={() => setShowProfileModal(false)}
       style={{
-        padding: '0.75rem 1.5rem',
+        padding: '0.6rem 1.2rem',
         background: '#6c757d',
         color: 'white',
         border: 'none',
-        borderRadius: '8px',
+        borderRadius: '6px',
         cursor: 'pointer',
-        fontSize: '1rem'
+        fontSize: '0.9rem'
       }}
     >
       取消
@@ -2268,16 +2277,16 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     <button
       onClick={saveProfileChanges}
       style={{
-        padding: '0.75rem 1.5rem',
+        padding: '0.6rem 1.2rem',
         background: 'var(--theme-primary)',
         color: 'white',
         border: 'none',
-        borderRadius: '8px',
+        borderRadius: '6px',
         cursor: 'pointer',
-        fontSize: '1rem'
+        fontSize: '0.9rem'
       }}
     >
-      <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
+      <i className="ri-save-line" style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}></i>
       保存更改
     </button>
   </div>
