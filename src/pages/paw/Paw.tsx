@@ -9,6 +9,7 @@ import { ThemeModal } from './components/ThemeModal'
 import { SocialModule } from './components/SocialModule'
 import { useLanguage } from '../../i18n/useLanguage'
 import { Modal } from './components/Modal'
+import { TwitterTimeline } from './components/TwitterTimeline'
 
 interface Web3ProfileProps {
   username?: string
@@ -1579,6 +1580,18 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     <p>{module.content}</p>
+                    
+                    {/* 如果用户设置了 Twitter Handle，显示 Twitter 时间线 */}
+                    {user?.twitterHandle && (
+                      <div style={{ 
+                        marginTop: '1rem',
+                        maxWidth: '100%',
+                        overflow: 'hidden'
+                      }}>
+                        <TwitterTimeline twitterHandle={user.twitterHandle} />
+                      </div>
+                    )}
+                    
                     <div style={{ 
                       marginTop: '0.5rem', 
                       fontSize: '0.875rem', 
