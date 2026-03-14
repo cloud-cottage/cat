@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { User } from '../lib/api'
+import { Modal } from './Modal'
 
 interface SocialModuleProps {
   user: User
@@ -310,303 +311,255 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
       </div>
 
       {/* 编辑模态框 */}
-      {showEditModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: 'var(--theme-surface)',
-            padding: '2rem',
-            borderRadius: '12px',
-            maxWidth: '500px',
-            width: '90%',
-            maxHeight: '80vh',
-            overflowY: 'auto'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '1.5rem'
+      <Modal
+        show={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="编辑社交媒体"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
             }}>
-              <h2 style={{
-                margin: 0,
-                fontSize: '1.5rem',
-                fontWeight: '600',
-                color: 'var(--theme-primary)'
-              }}>
-                编辑社交媒体
-              </h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.5rem',
-                  cursor: 'pointer',
-                  color: 'var(--theme-primary)',
-                  padding: '0.5rem'
-                }}
-              >
-                <i className="ri-close-line"></i>
-              </button>
-            </div>
+              Twitter 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.twitterHandle}
+              onChange={(e) => setEditForm({...editForm, twitterHandle: e.target.value})}
+              placeholder="输入 Twitter 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  color: 'var(--theme-primary)',
-                  fontWeight: '500'
-                }}>
-                  Twitter 用户名
-                </label>
-                <input
-                  type="text"
-                  value={editForm.twitterHandle}
-                  onChange={(e) => setEditForm({...editForm, twitterHandle: e.target.value})}
-                  placeholder="输入 Twitter 用户名"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    border: '1px solid var(--theme-primary)',
-                    borderRadius: '8px',
-                    background: 'var(--theme-surface)',
-                    color: 'var(--theme-primary)',
-                    fontSize: '1rem'
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  color: 'var(--theme-primary)',
-                  fontWeight: '500'
-                }}>
-                  LinkedIn 用户名
-                </label>
-                <input
-                  type="text"
-                  value={editForm.linkedInHandle}
-                  onChange={(e) => setEditForm({...editForm, linkedInHandle: e.target.value})}
-                  placeholder="输入 LinkedIn 用户名"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    border: '1px solid var(--theme-primary)',
-                    borderRadius: '8px',
-                    background: 'var(--theme-surface)',
-                    color: 'var(--theme-primary)',
-                    fontSize: '1rem'
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  color: 'var(--theme-primary)',
-                  fontWeight: '500'
-                }}>
-                  YouTube 用户名
-                </label>
-                <input
-                  type="text"
-                  value={editForm.youtubeHandle}
-                  onChange={(e) => setEditForm({...editForm, youtubeHandle: e.target.value})}
-                  placeholder="输入 YouTube 用户名"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    border: '1px solid var(--theme-primary)',
-                    borderRadius: '8px',
-                    background: 'var(--theme-surface)',
-                    color: 'var(--theme-primary)',
-                    fontSize: '1rem'
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  color: 'var(--theme-primary)',
-                  fontWeight: '500'
-                }}>
-                  Instagram 用户名
-                </label>
-                <input
-                  type="text"
-                  value={editForm.instagramHandle}
-                  onChange={(e) => setEditForm({...editForm, instagramHandle: e.target.value})}
-                  placeholder="输入 Instagram 用户名"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    border: '1px solid var(--theme-primary)',
-                    borderRadius: '8px',
-                    background: 'var(--theme-surface)',
-                    color: 'var(--theme-primary)',
-                    fontSize: '1rem'
-                  }}
-                />
-              </div>
-
-              {/* 添加新社交媒体功能 */}
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '0.5rem',
-                  color: 'var(--theme-primary)',
-                  fontWeight: '500'
-                }}>
-                  添加新社交媒体
-                </label>
-                {!showAddSocial ? (
-                  <div
-                    onClick={() => setShowAddSocial(true)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      background: 'var(--theme-primary)',
-                      color: 'white',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      margin: '0 auto'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)'
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(var(--theme-primary-rgb), 0.4)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                    title="添加社交媒体"
-                  >
-                    <i className="ri-add-circle-fill" style={{ fontSize: '20px' }}></i>
-                  </div>
-                ) : (
-                  <div style={{
-                    display: 'flex',
-                    gap: '0.5rem',
-                    alignItems: 'center',
-                    padding: '0.5rem',
-                    border: '1px solid var(--theme-primary)',
-                    borderRadius: '8px',
-                    background: 'var(--theme-surface)'
-                  }}>
-                    <select
-                      value={newSocialForm.platform}
-                      onChange={(e) => setNewSocialForm({...newSocialForm, platform: e.target.value})}
-                      style={{
-                        padding: '0.5rem',
-                        border: '1px solid var(--theme-primary)',
-                        borderRadius: '4px',
-                        background: 'var(--theme-surface)',
-                        color: 'var(--theme-primary)',
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      <option value="">选择平台</option>
-                      <option value="twitter">Twitter</option>
-                      <option value="youtube">YouTube</option>
-                      <option value="instagram">Instagram</option>
-                      <option value="linkedin">LinkedIn</option>
-                    </select>
-                    <input
-                      type="text"
-                      value={newSocialForm.username}
-                      onChange={(e) => setNewSocialForm({...newSocialForm, username: e.target.value})}
-                      placeholder="用户名"
-                      style={{
-                        flex: 1,
-                        padding: '0.5rem',
-                        border: '1px solid var(--theme-primary)',
-                        borderRadius: '4px',
-                        background: 'var(--theme-surface)',
-                        color: 'var(--theme-primary)',
-                        fontSize: '0.875rem'
-                      }}
-                    />
-                    <button
-                      onClick={saveNewSocial}
-                      disabled={!newSocialForm.platform || !newSocialForm.username}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        background: newSocialForm.platform && newSocialForm.username ? 'var(--theme-primary)' : '#ccc',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
-                      保存
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '1rem',
-              marginTop: '1.5rem'
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
             }}>
-              <button
-                onClick={() => setShowEditModal(false)}
+              LinkedIn 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.linkedInHandle}
+              onChange={(e) => setEditForm({...editForm, linkedInHandle: e.target.value})}
+              placeholder="输入 LinkedIn 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
+            }}>
+              YouTube 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.youtubeHandle}
+              onChange={(e) => setEditForm({...editForm, youtubeHandle: e.target.value})}
+              placeholder="输入 YouTube 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
+            }}>
+              Instagram 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.instagramHandle}
+              onChange={(e) => setEditForm({...editForm, instagramHandle: e.target.value})}
+              placeholder="输入 Instagram 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+
+          {/* 添加新社交媒体功能 */}
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
+            }}>
+              添加新社交媒体
+            </label>
+            {!showAddSocial ? (
+              <div
+                onClick={() => setShowAddSocial(true)}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  background: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '1rem'
-                }}
-              >
-                取消
-              </button>
-              <button
-                onClick={handleSaveChanges}
-                style={{
-                  padding: '0.75rem 1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
                   background: 'var(--theme-primary)',
                   color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '1rem'
+                  transition: 'all 0.2s ease',
+                  margin: '0 auto'
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.1)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(var(--theme-primary-rgb), 0.4)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+                title="添加社交媒体"
               >
-                <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
-                保存更改
-              </button>
-            </div>
+                <i className="ri-add-circle-fill" style={{ fontSize: '20px' }}></i>
+              </div>
+            ) : (
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem',
+                alignItems: 'center',
+                padding: '0.5rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)'
+              }}>
+                <select
+                  value={newSocialForm.platform}
+                  onChange={(e) => setNewSocialForm({...newSocialForm, platform: e.target.value})}
+                  style={{
+                    padding: '0.5rem',
+                    border: '1px solid var(--theme-primary)',
+                    borderRadius: '4px',
+                    background: 'var(--theme-surface)',
+                    color: 'var(--theme-primary)',
+                    fontSize: '0.875rem'
+                  }}
+                >
+                  <option value="">选择平台</option>
+                  <option value="twitter">Twitter</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="linkedin">LinkedIn</option>
+                </select>
+                <input
+                  type="text"
+                  value={newSocialForm.username}
+                  onChange={(e) => setNewSocialForm({...newSocialForm, username: e.target.value})}
+                  placeholder="用户名"
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem',
+                    border: '1px solid var(--theme-primary)',
+                    borderRadius: '4px',
+                    background: 'var(--theme-surface)',
+                    color: 'var(--theme-primary)',
+                    fontSize: '0.875rem'
+                  }}
+                />
+                <button
+                  onClick={saveNewSocial}
+                  disabled={!newSocialForm.platform || !newSocialForm.username}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    background: newSocialForm.platform && newSocialForm.username ? 'var(--theme-primary)' : '#ccc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem'
+                  }}
+                >
+                  <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
+                  保存
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: '1rem',
+          marginTop: '1.5rem'
+        }}>
+          <button
+            onClick={() => setShowEditModal(false)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem'
+            }}
+          >
+            取消
+          </button>
+          <button
+            onClick={handleSaveChanges}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'var(--theme-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem'
+            }}
+          >
+            <i className="ri-save-line" style={{ marginRight: '0.5rem' }}></i>
+            保存更改
+          </button>
+        </div>
+      </Modal>
     </>
   )
 }
