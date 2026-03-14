@@ -24,9 +24,14 @@ export const TwitterTimeline: React.FC<TwitterTimelineProps> = ({ twitterHandle 
 
   return (
     <div>
-      <blockquote className="twitter-tweet" data-width="300">
-        <a href={`https://twitter.com/${twitterHandle}?ref_src=twsrc%5Etfw`}>Tweets by @{twitterHandle}</a>
-      </blockquote>
+      <a 
+        className="twitter-timeline" 
+        data-theme="dark"
+        data-width="300"
+        href={`https://twitter.com/${twitterHandle}?ref_src=twsrc%5Etfw`}
+      >
+        Tweets by @{twitterHandle}
+      </a>
     </div>
   )
 }

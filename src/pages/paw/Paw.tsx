@@ -1591,17 +1591,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         <TwitterTimeline twitterHandle={user.twitterHandle} />
                       </div>
                     )}
-                    
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isTwitterEditing ? 1 : 0.8 
-                    }}>
-                      <div>• 推文内容</div>
-                      <div>• 互动数据</div>
-                      <div>• 关注者统计</div>
-                      <div>• 热门话题</div>
-                    </div>
                   </div>
                 )}
               </div>
