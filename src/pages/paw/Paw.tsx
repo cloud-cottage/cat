@@ -17,6 +17,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const { loading, user, links, currentTheme, setCurrentTheme, isOwner } = useUserProfile({ username: propUsername })
   const { t } = useLanguage()
   const [showThemeSelector, setShowThemeSelector] = useState(false)
+  const [currentLanguage, setCurrentLanguage] = useState('zh-CN') // 默认简体中文
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
   const [newLinkForm, setNewLinkForm] = useState({ url: '', label: '' })
@@ -95,6 +96,26 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const getCurrentThemeColors = () => {
     if (!currentTheme) return { primary: '#FF6B35', secondary: '#00D9FF', bg: '#0A0E27', surface: '#1A1F3A' };
     return getThemeColors(currentTheme, isDarkMode);
+  };
+
+  // 语言配置
+  const languages = [
+    { code: 'zh-CN', name: '简体中文', icon: 'ri-translate-2' },
+    { code: 'zh-TW', name: '繁体中文', icon: 'ri-translate' },
+    { code: 'vi', name: '越南语', icon: 'ri-global-line' },
+    { code: 'en', name: 'English', icon: 'ri-english-input' }
+  ];
+
+  // 切换语言
+  const toggleLanguage = () => {
+    const currentIndex = languages.findIndex(lang => lang.code === currentLanguage);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    setCurrentLanguage(languages[nextIndex].code);
+  };
+
+  // 获取当前语言信息
+  const getCurrentLanguage = () => {
+    return languages.find(lang => lang.code === currentLanguage) || languages[0];
   };
 
   // 添加新链接
@@ -598,6 +619,36 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 🎨 切换主题
               </button>
             )}
+            
+            {/* 语言切换按钮 */}
+            <button
+              className="cat-btn"
+              onClick={toggleLanguage}
+              style={{
+                padding: '0.75rem 1rem',
+                background: getCurrentThemeColors().primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: '25px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+              title={`当前语言: ${getCurrentLanguage().name} (点击切换)`}
+            >
+              <i className={getCurrentLanguage().icon} style={{ fontSize: '16px', marginRight: '0.5rem' }}></i>
+              {getCurrentLanguage().name}
+            </button>
             
             {/* 分享按钮 */}
             <button
