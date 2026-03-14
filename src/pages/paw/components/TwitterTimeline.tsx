@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface TwitterTimelineProps {
   twitterHandle: string
@@ -6,9 +6,25 @@ interface TwitterTimelineProps {
 
 export const TwitterTimeline: React.FC<TwitterTimelineProps> = ({ twitterHandle }) => {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isValidHandle, setIsValidHandle] = useState<boolean | null>(null)
 
   useEffect(() => {
     if (!containerRef.current) return
+
+    // 验证 Twitter 用户名格式
+    const isValidTwitterHandle = (handle: string) => {
+      // Twitter 用户名规则：1-15个字符，只包含字母、数字、下划线，不能以数字开头
+      const twitterRegex = /^[a-zA-Z_][a-zA-Z0-9_]{0,14}$/
+      return twitterRegex.test(handle)
+    }
+
+    const valid = isValidTwitterHandle(twitterHandle)
+    setIsValidHandle(valid)
+
+    if (!valid) {
+      console.warn('TwitterTimeline: Invalid Twitter handle format:', twitterHandle)
+      return
+    }
 
     console.log('TwitterTimeline: Initializing for', twitterHandle)
 
@@ -45,6 +61,25 @@ export const TwitterTimeline: React.FC<TwitterTimelineProps> = ({ twitterHandle 
       // 不清理脚本，因为其他组件可能也在使用
     }
   }, [twitterHandle])
+
+  // 如果用户名格式无效，显示提示信息
+  if (isValidHandle === false) {
+    return (
+      <div style={{
+        padding: '1rem',
+        textAlign: 'center',
+        color: 'var(--theme-primary)',
+        opacity: 0.7,
+        fontSize: '0.875rem'
+      }}>
+        <div style={{ marginBottom: '0.5rem' }}>🐦</div>
+        <div>Twitter 用户名格式无效</div>
+        <div style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
+          请检查 Profile 中的 Twitter 设置
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div ref={containerRef}>
