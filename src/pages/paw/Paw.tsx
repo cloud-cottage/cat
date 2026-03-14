@@ -817,23 +817,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   borderRadius: '8px',
                   position: 'relative'
                 }}>
-                {/* 模块调试信息 */}
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '-20px', 
-                  left: '0', 
-                  fontSize: '10px', 
-                  color: 'blue',
-                  background: 'yellow',
-                  padding: '1px 3px',
-                  borderRadius: '2px',
-                  zIndex: 1000
-                }}>
-                  {module.id} → {position.gridColumn && position.gridRow ? 
-                    `${position.gridColumn} ${position.gridRow}` : 
-                    '未知位置'
-                  }
-                </div>
                 <h3>{module.name}</h3>
                 
                 {module.type === 'profile' && (

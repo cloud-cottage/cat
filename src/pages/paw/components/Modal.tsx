@@ -1,4 +1,5 @@
 import React from 'react'
+import { createPortal } from 'react-dom'
 
 interface ModalProps {
   show: boolean
@@ -19,7 +20,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   if (!show) return null
 
-  return (
+  const modalContent = (
     <div style={{
       position: 'fixed',
       top: 0,
@@ -95,4 +96,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }

@@ -305,7 +305,7 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
             }}
             title="Telegram"
           >
-            <i className="ri-telegram-fill" style={{ fontSize: '10px' }}></i>
+            <i className="ri-telegram-2-fill" style={{ fontSize: '10px' }}></i>
           </a>
         </div>
       </div>
