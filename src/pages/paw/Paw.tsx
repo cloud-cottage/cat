@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getThemeClassName } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { getThemeColors } from '../../themes'
-import { api, PREDEFINED_ICONS, detectIconFromUrl, type Icon as IconType, getUserAvatarUrl } from './lib/api'
+import { api, getUserAvatarUrl } from './lib/api'
 import { Icon } from './components/Icon'
 import { QRCodeComponent } from './components/QRCode'
 import { ThemeModal } from './components/ThemeModal'
@@ -40,14 +40,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [showCreatePageModal, setShowCreatePageModal] = useState(false)
   
   // 各模块独立的编辑状态
-  const [isLinksEditing, setIsLinksEditing] = useState(false)
   const [isMostfindEditing, setIsMostfindEditing] = useState(false)
   const [isAssetEditing, setIsAssetEditing] = useState(false)
   const [isTwitterEditing, setIsTwitterEditing] = useState(false)
-  const [newLinkForm, setNewLinkForm] = useState({ url: "", label: "" })
-  const [showAddLink, setShowAddLink] = useState(false)
-  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
-  const [editLinkForm, setEditLinkForm] = useState({ url: "", label: "" })
   
   // 复制钱包地址功能
   const copyWalletAddress = async () => {
@@ -61,30 +56,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
       }
     }
   }
-
-  // 获取网站图标
-  const getFaviconUrl = (url: string): string => {
-    try {
-      const iconId = detectIconFromUrl(url);
-      const icon = PREDEFINED_ICONS.find((icon: IconType) => icon.id === iconId);
-      
-      // 如果有 ICO 文件，返回 ICO 文件路径
-      if (icon?.icoFile) {
-        return icon.icoFile;
-      }
-      
-      // 否则返回 emoji
-      if (icon?.emoji) {
-        return icon.emoji;
-      }
-      
-      // 默认返回链接 emoji
-      return '🔗';
-    } catch (error) {
-      console.error('解析URL失败:', error);
-      return '🔗';
-    }
-  };
 
   // 自动保存函数
   const handleAutoSave = async (field: string, value: string) => {
@@ -203,131 +174,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     }
   };
 
-  // 添加新链接
-  const addNewLink = async () => {
-    if (newLinkForm.url && newLinkForm.label) {
-      try {
-        const newLink = {
-          id: Date.now().toString(),
-          userId: user?.id || '',
-          url: newLinkForm.url,
-          label: newLinkForm.label,
-          order: (links?.length || 0) + 1,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        
-        await api.updateLinks(user?.username || '', [...(links || []), newLink]);
-        setNewLinkForm({ url: '', label: '' });
-        setShowAddLink(false);
-        window.location.reload();
-      } catch (error) {
-        console.error('添加链接失败:', error);
-        alert('添加链接失败，请重试');
-      }
-    }
-  };
-
-  // 开始编辑链接
-  const startEditLink = (link: any) => {
-    setEditingLinkId(link.id);
-    setEditLinkForm({ url: link.url, label: link.label });
-  };
-
-  // 保存编辑的链接
-  const saveEditLink = async () => {
-    if (editingLinkId && editLinkForm.url && editLinkForm.label) {
-      try {
-        const updatedLinks = (links || []).map((link: any) => 
-          link.id === editingLinkId 
-            ? { ...link, ...editLinkForm, updatedAt: new Date().toISOString() }
-            : link
-        );
-        
-        await api.updateLinks(user?.username || '', updatedLinks);
-        setEditingLinkId(null);
-        setEditLinkForm({ url: '', label: '' });
-        window.location.reload();
-      } catch (error) {
-        console.error('更新链接失败:', error);
-        alert('更新链接失败，请重试');
-      }
-    }
-  };
-
-  // 取消编辑链接
-  const cancelEditLink = () => {
-    setEditingLinkId(null);
-    setEditLinkForm({ url: '', label: '' });
-  };
-
-  // 删除链接
-  const deleteLink = async (linkId: string) => {
-    if (confirm('确定要删除这个链接吗？')) {
-      try {
-        const updatedLinks = (links || []).filter((link: any) => link.id !== linkId);
-        await api.updateLinks(user?.username || '', updatedLinks);
-        window.location.reload();
-      } catch (error) {
-        console.error('删除链接失败:', error);
-        alert('删除链接失败，请重试');
-      }
-    }
-  };
-
-  // 上移链接
-  const moveLinkUp = async (linkId: string) => {
-    try {
-      const linkList = [...(links || [])];
-      const currentIndex = linkList.findIndex((link: any) => link.id === linkId);
-      
-      if (currentIndex > 0) {
-        // 交换位置
-        [linkList[currentIndex], linkList[currentIndex - 1]] = 
-        [linkList[currentIndex - 1], linkList[currentIndex]];
-        
-        // 更新order字段
-        const updatedLinks = linkList.map((link, index) => ({
-          ...link,
-          order: index + 1,
-          updatedAt: new Date().toISOString()
-        }));
-        
-        await api.updateLinks(user?.username || '', updatedLinks);
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('移动链接失败:', error);
-      alert('移动链接失败，请重试');
-    }
-  };
-
-  // 下移链接
-  const moveLinkDown = async (linkId: string) => {
-    try {
-      const linkList = [...(links || [])];
-      const currentIndex = linkList.findIndex((link: any) => link.id === linkId);
-      
-      if (currentIndex < linkList.length - 1) {
-        // 交换位置
-        [linkList[currentIndex], linkList[currentIndex + 1]] = 
-        [linkList[currentIndex + 1], linkList[currentIndex]];
-        
-        // 更新order字段
-        const updatedLinks = linkList.map((link, index) => ({
-          ...link,
-          order: index + 1,
-          updatedAt: new Date().toISOString()
-        }));
-        
-        await api.updateLinks(user?.username || '', updatedLinks);
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('移动链接失败:', error);
-      alert('移动链接失败，请重试');
-    }
-  };
 
   // 应用主题功能
   const applyTheme = async (theme: any) => {
@@ -662,8 +508,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
             </button>
             
             {/* 主题选择按钮 */}
-            {isLinksEditing && (
-              <button
+            <button
                 onClick={() => setShowThemeSelector(!showThemeSelector)}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -688,7 +533,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
               >
                 🎨 切换主题
               </button>
-            )}
             
             {/* 语言切换按钮 */}
             <button
@@ -1119,22 +963,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                       <p>{module.content}</p>
-                      {isLinksEditing && (
-                        <button
-                          onClick={() => setShowAddLink(!showAddLink)}
-                          style={{
-                            padding: '0.25rem 0.5rem',
-                            background: 'var(--theme-primary)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '0.75rem'
-                          }}
-                        >
-                          {showAddLink ? '取消' : '+ 添加链接'}
-                        </button>
-                      )}
                     </div>
                   </div>
                 )}
