@@ -381,7 +381,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     },
     { 
       id: 'mostfind', 
-      name: '我活跃在', 
+      name: '我经常在这里', 
       content: '活跃平台',
       type: 'mostfind'
     },
@@ -1200,52 +1200,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         </div>
                       </div>
 
-                      {/* 副文案 */}
-                      <div style={{
-                        fontSize: '0.75rem',
-                        color: 'rgba(var(--theme-primary-rgb), 0.6)',
-                        textAlign: 'center',
-                        marginBottom: '1rem'
-                      }}>
-                        常驻根据地
                       </div>
-
-                      {/* 操作按钮 */}
-                      <div style={{
-                        textAlign: 'center'
-                      }}>
-                        <button
-                          style={{
-                            padding: '0.75rem 1.5rem',
-                            background: 'var(--theme-primary)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontSize: '0.875rem',
-                            fontWeight: '500',
-                            boxShadow: '0 2px 8px rgba(var(--theme-primary-rgb), 0.3)',
-                            transition: 'all 0.3s ease',
-                            width: '100%'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-1px)';
-                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(var(--theme-primary-rgb), 0.4)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(var(--theme-primary-rgb), 0.3)';
-                          }}
-                          onClick={() => {
-                            if (user?.twitterHandle) {
-                              window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
-                            }
-                          }}
-                        >
-                          去看看
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 )}
                 
