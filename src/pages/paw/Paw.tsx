@@ -1058,7 +1058,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         marginBottom: '1rem',
                         fontWeight: '500'
                       }}>
-                        我经常在这里：
+                        我经常在这里
                       </div>
 
                       {/* 顶部小状态栏 */}
@@ -1086,7 +1086,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             color: 'rgba(var(--theme-primary-rgb), 0.8)',
                             fontWeight: '400'
                           }}>
-                            当前活跃
+                            当前活跃：推特 / Twitter
                           </span>
                         </div>
                         <div style={{
@@ -1106,49 +1106,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}
                         >
                           <i className="ri-refresh-line"></i>
-                        </div>
-                      </div>
-
-                      {/* 中部核心视觉 */}
-                      <div style={{
-                        flex: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        marginBottom: '1.5rem',
-                        cursor: 'pointer',
-                        padding: '1rem',
-                        borderRadius: '8px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onClick={() => {
-                        if (user?.twitterHandle) {
-                          window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'transparent';
-                      }}
-                      >
-                        <div style={{
-                          fontSize: '3.5rem',
-                          marginBottom: '0.75rem',
-                          color: 'var(--theme-primary)'
-                        }}>
-                          <i className="ri-twitter-x-line"></i>
-                        </div>
-                        <div style={{
-                          fontSize: '2rem',
-                          fontWeight: 'bold',
-                          color: 'var(--theme-primary)',
-                          marginBottom: '0.5rem'
-                        }}>
-                          Twitter
                         </div>
                       </div>
 
