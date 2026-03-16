@@ -1051,16 +1051,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                     }}
                     >
-                      {/* 标题 */}
-                      <div style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--theme-primary)',
-                        marginBottom: '1rem',
-                        fontWeight: '500'
-                      }}>
-                        我经常在这里
-                      </div>
-
                       {/* 顶部小状态栏 */}
                       <div style={{
                         display: 'flex',
