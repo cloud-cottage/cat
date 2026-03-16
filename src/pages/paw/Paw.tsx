@@ -967,10 +967,13 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   </div>
                 )}
                 
-                {module.type === 'mostfind' && (
+{module.type === 'mostfind' && (
                   <div 
                     style={{ 
-                      position: 'relative'
+                      position: 'relative',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
                     }}
                     onMouseEnter={(e) => {
                       // 显示编辑符号
@@ -1027,15 +1030,264 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    <p>{module.content}</p>
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isMostfindEditing ? 1 : 0.8 
-                    }}>
-                      <div>• Web3社区</div>
-                      <div>• 开发者平台</div>
-                      <div>• 创作者生态</div>
+                    {/* 矩形卡片布局 */}
+                    <div style={{
+                      background: 'var(--theme-surface)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                      padding: '1rem',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                    }}
+                    >
+                      {/* 标题 */}
+                      <div style={{
+                        fontSize: '0.875rem',
+                        color: 'var(--theme-primary)',
+                        marginBottom: '1rem',
+                        fontWeight: '500'
+                      }}>
+                        我经常在这里：
+                      </div>
+
+                      {/* 顶部小状态栏 */}
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '1.5rem',
+                        padding: '0.5rem 0'
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          <div style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: '#4CAF50',
+                            boxShadow: '0 0 6px rgba(76, 175, 80, 0.4)'
+                          }}></div>
+                          <span style={{
+                            fontSize: '0.75rem',
+                            color: 'rgba(var(--theme-primary-rgb), 0.8)',
+                            fontWeight: '400'
+                          }}>
+                            当前活跃
+                          </span>
+                        </div>
+                        <div style={{
+                          fontSize: '0.875rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.4)',
+                          cursor: 'pointer',
+                          padding: '0.25rem',
+                          borderRadius: '4px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="此信息可能会更新"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.4)';
+                        }}
+                        >
+                          <i className="ri-refresh-line"></i>
+                        </div>
+                      </div>
+
+                      {/* 中部核心视觉 */}
+                      <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        marginBottom: '1.5rem',
+                        cursor: 'pointer',
+                        padding: '1rem',
+                        borderRadius: '8px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (user?.twitterHandle) {
+                          window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
+                        }
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                      >
+                        <div style={{
+                          fontSize: '3.5rem',
+                          marginBottom: '0.75rem',
+                          color: 'var(--theme-primary)'
+                        }}>
+                          <i className="ri-twitter-x-line"></i>
+                        </div>
+                        <div style={{
+                          fontSize: '2rem',
+                          fontWeight: 'bold',
+                          color: 'var(--theme-primary)',
+                          marginBottom: '0.5rem'
+                        }}>
+                          Twitter
+                        </div>
+                      </div>
+
+                      {/* 底部账号信息 */}
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '0.75rem',
+                        background: 'rgba(var(--theme-primary-rgb), 0.05)',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                        marginBottom: '1rem'
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          <span style={{
+                            fontSize: '0.875rem',
+                            color: 'var(--theme-primary)',
+                            fontWeight: '500'
+                          }}>
+                            @{user?.username || 'username'}
+                          </span>
+                        </div>
+                        <div style={{
+                          display: 'flex',
+                          gap: '0.25rem'
+                        }}>
+                          <button
+                            style={{
+                              padding: '0.25rem',
+                              background: 'transparent',
+                              color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                              border: 'none',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.75rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = 'var(--theme-primary)';
+                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
+                              e.currentTarget.style.background = 'transparent';
+                            }}
+                            title="复制用户名"
+                            onClick={() => {
+                              if (user?.username) {
+                                navigator.clipboard.writeText(`@${user.username}`);
+                              }
+                            }}
+                          >
+                            <i className="ri-file-copy-line"></i>
+                          </button>
+                          <button
+                            style={{
+                              padding: '0.25rem',
+                              background: 'transparent',
+                              color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                              border: 'none',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '0.75rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = 'var(--theme-primary)';
+                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
+                              e.currentTarget.style.background = 'transparent';
+                            }}
+                            title="跳转到页面"
+                            onClick={() => {
+                              if (user?.twitterHandle) {
+                                window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
+                              }
+                            }}
+                          >
+                            <i className="ri-external-link-line"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* 副文案 */}
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                        textAlign: 'center',
+                        marginBottom: '1rem'
+                      }}>
+                        常驻根据地
+                      </div>
+
+                      {/* 操作按钮 */}
+                      <div style={{
+                        textAlign: 'center'
+                      }}>
+                        <button
+                          style={{
+                            padding: '0.75rem 1.5rem',
+                            background: 'var(--theme-primary)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem',
+                            fontWeight: '500',
+                            boxShadow: '0 2px 8px rgba(var(--theme-primary-rgb), 0.3)',
+                            transition: 'all 0.3s ease',
+                            width: '100%'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(var(--theme-primary-rgb), 0.4)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(var(--theme-primary-rgb), 0.3)';
+                          }}
+                          onClick={() => {
+                            if (user?.twitterHandle) {
+                              window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
+                            }
+                          }}
+                        >
+                          去看看
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
