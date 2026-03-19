@@ -1122,7 +1122,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             color: 'var(--theme-primary)',
                             fontWeight: '500'
                           }}>
-                            @{user?.username || 'username'}
+                            @{user?.twitterHandle || user?.username || 'username'}
                           </span>
                         </div>
                         <div style={{
@@ -1152,8 +1152,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             }}
                             title="复制用户名"
                             onClick={() => {
-                              if (user?.username) {
-                                navigator.clipboard.writeText(`@${user.username}`);
+                              const handleToCopy = user?.twitterHandle || user?.username;
+                              if (handleToCopy) {
+                                navigator.clipboard.writeText(`@${handleToCopy}`);
                               }
                             }}
                           >
