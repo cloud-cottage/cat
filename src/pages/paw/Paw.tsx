@@ -1043,8 +1043,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
-                        fontSize: '0.75rem',
-                        color: 'rgba(var(--theme-primary-rgb), 0.8)'
+                        fontSize: '0.875rem',
+                        color: 'var(--theme-primary)'
                       }}>
                         <div style={{
                           width: '6px',
@@ -1059,7 +1059,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         className="ri-refresh-line" 
                         style={{
                           fontSize: '0.875rem',
-                          color: 'rgba(var(--theme-primary-rgb), 0.4)',
+                          color: 'var(--theme-primary)',
                           cursor: 'pointer',
                           padding: '0.25rem',
                           borderRadius: '4px',
@@ -1067,10 +1067,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}
                         title="此信息可能会更新"
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
+                          e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.4)';
+                          e.currentTarget.style.background = 'transparent';
                         }}
                       ></i>
                     </div>
@@ -1096,19 +1096,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           style={{
                             padding: '0.25rem',
                             background: 'transparent',
-                            color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                            color: 'var(--theme-primary)',
                             border: 'none',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '0.75rem',
+                            fontSize: '0.875rem',
                             transition: 'all 0.2s ease'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.color = 'var(--theme-primary)';
                             e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
                             e.currentTarget.style.background = 'transparent';
                           }}
                           title="复制用户名"
@@ -1125,19 +1123,17 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           style={{
                             padding: '0.25rem',
                             background: 'transparent',
-                            color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                            color: 'var(--theme-primary)',
                             border: 'none',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '0.75rem',
+                            fontSize: '0.875rem',
                             transition: 'all 0.2s ease'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.color = 'var(--theme-primary)';
                             e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
                             e.currentTarget.style.background = 'transparent';
                           }}
                           title="跳转到页面"
