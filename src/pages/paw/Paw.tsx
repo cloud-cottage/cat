@@ -972,41 +972,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <i className="ri-edit-line"></i>
                     </div>
                     
-                    {/* 链接信息行 */}
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '1rem'
-                    }}>
-                      <span style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--theme-primary)',
-                        fontWeight: '500'
-                      }}>
-                        {module.content}
-                      </span>
-                      <i 
-                        className="ri-add-line" 
-                        style={{
-                          fontSize: '0.875rem',
-                          color: 'var(--theme-primary)',
-                          cursor: 'pointer',
-                          padding: '0.25rem',
-                          borderRadius: '4px',
-                          transition: 'all 0.2s ease'
-                        }}
-                        title="添加新链接"
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                        onClick={() => openLinksModal()}
-                      ></i>
-                    </div>
-
                     {/* 链接列表 */}
                     <div style={{
                       display: 'flex',
