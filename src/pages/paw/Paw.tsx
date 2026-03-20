@@ -908,38 +908,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'links' && (
-                  <div 
-                    style={{ 
-                      position: 'relative',
-                      background: 'var(--theme-surface)',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                      padding: '1rem',
-                      height: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                    }}
-                  >
+                  <>
                     {/* 编辑符号 */}
                     <div
                       className="edit-icon"
@@ -979,9 +948,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         padding: '2rem 1rem',
                         fontSize: '0.875rem',
                         color: 'rgba(var(--theme-primary-rgb), 0.6)',
-                        background: 'rgba(var(--theme-primary-rgb), 0.02)',
+                        background: 'var(--theme-surface)',
                         borderRadius: '12px',
-                        border: '1px dashed rgba(var(--theme-primary-rgb), 0.2)'
+                        border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                       }}>
                         <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>🔗</div>
                         <div>暂无链接</div>
@@ -1004,41 +974,24 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               gap: '1rem',
                               padding: '1rem',
                               borderRadius: '12px',
-                              background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.03) 0%, rgba(var(--theme-primary-rgb), 0.01) 100%)',
-                              border: '1px solid rgba(var(--theme-primary-rgb), 0.08)',
-                              boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
-                              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                              background: 'var(--theme-surface)',
+                              border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                              transition: 'all 0.3s ease',
                               position: 'relative',
                               overflow: 'hidden',
                               textDecoration: 'none',
                               color: 'inherit'
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.06) 0%, rgba(var(--theme-primary-rgb), 0.03) 100%)';
-                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.15)';
-                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)';
-                              e.currentTarget.style.transform = 'translateY(-1px)';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.03) 0%, rgba(var(--theme-primary-rgb), 0.01) 100%)';
-                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.08)';
-                              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)';
                               e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                             }}
                           >
-                            {/* 装饰性背景光晕 */}
-                            <div style={{
-                              position: 'absolute',
-                              top: '-50%',
-                              right: '-50%',
-                              width: '100%',
-                              height: '100%',
-                              background: 'radial-gradient(circle, rgba(var(--theme-primary-rgb), 0.05) 0%, transparent 70%)',
-                              pointerEvents: 'none',
-                              opacity: 0,
-                              transition: 'opacity 0.3s ease'
-                            }}></div>
-                            
                             {/* 左侧图标容器 */}
                             <div style={{
                               position: 'relative',
@@ -1112,7 +1065,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         ))}
                       </div>
                     )}
-                  </div>
+                  </>
                 )}
                 
                 {module.type === 'mostfind' && (
