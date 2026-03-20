@@ -1023,7 +1023,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           暂无链接
                         </div>
                       ) : (
-                        links.slice(0, 3).map((link) => (
+                        links.map((link) => (
                           <a
                             key={link.id}
                             href={link.url}
@@ -1062,21 +1062,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           </a>
                         ))
                       )}
-                      {links.length > 3 && (
-                        <div style={{
-                          textAlign: 'center',
-                          padding: '0.5rem',
-                          fontSize: '0.75rem',
-                          color: 'rgba(var(--theme-primary-rgb), 0.6)'
-                        }}>
-                          还有 {links.length - 3} 个链接...
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
                 
-{module.type === 'mostfind' && (
+                {module.type === 'mostfind' && (
                   <div 
                     style={{ 
                       position: 'relative',
