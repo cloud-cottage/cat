@@ -910,26 +910,37 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 {module.type === 'links' && (
                   <div 
                     style={{ 
-                      position: 'relative'
+                      position: 'relative',
+                      background: 'var(--theme-surface)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                      padding: '1rem',
+                      height: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s ease'
                     }}
                     onMouseEnter={(e) => {
-                      // 显示编辑符号
                       const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
                       if (editIcon) {
                         editIcon.style.opacity = '1';
                         editIcon.style.pointerEvents = 'auto';
                       }
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
                     }}
                     onMouseLeave={(e) => {
-                      // 隐藏编辑符号
                       const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
                       if (editIcon) {
                         editIcon.style.opacity = '0';
                         editIcon.style.pointerEvents = 'none';
                       }
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                     }}
                   >
-                    {/* 编辑符号 - 悬停时显示 */}
+                    {/* 编辑符号 */}
                     <div
                       className="edit-icon"
                       style={{
@@ -961,8 +972,38 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <i className="ri-edit-line"></i>
                     </div>
                     
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                      <p>{module.content}</p>
+                    {/* 链接信息行 */}
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <span style={{
+                        fontSize: '0.875rem',
+                        color: 'var(--theme-primary)',
+                        fontWeight: '500'
+                      }}>
+                        {module.content}
+                      </span>
+                      <i 
+                        className="ri-external-link-line" 
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--theme-primary)',
+                          cursor: 'pointer',
+                          padding: '0.25rem',
+                          borderRadius: '4px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="查看所有链接"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
+                        }}
+                        onClick={() => openLinksModal()}
+                      ></i>
                     </div>
                   </div>
                 )}
