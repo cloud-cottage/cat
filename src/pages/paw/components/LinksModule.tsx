@@ -1,40 +1,24 @@
 import React from 'react'
-import type { Link, LinkGroup } from '../lib/api'
+import type { Link } from '../lib/api'
 import { detectIconFromUrl, detectTitleFromUrl } from '../lib/api'
 
 interface LinksModuleProps {
   links: Link[]
-  groups: LinkGroup[]
   isEditing: boolean
   isOwner: boolean
   onAddLink: () => void
   onEditLink: (link: Link) => void
   onDeleteLink: (id: string) => void
-  onAddGroup: () => void
-  onEditGroup: (id: string, field: keyof LinkGroup, value: string | number) => void
-  onDeleteGroup: (id: string) => void
 }
 
 export const LinksModule: React.FC<LinksModuleProps> = ({
   links,
-  groups,
   isEditing,
   isOwner,
   onAddLink,
   onEditLink,
-  onDeleteLink,
-  onAddGroup,
-  onEditGroup,
-  onDeleteGroup
+  onDeleteLink
 }) => {
-  const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
-    // Since group property was removed from Link interface, 
-    // all links are now ungrouped
-    return [{ group: null, links }]
-  }
-
-  const linksByGroups = getLinksByGroups(links, [])
-
   return (
     <div style={{
       background: 'rgba(255,255,255,0.1)',
