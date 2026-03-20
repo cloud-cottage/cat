@@ -1032,20 +1032,21 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    {/* 状态栏 */}
+                    {/* 状态指示器 */}
                     <div style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.75rem',
+                      color: 'rgba(var(--theme-primary-rgb), 0.8)',
                       marginBottom: '1.5rem',
-                      padding: '0.5rem 0'
+                      padding: '0.5rem 0',
+                      justifyContent: 'space-between'
                     }}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
-                        fontSize: '0.75rem',
-                        color: 'rgba(var(--theme-primary-rgb), 0.8)'
+                        gap: '0.5rem'
                       }}>
                         <div style={{
                           width: '6px',
@@ -1076,7 +1077,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       ></i>
                     </div>
 
-                    {/* 账号信息和操作按钮 */}
+                    {/* 账号信息 */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
