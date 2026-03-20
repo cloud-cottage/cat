@@ -976,7 +976,8 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      marginBottom: '1rem'
                     }}>
                       <span style={{
                         fontSize: '0.875rem',
@@ -986,7 +987,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         {module.content}
                       </span>
                       <i 
-                        className="ri-external-link-line" 
+                        className="ri-add-line" 
                         style={{
                           fontSize: '0.875rem',
                           color: 'var(--theme-primary)',
@@ -995,7 +996,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           borderRadius: '4px',
                           transition: 'all 0.2s ease'
                         }}
-                        title="查看所有链接"
+                        title="添加新链接"
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
                         }}
@@ -1004,6 +1005,73 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         }}
                         onClick={() => openLinksModal()}
                       ></i>
+                    </div>
+
+                    {/* 链接列表 */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem'
+                    }}>
+                      {links.length === 0 ? (
+                        <div style={{
+                          textAlign: 'center',
+                          padding: '1rem',
+                          fontSize: '0.875rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.6)'
+                        }}>
+                          暂无链接
+                        </div>
+                      ) : (
+                        links.slice(0, 3).map((link, index) => (
+                          <a
+                            key={link.id}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              padding: '0.5rem',
+                              borderRadius: '6px',
+                              textDecoration: 'none',
+                              color: 'var(--theme-primary)',
+                              fontSize: '0.875rem',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent';
+                            }}
+                          >
+                            <span style={{ fontSize: '1rem' }}>
+                              {link.icon || '🔗'}
+                            </span>
+                            <span style={{
+                              flex: 1,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {link.label}
+                            </span>
+                            <i className="ri-external-link-line" style={{ fontSize: '0.75rem' }}></i>
+                          </a>
+                        ))
+                      )}
+                      {links.length > 3 && (
+                        <div style={{
+                          textAlign: 'center',
+                          padding: '0.5rem',
+                          fontSize: '0.75rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.6)'
+                        }}>
+                          还有 {links.length - 3} 个链接...
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
