@@ -1069,38 +1069,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'mostfind' && (
-                  <div 
-                    style={{ 
-                      position: 'relative',
-                      background: 'var(--theme-surface)',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                      padding: '1rem',
-                      height: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                    }}
-                  >
+                  <>
                     {/* 编辑符号 */}
                     <div
                       className="edit-icon"
@@ -1133,122 +1102,104 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    {/* 状态行 */}
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '1rem'
-                    }}>
+                    {/* Twitter 链接卡片 */}
+                    <a
+                      href={`https://twitter.com/${user?.twitterHandle || user?.username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '1rem',
+                        padding: '1rem',
+                        borderRadius: '12px',
+                        background: 'var(--theme-surface)',
+                        border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        transition: 'all 0.3s ease',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        textDecoration: 'none',
+                        color: 'inherit'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                      }}
+                    >
+                      {/* 左侧图标容器 */}
                       <div style={{
+                        position: 'relative',
+                        width: '3rem',
+                        height: '3.6rem',
+                        flexShrink: 0,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
-                        fontSize: '0.875rem',
-                        color: 'var(--theme-primary)'
+                        justifyContent: 'center',
+                        fontSize: '1.75rem',
+                        background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.1) 0%, rgba(var(--theme-primary-rgb), 0.05) 100%)',
+                        borderRadius: '10px',
+                        boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.05)',
+                        border: '1px solid rgba(var(--theme-primary-rgb), 0.15)'
                       }}>
-                        <div style={{
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: '50%',
-                          background: '#4CAF50',
-                          boxShadow: '0 0 6px rgba(76, 175, 80, 0.4)'
-                        }}></div>
-                        当前活跃：推特 / Twitter
+                        <i className="ri-twitter-x-line" style={{ fontSize: '1.75rem' }}></i>
                       </div>
-                      <i 
-                        className="ri-refresh-line" 
-                        style={{
-                          fontSize: '0.875rem',
-                          color: 'var(--theme-primary)',
-                          cursor: 'pointer',
-                          padding: '0.25rem',
-                          borderRadius: '4px',
-                          transition: 'all 0.2s ease'
-                        }}
-                        title="此信息可能会更新"
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                      ></i>
-                    </div>
-
-                    {/* 账号行 */}
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                      <span style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--theme-primary)',
-                        fontWeight: '500'
-                      }}>
-                        @{user?.twitterHandle || user?.username || 'username'}
-                      </span>
+                      
+                      {/* 右侧内容区域 */}
                       <div style={{
                         display: 'flex',
-                        gap: '0.25rem'
+                        flexDirection: 'column',
+                        gap: '0.375rem',
+                        flex: 1,
+                        minWidth: 0,
+                        paddingTop: '0.25rem'
                       }}>
-                        <button
-                          style={{
-                            padding: '0.25rem',
-                            background: 'transparent',
-                            color: 'var(--theme-primary)',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '0.875rem',
-                            transition: 'all 0.2s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                          title="复制用户名"
-                          onClick={() => {
-                            const handleToCopy = user?.twitterHandle || user?.username;
-                            if (handleToCopy) {
-                              navigator.clipboard.writeText(`@${handleToCopy}`);
-                            }
-                          }}
-                        >
-                          <i className="ri-file-copy-line"></i>
-                        </button>
-                        <button
-                          style={{
-                            padding: '0.25rem',
-                            background: 'transparent',
-                            color: 'var(--theme-primary)',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '0.875rem',
-                            transition: 'all 0.2s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                          title="跳转到页面"
-                          onClick={() => {
-                            if (user?.twitterHandle) {
-                              window.open(`https://twitter.com/${user.twitterHandle}`, '_blank');
-                            }
-                          }}
-                        >
-                          <i className="ri-external-link-line"></i>
-                        </button>
+                        {/* 第一行：label */}
+                        <div style={{
+                          fontSize: '1.0625rem',
+                          fontWeight: '600',
+                          color: 'var(--theme-primary)',
+                          lineHeight: '1.3',
+                          letterSpacing: '-0.01em'
+                        }}>
+                          当前活跃：推特 / Twitter
+                        </div>
+                        
+                        {/* 第二行：url */}
+                        <div style={{
+                          fontSize: '0.8125rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.8)',
+                          lineHeight: '1.3',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.25rem'
+                        }}>
+                          <i className="ri-link" style={{ fontSize: '0.75rem', opacity: 0.6 }}></i>
+                          @0xCatKing
+                        </div>
+                        
+                        {/* 第三行：description */}
+                        <div style={{
+                          fontSize: '0.8125rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.65)',
+                          lineHeight: '1.3',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          fontStyle: 'italic'
+                        }}>
+                          在推特上关注我，获取最新动态
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </a>
+                  </>
                 )}
                 
                 {module.type === 'asset' && (
