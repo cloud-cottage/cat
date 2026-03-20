@@ -973,26 +973,26 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     </div>
                     
                     {/* 链接列表 */}
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.75rem'
-                    }}>
-                      {links.length === 0 ? (
-                        <div style={{
-                          textAlign: 'center',
-                          padding: '2rem 1rem',
-                          fontSize: '0.875rem',
-                          color: 'rgba(var(--theme-primary-rgb), 0.6)',
-                          background: 'rgba(var(--theme-primary-rgb), 0.02)',
-                          borderRadius: '12px',
-                          border: '1px dashed rgba(var(--theme-primary-rgb), 0.2)'
-                        }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>🔗</div>
-                          <div>暂无链接</div>
-                        </div>
-                      ) : (
-                        links.map((link) => (
+                    {links.length === 0 ? (
+                      <div style={{
+                        textAlign: 'center',
+                        padding: '2rem 1rem',
+                        fontSize: '0.875rem',
+                        color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                        background: 'rgba(var(--theme-primary-rgb), 0.02)',
+                        borderRadius: '12px',
+                        border: '1px dashed rgba(var(--theme-primary-rgb), 0.2)'
+                      }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>🔗</div>
+                        <div>暂无链接</div>
+                      </div>
+                    ) : (
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.75rem'
+                      }}>
+                        {links.map((link) => (
                           <div
                             key={link.id}
                             style={{
@@ -1120,9 +1120,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               )}
                             </div>
                           </div>
-                        ))
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 
