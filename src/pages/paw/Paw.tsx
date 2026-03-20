@@ -976,15 +976,12 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
                       padding: '1rem',
                       height: 'auto',
-                      minHeight: 'auto',
-                      maxHeight: 'fit-content',
                       display: 'flex',
                       flexDirection: 'column',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                       transition: 'all 0.3s ease'
                     }}
                     onMouseEnter={(e) => {
-                      // 显示编辑符号和卡片悬停效果
                       const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
                       if (editIcon) {
                         editIcon.style.opacity = '1';
@@ -994,7 +991,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
                     }}
                     onMouseLeave={(e) => {
-                      // 隐藏编辑符号和重置卡片效果
                       const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
                       if (editIcon) {
                         editIcon.style.opacity = '0';
@@ -1004,7 +1000,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
                     }}
                   >
-                    {/* 编辑符号 - 悬停时显示 */}
+                    {/* 编辑符号 */}
                     <div
                       className="edit-icon"
                       style={{
@@ -1029,20 +1025,14 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (isMostfindEditing) {
-                          // 关闭编辑模式
-                          setIsMostfindEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsMostfindEditing(true);
-                        }
+                        setIsMostfindEditing(!isMostfindEditing);
                       }}
                       title={isMostfindEditing ? "关闭编辑" : "编辑活跃平台"}
                     >
                       {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    {/* 顶部小状态栏 */}
+                    {/* 状态栏 */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -1053,7 +1043,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem'
+                        gap: '0.5rem',
+                        fontSize: '0.75rem',
+                        color: 'rgba(var(--theme-primary-rgb), 0.8)'
                       }}>
                         <div style={{
                           width: '6px',
@@ -1062,35 +1054,29 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           background: '#4CAF50',
                           boxShadow: '0 0 6px rgba(76, 175, 80, 0.4)'
                         }}></div>
-                        <span style={{
-                          fontSize: '0.75rem',
-                          color: 'rgba(var(--theme-primary-rgb), 0.8)',
-                          fontWeight: '400'
-                        }}>
-                          当前活跃：推特 / Twitter
-                        </span>
+                        当前活跃：推特 / Twitter
                       </div>
-                      <div style={{
-                        fontSize: '0.875rem',
-                        color: 'rgba(var(--theme-primary-rgb), 0.4)',
-                        cursor: 'pointer',
-                        padding: '0.25rem',
-                        borderRadius: '4px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      title="此信息可能会更新"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.4)';
-                      }}
-                      >
-                        <i className="ri-refresh-line"></i>
-                      </div>
+                      <i 
+                        className="ri-refresh-line" 
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'rgba(var(--theme-primary-rgb), 0.4)',
+                          cursor: 'pointer',
+                          padding: '0.25rem',
+                          borderRadius: '4px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="此信息可能会更新"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.6)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.4)';
+                        }}
+                      ></i>
                     </div>
 
-                    {/* 底部账号信息 */}
+                    {/* 账号信息和操作按钮 */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -1098,22 +1084,15 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       padding: '0.75rem',
                       background: 'rgba(var(--theme-primary-rgb), 0.05)',
                       borderRadius: '8px',
-                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                      marginBottom: '0'
+                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)'
                     }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
+                      <span style={{
+                        fontSize: '0.875rem',
+                        color: 'var(--theme-primary)',
+                        fontWeight: '500'
                       }}>
-                        <span style={{
-                          fontSize: '0.875rem',
-                          color: 'var(--theme-primary)',
-                          fontWeight: '500'
-                        }}>
-                          @{user?.twitterHandle || user?.username || 'username'}
-                        </span>
-                      </div>
+                        @{user?.twitterHandle || user?.username || 'username'}
+                      </span>
                       <div style={{
                         display: 'flex',
                         gap: '0.25rem'
@@ -1127,8 +1106,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             borderRadius: '4px',
                             cursor: 'pointer',
                             fontSize: '0.75rem',
-                            display: 'flex',
-                            alignItems: 'center',
                             transition: 'all 0.2s ease'
                           }}
                           onMouseEnter={(e) => {
@@ -1158,8 +1135,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             borderRadius: '4px',
                             cursor: 'pointer',
                             fontSize: '0.75rem',
-                            display: 'flex',
-                            alignItems: 'center',
                             transition: 'all 0.2s ease'
                           }}
                           onMouseEnter={(e) => {
