@@ -28,14 +28,9 @@ export const LinksModule: React.FC<LinksModuleProps> = ({
   onDeleteGroup
 }) => {
   const getLinksByGroups = (links: Link[], groups: LinkGroup[]) => {
-    if (groups.length === 0) {
-      return [{ group: null, links }]
-    }
-    
-    return groups.map(group => ({
-      group,
-      links: links.filter(link => link.group === group.id)
-    })).filter(group => group.links.length > 0)
+    // Since group property was removed from Link interface, 
+    // all links are now ungrouped
+    return [{ group: null, links }]
   }
 
   const linksByGroups = getLinksByGroups(links, groups)
