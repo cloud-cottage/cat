@@ -1024,42 +1024,99 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         </div>
                       ) : (
                         links.map((link) => (
-                          <a
+                          <div
                             key={link.id}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             style={{
                               display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              padding: '0.5rem',
-                              borderRadius: '6px',
-                              textDecoration: 'none',
-                              color: 'var(--theme-primary)',
-                              fontSize: '0.875rem',
+                              alignItems: 'flex-start',
+                              gap: '0.75rem',
+                              padding: '0.75rem',
+                              borderRadius: '8px',
+                              background: 'rgba(var(--theme-primary-rgb), 0.02)',
+                              border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
                               transition: 'all 0.2s ease'
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.05)';
+                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.2)';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'transparent';
+                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.02)';
+                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.1)';
                             }}
                           >
-                            <span style={{ fontSize: '1rem' }}>
-                              {link.icon || '🔗'}
-                            </span>
-                            <span style={{
-                              flex: 1,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
+                            {/* 左侧图标 - 占据三行高度 */}
+                            <div style={{
+                              fontSize: '1.5rem',
+                              lineHeight: '1.2',
+                              flexShrink: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '2rem',
+                              height: '3.6rem'
                             }}>
-                              {link.label}
-                            </span>
-                            <i className="ri-external-link-line" style={{ fontSize: '0.75rem' }}></i>
-                          </a>
+                              {link.icon || '🔗'}
+                            </div>
+                            
+                            {/* 右侧三行文字 */}
+                            <div style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.25rem',
+                              flex: 1,
+                              minWidth: 0
+                            }}>
+                              {/* 第一行：label */}
+                              <div style={{
+                                fontSize: '1rem',
+                                fontWeight: '500',
+                                color: 'var(--theme-primary)',
+                                lineHeight: '1.2'
+                              }}>
+                                {link.label}
+                              </div>
+                              
+                              {/* 第二行：url */}
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  fontSize: '0.875rem',
+                                  color: 'var(--theme-primary)',
+                                  textDecoration: 'none',
+                                  lineHeight: '1.2',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  transition: 'text-decoration 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.textDecoration = 'underline';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.textDecoration = 'none';
+                                }}
+                              >
+                                {link.url}
+                              </a>
+                              
+                              {/* 第三行：description */}
+                              {link.description && (
+                                <div style={{
+                                  fontSize: '0.875rem',
+                                  color: 'rgba(var(--theme-primary-rgb), 0.7)',
+                                  lineHeight: '1.2',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap'
+                                }}>
+                                  {link.description}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         ))
                       )}
                     </div>

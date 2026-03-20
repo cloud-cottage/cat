@@ -94,7 +94,6 @@ export interface Link {
   label: string
   url: string
   description?: string
-  group?: string
   icon?: string
   order: number
   createdAt: string
