@@ -976,16 +976,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.5rem'
+                      gap: '0.75rem'
                     }}>
                       {links.length === 0 ? (
                         <div style={{
                           textAlign: 'center',
-                          padding: '1rem',
+                          padding: '2rem 1rem',
                           fontSize: '0.875rem',
-                          color: 'rgba(var(--theme-primary-rgb), 0.6)'
+                          color: 'rgba(var(--theme-primary-rgb), 0.6)',
+                          background: 'rgba(var(--theme-primary-rgb), 0.02)',
+                          borderRadius: '12px',
+                          border: '1px dashed rgba(var(--theme-primary-rgb), 0.2)'
                         }}>
-                          暂无链接
+                          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>🔗</div>
+                          <div>暂无链接</div>
                         </div>
                       ) : (
                         links.map((link) => (
@@ -994,50 +998,76 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                             style={{
                               display: 'flex',
                               alignItems: 'flex-start',
-                              gap: '0.75rem',
-                              padding: '0.75rem',
-                              borderRadius: '8px',
-                              background: 'rgba(var(--theme-primary-rgb), 0.02)',
-                              border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                              transition: 'all 0.2s ease'
+                              gap: '1rem',
+                              padding: '1rem',
+                              borderRadius: '12px',
+                              background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.03) 0%, rgba(var(--theme-primary-rgb), 0.01) 100%)',
+                              border: '1px solid rgba(var(--theme-primary-rgb), 0.08)',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
+                              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                              position: 'relative',
+                              overflow: 'hidden'
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.05)';
-                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.2)';
+                              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.06) 0%, rgba(var(--theme-primary-rgb), 0.03) 100%)';
+                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.15)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)';
+                              e.currentTarget.style.transform = 'translateY(-1px)';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'rgba(var(--theme-primary-rgb), 0.02)';
-                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.1)';
+                              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.03) 0%, rgba(var(--theme-primary-rgb), 0.01) 100%)';
+                              e.currentTarget.style.borderColor = 'rgba(var(--theme-primary-rgb), 0.08)';
+                              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)';
+                              e.currentTarget.style.transform = 'translateY(0)';
                             }}
                           >
-                            {/* 左侧图标 - 占据三行高度 */}
+                            {/* 装饰性背景光晕 */}
                             <div style={{
-                              fontSize: '1.5rem',
-                              lineHeight: '1.2',
+                              position: 'absolute',
+                              top: '-50%',
+                              right: '-50%',
+                              width: '100%',
+                              height: '100%',
+                              background: 'radial-gradient(circle, rgba(var(--theme-primary-rgb), 0.05) 0%, transparent 70%)',
+                              pointerEvents: 'none',
+                              opacity: 0,
+                              transition: 'opacity 0.3s ease'
+                            }}></div>
+                            
+                            {/* 左侧图标容器 */}
+                            <div style={{
+                              position: 'relative',
+                              width: '3rem',
+                              height: '3.6rem',
                               flexShrink: 0,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              width: '2rem',
-                              height: '3.6rem'
+                              fontSize: '1.75rem',
+                              background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.1) 0%, rgba(var(--theme-primary-rgb), 0.05) 100%)',
+                              borderRadius: '10px',
+                              boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.05)',
+                              border: '1px solid rgba(var(--theme-primary-rgb), 0.15)'
                             }}>
                               {link.icon || '🔗'}
                             </div>
                             
-                            {/* 右侧三行文字 */}
+                            {/* 右侧内容区域 */}
                             <div style={{
                               display: 'flex',
                               flexDirection: 'column',
-                              gap: '0.25rem',
+                              gap: '0.375rem',
                               flex: 1,
-                              minWidth: 0
+                              minWidth: 0,
+                              paddingTop: '0.25rem'
                             }}>
                               {/* 第一行：label */}
                               <div style={{
-                                fontSize: '1rem',
-                                fontWeight: '500',
+                                fontSize: '1.0625rem',
+                                fontWeight: '600',
                                 color: 'var(--theme-primary)',
-                                lineHeight: '1.2'
+                                lineHeight: '1.3',
+                                letterSpacing: '-0.01em'
                               }}>
                                 {link.label}
                               </div>
@@ -1048,34 +1078,42 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                  fontSize: '0.875rem',
-                                  color: 'var(--theme-primary)',
+                                  fontSize: '0.8125rem',
+                                  color: 'rgba(var(--theme-primary-rgb), 0.8)',
                                   textDecoration: 'none',
-                                  lineHeight: '1.2',
+                                  lineHeight: '1.3',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
-                                  transition: 'text-decoration 0.2s ease'
+                                  transition: 'all 0.2s ease',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.25rem'
                                 }}
                                 onMouseEnter={(e) => {
+                                  e.currentTarget.style.color = 'var(--theme-primary)';
                                   e.currentTarget.style.textDecoration = 'underline';
+                                  e.currentTarget.style.textDecorationColor = 'rgba(var(--theme-primary-rgb), 0.4)';
                                 }}
                                 onMouseLeave={(e) => {
+                                  e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.8)';
                                   e.currentTarget.style.textDecoration = 'none';
                                 }}
                               >
+                                <i className="ri-link" style={{ fontSize: '0.75rem', opacity: 0.6 }}></i>
                                 {link.url}
                               </a>
                               
                               {/* 第三行：description */}
                               {link.description && (
                                 <div style={{
-                                  fontSize: '0.875rem',
-                                  color: 'rgba(var(--theme-primary-rgb), 0.7)',
-                                  lineHeight: '1.2',
+                                  fontSize: '0.8125rem',
+                                  color: 'rgba(var(--theme-primary-rgb), 0.65)',
+                                  lineHeight: '1.3',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap'
+                                  whiteSpace: 'nowrap',
+                                  fontStyle: 'italic'
                                 }}>
                                   {link.description}
                                 </div>
