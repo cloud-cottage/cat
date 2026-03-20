@@ -911,33 +911,10 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                   <div 
                     style={{ 
                       position: 'relative',
-                      background: 'var(--theme-surface)',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                      padding: '1rem',
+                      padding: '0',
                       height: 'auto',
                       display: 'flex',
-                      flexDirection: 'column',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                      flexDirection: 'column'
                     }}
                   >
                     {/* 编辑符号 */}
