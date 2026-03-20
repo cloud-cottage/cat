@@ -1032,21 +1032,19 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       {isMostfindEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    {/* 状态指示器 */}
+                    {/* 状态行 */}
                     <div style={{
                       display: 'flex',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      gap: '0.5rem',
-                      fontSize: '0.75rem',
-                      color: 'rgba(var(--theme-primary-rgb), 0.8)',
-                      marginBottom: '1.5rem',
-                      padding: '0.5rem 0',
-                      justifyContent: 'space-between'
+                      marginBottom: '1rem'
                     }}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem'
+                        gap: '0.5rem',
+                        fontSize: '0.75rem',
+                        color: 'rgba(var(--theme-primary-rgb), 0.8)'
                       }}>
                         <div style={{
                           width: '6px',
@@ -1077,15 +1075,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       ></i>
                     </div>
 
-                    {/* 账号信息 */}
+                    {/* 账号行 */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '0.75rem',
-                      background: 'rgba(var(--theme-primary-rgb), 0.05)',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(var(--theme-primary-rgb), 0.1)'
+                      alignItems: 'center'
                     }}>
                       <span style={{
                         fontSize: '0.875rem',
