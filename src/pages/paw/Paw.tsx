@@ -993,8 +993,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                         gap: '0.75rem'
                       }}>
                         {links.map((link) => (
-                          <div
+                          <a
                             key={link.id}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
                               display: 'flex',
                               alignItems: 'flex-start',
@@ -1006,7 +1009,9 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
                               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                               position: 'relative',
-                              overflow: 'hidden'
+                              overflow: 'hidden',
+                              textDecoration: 'none',
+                              color: 'inherit'
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background = 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.06) 0%, rgba(var(--theme-primary-rgb), 0.03) 100%)';
@@ -1073,36 +1078,20 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                               </div>
                               
                               {/* 第二行：url */}
-                              <a
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  fontSize: '0.8125rem',
-                                  color: 'rgba(var(--theme-primary-rgb), 0.8)',
-                                  textDecoration: 'none',
-                                  lineHeight: '1.3',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  transition: 'all 0.2s ease',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '0.25rem'
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.color = 'var(--theme-primary)';
-                                  e.currentTarget.style.textDecoration = 'underline';
-                                  e.currentTarget.style.textDecorationColor = 'rgba(var(--theme-primary-rgb), 0.4)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.color = 'rgba(var(--theme-primary-rgb), 0.8)';
-                                  e.currentTarget.style.textDecoration = 'none';
-                                }}
-                              >
+                              <div style={{
+                                fontSize: '0.8125rem',
+                                color: 'rgba(var(--theme-primary-rgb), 0.8)',
+                                lineHeight: '1.3',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.25rem'
+                              }}>
                                 <i className="ri-link" style={{ fontSize: '0.75rem', opacity: 0.6 }}></i>
                                 {link.url}
-                              </a>
+                              </div>
                               
                               {/* 第三行：description */}
                               {link.description && (
@@ -1119,7 +1108,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                                 </div>
                               )}
                             </div>
-                          </div>
+                          </a>
                         ))}
                       </div>
                     )}
