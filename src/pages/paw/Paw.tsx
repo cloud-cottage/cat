@@ -1023,7 +1023,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                           暂无链接
                         </div>
                       ) : (
-                        links.slice(0, 3).map((link, index) => (
+                        links.slice(0, 3).map((link) => (
                           <a
                             key={link.id}
                             href={link.url}
