@@ -277,7 +277,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
         } else {
           // 桌面：原始布局
           (gridContainer as HTMLElement).style.gridTemplateColumns = 'repeat(6, 1fr)';
-          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(9, 187px)';
+          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(9, 180px)';
           (gridContainer as HTMLElement).style.gap = '1rem';
           (gridContainer as HTMLElement).style.padding = '1rem';
         }
@@ -669,7 +669,7 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
           <div className={`grid-container ${themeClass}`} style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(6, 1fr)',
-            gridTemplateRows: 'repeat(9, 187px)',
+            gridTemplateRows: 'repeat(9, 180px)',
             gap: '1rem',
             minHeight: '900px',
             width: '100%',  // 确保网格容器占满可用宽度
