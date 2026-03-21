@@ -8,6 +8,10 @@ import { QRCodeComponent } from './components/QRCode'
 import { ThemeModal } from './components/ThemeModal'
 import { SocialModule } from './components/SocialModule'
 import { MostfindModule } from './components/MostfindModule'
+import { ProfileModule } from './components/ProfileModule'
+import { LinksModule } from './components/LinksModule'
+import { AssetModule } from './components/AssetModule'
+import { TwitterModule } from './components/TwitterModule'
 import { useLanguage } from '../../i18n/useLanguage'
 import { Modal } from './components/Modal'
 import { TwitterTimeline } from './components/TwitterTimeline'
@@ -736,7 +740,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 {module.type === 'profile' && (
                   <div 
                     style={{ 
-                      textAlign: 'center',
                       position: 'relative'
                     }}
                     onMouseEnter={(e) => {
@@ -788,115 +791,11 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <i className="ri-edit-line"></i>
                     </div>
                     
-                    <div style={{ marginBottom: '1rem' }}>
-                      {getUserAvatarUrl(user) ? (
-                        <img 
-                          src={getUserAvatarUrl(user!)} 
-                          alt={user?.username}
-                          style={{ 
-                            width: '80px', 
-                            height: '80px', 
-                            borderRadius: '50%',
-                            objectFit: 'cover',
-                            border: '3px solid var(--theme-primary)',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-                          }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.style.display = 'none'
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          width: '80px',
-                          height: '80px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%)',
-                          margin: '0 auto',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '2rem',
-                          color: 'white',
-                          fontWeight: 'bold',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-                        }}>
-                          {user?.username?.[0]?.toUpperCase() || '?'}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <h2 style={{
-                        margin: 0,
-                        fontSize: '1.2rem',
-                        fontWeight: '600',
-                        color: 'var(--theme-primary)',
-                        marginBottom: '1rem',
-                        paddingRight: '3rem' // 为关闭按钮留出空间
-                      }}>
-                        {user?.nickname || user?.username}
-                      </h2>
-                      {user?.nickname && user?.username && (
-                        <p style={{ 
-                          margin: '0 0 0.5rem 0', 
-                          fontSize: '0.875rem', 
-                          opacity: 0.7 
-                        }}>
-                          @{user.username}
-                        </p>
-                      )}
-                      {user?.bio && (
-                        <p style={{ 
-                          margin: '0 0 0.5rem 0', 
-                          fontSize: '0.875rem', 
-                          opacity: 0.8,
-                          lineHeight: '1.4'
-                        }}>
-                          {user.bio}
-                        </p>
-                      )}
-                      {user?.walletAddress && (
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          gap: '0.5rem',
-                          marginTop: '0.5rem'
-                        }}>
-                          <span style={{ 
-                            fontSize: '0.75rem', 
-                            opacity: 0.6 
-                          }}>
-                            {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
-                          </span>
-                          <button
-                            onClick={copyWalletAddress}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              color: 'var(--theme-primary)',
-                              cursor: 'pointer',
-                              fontSize: '0.875rem',
-                              padding: '0.25rem',
-                              borderRadius: '4px',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = 'var(--theme-primary)'
-                              e.currentTarget.style.color = 'white'
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = 'transparent'
-                              e.currentTarget.style.color = 'var(--theme-primary)'
-                            }}
-                            title="复制钱包地址"
-                          >
-                            {copySuccess ? '✓' : '📋'}
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    <ProfileModule 
+                      user={user!}
+                      isOwner={isOwner}
+                      onAvatarClick={openProfileModal}
+                    />
                   </div>
                 )}
                 
