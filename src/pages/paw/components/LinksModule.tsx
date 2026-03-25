@@ -1,183 +1,143 @@
 import React from 'react'
 import type { Link } from '../lib/api'
-import { detectIconFromUrl, detectTitleFromUrl } from '../lib/api'
 
 interface LinksModuleProps {
   links: Link[]
-  isEditing: boolean
   isOwner: boolean
   onAddLink: () => void
-  onEditLink: (link: Link) => void
-  onDeleteLink: (id: string) => void
 }
 
 export const LinksModule: React.FC<LinksModuleProps> = ({
   links,
-  isEditing,
   isOwner,
-  onAddLink,
-  onEditLink,
-  onDeleteLink
+  onAddLink
 }) => {
   return (
-    <div style={{
-      background: 'rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255,255,255,0.2)',
-      borderRadius: '16px',
-      padding: '2rem',
-      marginBottom: '2rem'
-    }}>
-      {/* 标题和添加按钮 */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '1.5rem'
-      }}>
-        <h2 style={{
-          color: 'white',
-          margin: 0,
-          fontSize: '1.5rem',
-          fontWeight: '600'
-        }}>
-          🔗 链接集合
-        </h2>
-        {isOwner && (
-          <button
-            onClick={onAddLink}
-            style={{
-              background: 'rgba(33, 150, 243, 0.8)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-              cursor: 'pointer',
-              fontSize: '0.9rem'
-            }}
-          >
-            + 链接
-          </button>
-        )}
-      </div>
-
+    <>
       {/* 链接列表 */}
       {links.length === 0 ? (
         <div style={{
           textAlign: 'center',
-          padding: '3rem',
-          color: 'rgba(255,255,255,0.7)'
+          padding: '2rem 1rem',
+          fontSize: '0.875rem',
+          color: 'rgba(var(--theme-primary-rgb), 0.6)',
+          background: 'var(--theme-surface)',
+          borderRadius: '12px',
+          border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📝</div>
-          <p style={{ margin: 0, fontSize: '1.2rem' }}>
-            {isOwner ? '点击上方按钮添加你的第一个链接' : '暂无链接'}
-          </p>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>�</div>
+          <div>暂无链接</div>
         </div>
       ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '1rem' 
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
         }}>
-          {links.map((link, index) => (
+          {links.map((link) => (
             <a
-              key={`${link.id}-${index}`}
+              key={link.id}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                background: 'rgba(255,255,255,0.15)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: '12px',
-                padding: '1rem',
-                textDecoration: 'none',
-                color: 'white',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 gap: '1rem',
-                transition: 'all 0.3s ease'
+                padding: '1rem',
+                borderRadius: '12px',
+                background: 'var(--theme-surface)',
+                border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                overflow: 'hidden',
+                textDecoration: 'none',
+                color: 'inherit'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.25)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
-                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
               }}
             >
+              {/* 左侧图标容器 */}
               <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '8px',
+                position: 'relative',
+                width: '3rem',
+                height: '3.6rem',
+                flexShrink: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.5rem',
-                background: 'rgba(255,255,255,0.2)'
+                fontSize: '1.75rem',
+                background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.1) 0%, rgba(var(--theme-primary-rgb), 0.05) 100%)',
+                borderRadius: '10px',
+                boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.05)',
+                border: '1px solid rgba(var(--theme-primary-rgb), 0.15)'
               }}>
-                {link.icon || detectIconFromUrl(link.url) || '🔗'}
+                {link.icon || '🔗'}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ 
-                  fontWeight: '600', 
-                  marginBottom: '0.25rem',
-                  fontSize: '1rem'
+              
+              {/* 右侧内容区域 */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.375rem',
+                flex: 1,
+                minWidth: 0,
+                paddingTop: '0.25rem'
+              }}>
+                {/* 第一行：label */}
+                <div style={{
+                  fontSize: '1.0625rem',
+                  fontWeight: '600',
+                  color: 'var(--theme-primary)',
+                  lineHeight: '1.3',
+                  letterSpacing: '-0.01em'
                 }}>
-                  {link.label || detectTitleFromUrl(link.url)}
+                  {link.label}
                 </div>
-                <div style={{ 
-                  fontSize: '0.8rem', 
-                  opacity: 0.8,
+                
+                {/* 第二行：url */}
+                <div style={{
+                  fontSize: '0.8125rem',
+                  color: 'rgba(var(--theme-primary-rgb), 0.8)',
+                  lineHeight: '1.3',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
                 }}>
+                  <i className="ri-link" style={{ fontSize: '0.75rem', opacity: 0.6 }}></i>
                   {link.url}
                 </div>
+                
+                {/* 第三行：description */}
+                {link.description && (
+                  <div style={{
+                    fontSize: '0.8125rem',
+                    color: 'rgba(var(--theme-primary-rgb), 0.65)',
+                    lineHeight: '1.3',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    fontStyle: 'italic'
+                  }}>
+                    {link.description}
+                  </div>
+                )}
               </div>
-              {isEditing && (
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onEditLink(link)
-                    }}
-                    style={{
-                      background: 'rgba(255,255,255,0.2)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '0.25rem',
-                      cursor: 'pointer',
-                      fontSize: '0.7rem'
-                    }}
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onDeleteLink(link.id)
-                    }}
-                    style={{
-                      background: 'rgba(244, 67, 54, 0.8)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '0.25rem',
-                      cursor: 'pointer',
-                      fontSize: '0.7rem'
-                    }}
-                  >
-                    🗑️
-                  </button>
-                </div>
-              )}
             </a>
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }

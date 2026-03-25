@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getThemeClassName } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { getThemeColors } from '../../themes'
-import { api, getUserAvatarUrl } from './lib/api'
+import { api } from './lib/api'
 import { Icon } from './components/Icon'
 import { QRCodeComponent } from './components/QRCode'
 import { ThemeModal } from './components/ThemeModal'
@@ -11,7 +11,6 @@ import { MostfindModule } from './components/MostfindModule'
 import { ProfileModule } from './components/ProfileModule'
 import { LinksModule } from './components/LinksModule'
 import { AssetModule } from './components/AssetModule'
-import { TwitterModule } from './components/TwitterModule'
 import { useLanguage } from '../../i18n/useLanguage'
 import { Modal } from './components/Modal'
 import { TwitterTimeline } from './components/TwitterTimeline'
@@ -36,7 +35,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
     links: [] as Array<{ id: string; label: string; url: string }>
   })
   const [isDarkMode, setIsDarkMode] = useState(true) // 默认深色模式
-  const [copySuccess, setCopySuccess] = useState(false)
   const [applyingTheme, setApplyingTheme] = useState(false)
   const [showCatPawModal, setShowCatPawModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -49,19 +47,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
   const [isAssetEditing, setIsAssetEditing] = useState(false)
   const [isTwitterEditing, setIsTwitterEditing] = useState(false)
   
-  // 复制钱包地址功能
-  const copyWalletAddress = async () => {
-    if (user?.walletAddress) {
-      try {
-        await navigator.clipboard.writeText(user.walletAddress);
-        setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 2000);
-      } catch (error) {
-        console.error('复制失败:', error);
-      }
-    }
-  }
-
   // 自动保存函数
   const handleAutoSave = async (field: string, value: string) => {
     if (!user?.username) return;
@@ -808,7 +793,27 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                 )}
                 
                 {module.type === 'links' && (
-                  <>
+                  <div 
+                    style={{ 
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      // 显示编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '1';
+                        editIcon.style.pointerEvents = 'auto';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      // 隐藏编辑符号
+                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
+                      if (editIcon) {
+                        editIcon.style.opacity = '0';
+                        editIcon.style.pointerEvents = 'none';
+                      }
+                    }}
+                  >
                     {/* 编辑符号 */}
                     <div
                       className="edit-icon"
@@ -841,254 +846,29 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                       <i className="ri-edit-line"></i>
                     </div>
                     
-                    {/* 链接列表 */}
-                    {links.length === 0 ? (
-                      <div style={{
-                        textAlign: 'center',
-                        padding: '2rem 1rem',
-                        fontSize: '0.875rem',
-                        color: 'rgba(var(--theme-primary-rgb), 0.6)',
-                        background: 'var(--theme-surface)',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                      }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>🔗</div>
-                        <div>暂无链接</div>
-                      </div>
-                    ) : (
-                      <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.75rem'
-                      }}>
-                        {links.map((link) => (
-                          <a
-                            key={link.id}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '1rem',
-                              padding: '1rem',
-                              borderRadius: '12px',
-                              background: 'var(--theme-surface)',
-                              border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                              transition: 'all 0.3s ease',
-                              position: 'relative',
-                              overflow: 'hidden',
-                              textDecoration: 'none',
-                              color: 'inherit'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = 'translateY(-2px)';
-                              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = 'translateY(0)';
-                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                            }}
-                          >
-                            {/* 左侧图标容器 */}
-                            <div style={{
-                              position: 'relative',
-                              width: '3rem',
-                              height: '3.6rem',
-                              flexShrink: 0,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '1.75rem',
-                              background: 'linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.1) 0%, rgba(var(--theme-primary-rgb), 0.05) 100%)',
-                              borderRadius: '10px',
-                              boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.05)',
-                              border: '1px solid rgba(var(--theme-primary-rgb), 0.15)'
-                            }}>
-                              {link.icon || '🔗'}
-                            </div>
-                            
-                            {/* 右侧内容区域 */}
-                            <div style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '0.375rem',
-                              flex: 1,
-                              minWidth: 0,
-                              paddingTop: '0.25rem'
-                            }}>
-                              {/* 第一行：label */}
-                              <div style={{
-                                fontSize: '1.0625rem',
-                                fontWeight: '600',
-                                color: 'var(--theme-primary)',
-                                lineHeight: '1.3',
-                                letterSpacing: '-0.01em'
-                              }}>
-                                {link.label}
-                              </div>
-                              
-                              {/* 第二行：url */}
-                              <div style={{
-                                fontSize: '0.8125rem',
-                                color: 'rgba(var(--theme-primary-rgb), 0.8)',
-                                lineHeight: '1.3',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                              }}>
-                                <i className="ri-link" style={{ fontSize: '0.75rem', opacity: 0.6 }}></i>
-                                {link.url}
-                              </div>
-                              
-                              {/* 第三行：description */}
-                              {link.description && (
-                                <div style={{
-                                  fontSize: '0.8125rem',
-                                  color: 'rgba(var(--theme-primary-rgb), 0.65)',
-                                  lineHeight: '1.3',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  fontStyle: 'italic'
-                                }}>
-                                  {link.description}
-                                </div>
-                              )}
-                            </div>
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-                
-                {module.type === 'mostfind' && (
-                  <div 
-                    style={{ 
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      // 显示编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // 隐藏编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                    }}
-                  >
-                    <MostfindModule 
-                      user={user}
+                    <LinksModule 
+                      links={links}
                       isOwner={isOwner}
-                      isMostfindEditing={isMostfindEditing}
-                      setIsMostfindEditing={setIsMostfindEditing}
+                      onAddLink={openLinksModal}
                     />
                   </div>
                 )}
                 
+                {module.type === 'mostfind' && (
+                  <MostfindModule 
+                    user={user}
+                    isOwner={isOwner}
+                    isMostfindEditing={isMostfindEditing}
+                    setIsMostfindEditing={setIsMostfindEditing}
+                  />
+                )}
+                
                 {module.type === 'asset' && (
-                  <div 
-                    style={{ 
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      // 显示编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '1';
-                        editIcon.style.pointerEvents = 'auto';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      // 隐藏编辑符号
-                      const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement;
-                      if (editIcon) {
-                        editIcon.style.opacity = '0';
-                        editIcon.style.pointerEvents = 'none';
-                      }
-                    }}
-                  >
-                    {/* 编辑符号 - 悬停时显示 */}
-                    <div
-                      className="edit-icon"
-                      style={{
-                        position: 'absolute',
-                        top: '-8px',
-                        right: '-8px',
-                        width: '24px',
-                        height: '24px',
-                        background: 'var(--theme-primary)',
-                        color: 'white',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        opacity: '0',
-                        pointerEvents: 'none',
-                        transition: 'all 0.2s ease',
-                        zIndex: 10,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isAssetEditing) {
-                          // 关闭编辑模式
-                          setIsAssetEditing(false);
-                        } else {
-                          // 进入编辑模式
-                          setIsAssetEditing(true);
-                        }
-                      }}
-                      title={isAssetEditing ? "关闭编辑" : "编辑数字资产"}
-                    >
-                      {isAssetEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
-                    </div>
-                    
-                    <p>{module.content}</p>
-                    <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      opacity: isAssetEditing ? 1 : 0.8 
-                    }}>
-                      <div>• NFT 收藏</div>
-                      <div>• 代币资产</div>
-                      <div>• DeFi 仓位</div>
-                      <div>• 链上身份</div>
-                    </div>
-                    <div style={{ 
-                      marginTop: '1rem', 
-                      textAlign: 'center'
-                    }}>
-                      <button
-                        style={{
-                          padding: '0.5rem 1rem',
-                          background: 'var(--theme-primary)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '0.875rem'
-                        }}
-                      >
-                        查看详情
-                      </button>
-                    </div>
-                  </div>
+                  <AssetModule 
+                    isOwner={isOwner}
+                    isAssetEditing={isAssetEditing}
+                    setIsAssetEditing={setIsAssetEditing}
+                  />
                 )}
                 
                 {module.type === 'twitter' && (
