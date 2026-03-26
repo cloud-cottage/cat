@@ -18,7 +18,11 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
     twitterHandle: user?.twitterHandle || '',
     linkedInHandle: user?.linkedInHandle || '',
     youtubeHandle: user?.youtubeHandle || '',
-    instagramHandle: user?.instagramHandle || ''
+    instagramHandle: user?.instagramHandle || '',
+    githubHandle: user?.username || '',
+    telegramHandle: user?.username || '',
+    showGithub: true,
+    showTelegram: true
   })
   const [showAddSocial, setShowAddSocial] = useState(false)
   const [newSocialForm, setNewSocialForm] = useState({ platform: '', username: '' })
@@ -57,6 +61,8 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
     handleAutoSave('linkedInHandle', editForm.linkedInHandle)
     handleAutoSave('youtubeHandle', editForm.youtubeHandle)
     handleAutoSave('instagramHandle', editForm.instagramHandle)
+    // Note: GitHub and Telegram handles are stored in local state only
+    // The showGithub/showTelegram flags control visibility
     setShowEditModal(false)
   }
 
@@ -183,39 +189,9 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
             </a>
           )}
           
-          <a
-            href={`https://github.com/${user?.username}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              background: '#333',
-              color: 'white',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)'
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(51, 51, 51, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)'
-              e.currentTarget.style.boxShadow = 'none'
-            }}
-            title="GitHub"
-          >
-            <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
-          </a>
-          
-          {user?.instagramHandle && (
+          {editForm.showGithub && (
             <a
-              href={`https://instagram.com/${user.instagramHandle}`}
+              href={`https://github.com/${editForm.githubHandle}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -225,7 +201,7 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
-                background: 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
+                background: '#333',
                 color: 'white',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
@@ -233,21 +209,21 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(225, 48, 108, 0.4)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(51, 51, 51, 0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
-              title="Instagram"
+              title="GitHub"
             >
-              <i className="ri-instagram-fill" style={{ fontSize: '10px' }}></i>
+              <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
             </a>
           )}
           
-          {user?.linkedInHandle && (
+          {editForm.showTelegram && (
             <a
-              href={`https://linkedin.com/in/${user.linkedInHandle}`}
+              href={`https://t.me/${editForm.telegramHandle}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -257,7 +233,7 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
-                background: '#0077B5',
+                background: '#0088CC',
                 color: 'white',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
@@ -265,48 +241,17 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 119, 181, 0.4)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 136, 204, 0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
-              title="LinkedIn"
+              title="Telegram"
             >
-              <i className="ri-linkedin-box-fill" style={{ fontSize: '10px' }}></i>
+              <i className="ri-telegram-2-fill" style={{ fontSize: '10px' }}></i>
             </a>
           )}
-          
-          {/* Telegram - 使用用户名作为默认 */}
-          <a
-            href={`https://t.me/${user?.username || user?.nickname}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              background: '#0088CC',
-              color: 'white',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)'
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 136, 204, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)'
-              e.currentTarget.style.boxShadow = 'none'
-            }}
-            title="Telegram"
-          >
-            <i className="ri-telegram-2-fill" style={{ fontSize: '10px' }}></i>
-          </a>
         </div>
       </div>
 
@@ -419,6 +364,98 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
                 fontSize: '1rem'
               }}
             />
+          </div>
+
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
+            }}>
+              GitHub 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.githubHandle}
+              onChange={(e) => setEditForm({...editForm, githubHandle: e.target.value})}
+              placeholder="输入 GitHub 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500'
+            }}>
+              Telegram 用户名
+            </label>
+            <input
+              type="text"
+              value={editForm.telegramHandle}
+              onChange={(e) => setEditForm({...editForm, telegramHandle: e.target.value})}
+              placeholder="输入 Telegram 用户名"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--theme-primary)',
+                borderRadius: '8px',
+                background: 'var(--theme-surface)',
+                color: 'var(--theme-primary)',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}>
+              <input
+                type="checkbox"
+                checked={editForm.showGithub}
+                onChange={(e) => setEditForm({...editForm, showGithub: e.target.checked})}
+                style={{
+                  cursor: 'pointer'
+                }}
+              />
+              显示 GitHub
+            </label>
+            
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: 'var(--theme-primary)',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}>
+              <input
+                type="checkbox"
+                checked={editForm.showTelegram}
+                onChange={(e) => setEditForm({...editForm, showTelegram: e.target.checked})}
+                style={{
+                  cursor: 'pointer'
+                }}
+              />
+              显示 Telegram
+            </label>
           </div>
 
           {/* 添加新社交媒体功能 */}
