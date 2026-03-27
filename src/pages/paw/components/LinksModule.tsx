@@ -3,14 +3,10 @@ import type { Link } from '../lib/api'
 
 interface LinksModuleProps {
   links: Link[]
-  isOwner: boolean
-  onAddLink: () => void
 }
 
 export const LinksModule: React.FC<LinksModuleProps> = ({
-  links,
-  isOwner,
-  onAddLink
+  links
 }) => {
   return (
     <>

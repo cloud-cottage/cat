@@ -848,8 +848,6 @@ export const Web3ProfileSimple: React.FC<Web3ProfileProps> = ({ username: propUs
                     
                     <LinksModule 
                       links={links}
-                      isOwner={isOwner}
-                      onAddLink={openLinksModal}
                     />
                   </div>
                 )}
