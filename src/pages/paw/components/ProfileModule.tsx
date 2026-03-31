@@ -25,7 +25,7 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
       {/* 头像区域 */}
       <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
         <img
-          src={getUserAvatarUrl(user.avatarUrl)}
+          src={user.avatarUrl || '/default-avatar.png'}
           alt={`${user.username} 的头像`}
           style={{
             width: '120px',
