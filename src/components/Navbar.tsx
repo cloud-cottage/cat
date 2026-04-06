@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Globe, ArrowUpRight, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/useTheme';
 
 const Navbar: React.FC = () => {
     const { t, i18n } = useTranslation();
