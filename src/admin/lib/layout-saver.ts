@@ -11,12 +11,18 @@ export interface LayoutSaveResult {
   cssContent?: string
 }
 
+interface CSSModuleMetadata {
+  area: string
+  order: number
+  className: string
+}
+
 /**
  * 将模块布局转换为CSS格式
  */
 export function convertModulesToCSS(themeName: string, modules: Module[]): string {
   const gridAreas = generateGridAreas(modules)
-  const modulePositions = generateModulePositions(modules)
+  const modulePositions = generateModulePositions(themeName, modules)
   
   return `/* ${themeName}主题布局配置 - 由Admin页面编辑 */
 
@@ -89,9 +95,9 @@ function generateGridAreas(modules: Module[]): string {
 /**
  * 生成模块位置CSS
  */
-function generateModulePositions(modules: Module[]): string {
+function generateModulePositions(themeName: string, modules: Module[]): string {
   return modules.map(module => 
-`.theme-${getThemeNameFromModule(module)} .module-${module.id} {
+`.theme-${themeName} .module-${module.id} {
   grid-area: ${module.id};
 }`
   ).join('\n\n')
@@ -127,7 +133,7 @@ function generateResponsiveGridAreas(modules: Module[], columns: number): string
  * 生成布局元数据
  */
 function generateLayoutMetadata(themeName: string, modules: Module[]): string {
-  const moduleData: Record<string, any> = {}
+  const moduleData: Record<string, CSSModuleMetadata> = {}
   
   modules.forEach((module, index) => {
     moduleData[module.id] = {
@@ -164,12 +170,6 @@ function getThemeDisplayName(themeName: string): string {
   }
   
   return displayNames[themeName] || themeName
-}
-
-function getThemeNameFromModule(_module: Module): string {
-  // 这里可以根据模块信息推断主题名称
-  // 暂时返回默认值，实际使用时需要传入主题名称
-  return 'diamond'
 }
 
 /**

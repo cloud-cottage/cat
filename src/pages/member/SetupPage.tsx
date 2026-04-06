@@ -3,13 +3,13 @@ import { useAccount } from 'wagmi'
 import { api, validateUsername } from '../paw/lib/api'
 import WalletConnect from '../../components/WalletConnect'
 
-export default function Setup() {
+export default function SetupPage() {
   const [username, setUsername] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const { address, isConnected } = useAccount()
 
-  console.log('Setup render:', { isConnected, address, username })
+  console.log('SetupPage render:', { isConnected, address, username })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,7 +50,7 @@ export default function Setup() {
       // 跳转到用户子域名
       window.location.href = `https://${username.trim()}.catcat.meme/`
     } catch (err) {
-      console.error('Setup error:', err)
+      console.error('SetupPage error:', err)
       setError('保存失败，请重试')
     } finally {
       setIsLoading(false)

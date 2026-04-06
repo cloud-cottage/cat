@@ -7,24 +7,34 @@ interface AnimatedNumberProps {
     duration?: number;
 }
 
+const getInitialDisplayValue = (value: string): string => {
+    const match = value.match(/^([^\d]*)([\d,]+)([^\d]*)$/);
+    if (!match) {
+        return value;
+    }
+
+    return `${match[1]}0${match[3]}`;
+};
+
 const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value, duration = 2 }) => {
-    const [displayValue, setDisplayValue] = useState('0');
+    const [displayValue, setDisplayValue] = useState(() => getInitialDisplayValue(value));
     const ref = useRef<HTMLSpanElement>(null);
     const isInView = useInView(ref, { once: true, amount: 0.5 });
+    const match = value.match(/^([^\d]*)([\d,]+)([^\d]*)$/);
     
     useEffect(() => {
-        if (!isInView) return;
-        
-        // Parse the value to extract numeric part and suffix
-        const match = value.match(/^([^\d]*)([\d,]+)([^\d]*)$/);
-        if (!match) {
-            setDisplayValue(value);
+        if (!isInView) {
+            return;
+        }
+
+        const animatedMatch = value.match(/^([^\d]*)([\d,]+)([^\d]*)$/);
+        if (!animatedMatch) {
             return;
         }
         
-        const prefix = match[1]; // e.g., "$"
-        const targetNum = parseInt(match[2].replace(/,/g, ''), 10); // e.g., 2500000
-        const suffix = match[3]; // e.g., "+"
+        const prefix = animatedMatch[1]; // e.g., "$"
+        const targetNum = parseInt(animatedMatch[2].replace(/,/g, ''), 10); // e.g., 2500000
+        const suffix = animatedMatch[3]; // e.g., "+"
         
         const startTime = Date.now();
         const animate = () => {
@@ -45,9 +55,9 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value, duration = 2 }) 
         };
         
         requestAnimationFrame(animate);
-    }, [isInView, value, duration]);
+    }, [duration, isInView, value]);
     
-    return <span ref={ref}>{displayValue}</span>;
+    return <span ref={ref}>{match ? displayValue : value}</span>;
 };
 
 const Stats: React.FC = () => {
@@ -101,7 +111,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '2rem',
     },
     card: {
@@ -125,11 +135,5 @@ const styles: { [key: string]: React.CSSProperties } = {
         letterSpacing: '0.05em',
     }
 };
-
-/* Media Query Support (Inline for simple demo) */
-if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    // @ts-ignore
-    styles.grid.gridTemplateColumns = 'repeat(2, 1fr)';
-}
 
 export default Stats;

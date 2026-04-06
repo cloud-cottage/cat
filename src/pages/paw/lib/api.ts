@@ -1,4 +1,5 @@
 const API_BASE = 'https://www.catcat.meme/api/user-kv'
+const API_ROOT = API_BASE.replace(/\/user-kv$/, '')
 
 // IPFS 配置
 const IPFS_CONFIG = {
@@ -115,6 +116,12 @@ export interface Icon {
   emoji?: string
   icoFile?: string
   category: string
+}
+
+interface LocalUserData {
+  user: User
+  links: Link[]
+  groups: LinkGroup[]
 }
 
 // 预定义图标列表
@@ -263,7 +270,7 @@ export const detectIconFromUrl = (url: string): string => {
       domain = urlObj.hostname.toLowerCase()
     } catch {
       // 如果URL解析失败，尝试简单处理
-      const match = url.match(/^(https?:\/\/)?([^\/]+)/i)
+      const match = url.match(/^(https?:\/\/)?([^/]+)/i)
       domain = match ? match[2].toLowerCase() : url.toLowerCase()
     }
     
@@ -321,7 +328,7 @@ export const detectTitleFromUrl = (url: string): string => {
       domain = urlObj.hostname.toLowerCase()
     } catch {
       // 如果URL解析失败，尝试简单处理
-      const match = url.match(/^(https?:\/\/)?([^\/]+)/i)
+      const match = url.match(/^(https?:\/\/)?([^/]+)/i)
       domain = match ? match[2].toLowerCase() : url.toLowerCase()
     }
     
@@ -374,8 +381,7 @@ export const getTwitterAvatarUrl = (handle: string): string => {
   if (!handle) return ''
   // 移除@符号（如果用户输入了）
   const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle
-  // 使用推特头像API，返回原始尺寸图片
-  return `https://unavatar.io/twitter/${cleanHandle}`
+  return `${API_ROOT}/twitter-avatar?handle=${encodeURIComponent(cleanHandle)}`
 }
 
 // 获取用户头像URL (支持 IPFS)
@@ -496,7 +502,7 @@ const genId = () => 'id_' + Math.random().toString(36).slice(2, 9) + Date.now().
 // 临时使用 localStorage 作为后备方案
 const localStorageKey = (username: string) => `catcat_blog_${username}`
 
-const setLocalData = (username: string, data: { user: User; links: Link[]; groups: LinkGroup[] }) => {
+const setLocalData = (username: string, data: LocalUserData) => {
   try {
     localStorage.setItem(localStorageKey(username), JSON.stringify(data))
   } catch (error) {
@@ -504,7 +510,7 @@ const setLocalData = (username: string, data: { user: User; links: Link[]; group
   }
 }
 
-const getLocalData = (username: string): { user: User; links: Link[]; groups: LinkGroup[] } | null => {
+const getLocalData = (username: string): LocalUserData | null => {
   try {
     const data = localStorage.getItem(localStorageKey(username))
     return data ? JSON.parse(data) : null
@@ -643,11 +649,16 @@ export const api = {
       console.log('API 更新链接成功')
     } catch (error) {
       console.error('API 更新链接出错，保存到 localStorage:', error)
-      setLocalData(username, { user: {}, links: userLinks, groups: [] } as any)
       const localData = getLocalData(username)
-      if (localData) {
-        setLocalData(username, { user: localData.user, links: userLinks, groups: localData.groups })
+      const fallbackUser = localData?.user ?? {
+        id: genId(),
+        walletAddress: '0x0000',
+        username,
+        themeId: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       }
+      setLocalData(username, { user: fallbackUser, links: userLinks, groups: localData?.groups ?? [] })
     }
   },
 

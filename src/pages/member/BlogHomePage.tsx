@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import WalletConnect from '../../components/WalletConnect'
 
-export default function BlogHome() {
+export default function BlogHomePage() {
   const navigate = useNavigate()
 
   return (

@@ -3,7 +3,7 @@
 .theme-matrix {
   /* 主题基本信息 */
   --theme-name: "matrix";
-  --theme-display-name: "短菜帝国";
+  --theme-display-name: "韭菜帝国";
   
   /* 主题颜色变量 */
   --theme-primary: #52C41A;
@@ -47,9 +47,9 @@
   --theme-font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* 短菜帝国主题的body背景 */
+/* 韭菜帝国主题的body背景 */
 .theme-matrix body {
-  background: url('/images/themes/matrix-background.png') repeat;
+  background: url('/images/themes/leek-green-background.png') repeat;
   background-size: 200px 200px;
   background-attachment: fixed;
   background-color: transparent;
@@ -63,7 +63,7 @@
   gap: var(--theme-grid-gap);
   min-height: 900px;
 
-  /* 短菜帝国主题布局 - 用户自定义 */
+  /* 韭菜帝国主题布局 - 用户自定义 */
   grid-template-areas: 
     "1 1 2 2 3 3"
     "1 1 2 2 3 3"
@@ -135,7 +135,7 @@
   }
 }
 
-/* 网格容器背景 - 短菜帝国渐变 */
+/* 网格容器背景 - 韭菜帝国渐变 */
 .theme-matrix .blog-container {
   background: linear-gradient(135deg, 
     rgba(82, 196, 26, 0.05) 0%,

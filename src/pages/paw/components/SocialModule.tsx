@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import type { User } from '../lib/api'
 import { Modal } from './Modal'
 
+type SocialField = 'twitterHandle' | 'linkedInHandle' | 'youtubeHandle' | 'instagramHandle'
+
 interface SocialModuleProps {
   user: User
   isOwner: boolean
-  handleAutoSave: (field: string, value: string) => void
+  handleAutoSave: (field: SocialField, value: string) => void
 }
 
 export const SocialModule: React.FC<SocialModuleProps> = ({
@@ -30,8 +32,8 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
   const saveNewSocial = async () => {
     if (newSocialForm.platform && newSocialForm.username) {
       try {
-        const updateData: any = {}
-        const platformMap: Record<string, string> = {
+        const updateData: Partial<Pick<User, SocialField>> = {}
+        const platformMap: Record<string, SocialField> = {
           'twitter': 'twitterHandle',
           'youtube': 'youtubeHandle',
           'instagram': 'instagramHandle',

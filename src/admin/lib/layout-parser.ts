@@ -24,6 +24,11 @@ export interface ThemeLayout {
   }
 }
 
+interface CSSModuleDefinition {
+  area: string
+  order: number
+}
+
 /**
  * 从CSS自定义属性中解析主题布局信息
  * @param themeId 主题ID
@@ -74,7 +79,7 @@ export async function parseThemeLayoutFromCSS(themeId: number, themeName: string
 /**
  * 将CSS模块配置转换为Admin页面模块格式
  */
-function convertCSSToModules(cssModules: Record<string, any>): Module[] {
+function convertCSSToModules(cssModules: Record<string, CSSModuleDefinition>): Module[] {
   // 数字模块映射 - 对应新的数字系统
   const moduleMap: Record<string, { name: string; component: Module['component'] }> = {
     '1': { name: '模块1', component: 'profile' },
@@ -195,7 +200,7 @@ export async function loadAllThemeLayouts(): Promise<ThemeLayout[]> {
  * 将Admin页面的模块布局保存为CSS格式
  */
 export function saveLayoutToCSS(themeName: string, modules: Module[]): string {
-  const cssModules: Record<string, any> = {};
+  const cssModules: Record<string, CSSModuleDefinition & { className: string }> = {};
   
   modules.forEach((module, index) => {
     cssModules[module.id] = {

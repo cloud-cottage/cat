@@ -1,5 +1,5 @@
 import React from 'react'
-import type { User } from '../lib/api'
+import { getTwitterAvatarUrl, getUserAvatarUrl, type User } from '../lib/api'
 
 interface ProfileModuleProps {
   user: User
@@ -12,21 +12,26 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
   isOwner, 
   onAvatarClick 
 }) => {
+  const avatarSrc =
+    (user.twitterHandle ? getTwitterAvatarUrl(user.twitterHandle) : '') ||
+    getUserAvatarUrl(user) ||
+    '/default-avatar.png'
+
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255,255,255,0.2)',
-      borderRadius: '16px',
-      padding: '2rem',
-      marginBottom: '2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
       textAlign: 'center'
     }}>
       {/* 头像区域 */}
       <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
         <img
-          src={user.avatarUrl || '/default-avatar.png'}
+          src={avatarSrc}
           alt={`${user.username} 的头像`}
+          referrerPolicy="no-referrer"
           style={{
             width: '120px',
             height: '120px',
@@ -36,6 +41,14 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
             cursor: isOwner ? 'pointer' : 'default'
           }}
           onClick={onAvatarClick}
+          onError={(event) => {
+            if (event.currentTarget.dataset.fallbackApplied === 'true') {
+              return
+            }
+
+            event.currentTarget.dataset.fallbackApplied = 'true'
+            event.currentTarget.src = '/default-avatar.png'
+          }}
         />
         
         {/* 签名认证印章 - 像邮戳压在邮票上 */}
@@ -120,7 +133,7 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
           color: 'rgba(255,255,255,0.9)', 
           margin: '0 0 1.5rem 0',
           fontSize: '1.1rem',
-          maxWidth: '600px',
+          maxWidth: '100%',
           lineHeight: 1.5
         }}>
           {user.bio}
@@ -162,19 +175,4 @@ export const ProfileModule: React.FC<ProfileModuleProps> = ({
       </div>
     </div>
   )
-}
-
-// 辅助函数
-function getUserAvatarUrl(avatarUrl?: string): string {
-  if (!avatarUrl) {
-    return 'https://api.dicebear.com/7.x/avataaars/svg?seed=default&backgroundColor=b6e3f4'
-  }
-  
-  // 如果是完整的 URL，直接返回
-  if (avatarUrl.startsWith('http')) {
-    return avatarUrl
-  }
-  
-  // 否则认为是 IPFS 链接
-  return `https://ipfs.io/ipfs/${avatarUrl}`
 }

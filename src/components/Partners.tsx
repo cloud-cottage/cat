@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/useTheme';
 
 interface Partner {
     id: number;
@@ -98,7 +98,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
         gap: '2rem',
         maxWidth: '1200px',
         margin: '0 auto',
@@ -137,17 +137,5 @@ const styles: { [key: string]: React.CSSProperties } = {
         textAlign: 'center',
     },
 };
-
-/* Responsive */
-if (typeof window !== 'undefined') {
-    if (window.innerWidth < 1024) {
-        // @ts-ignore
-        styles.grid.gridTemplateColumns = 'repeat(2, 1fr)';
-    }
-    if (window.innerWidth < 640) {
-        // @ts-ignore
-        styles.grid.gridTemplateColumns = '1fr';
-    }
-}
 
 export default Partners;

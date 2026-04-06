@@ -102,7 +102,7 @@ function getDefaultModules(): Module[] {
   ];
 }
 
-export const Dashboard: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const { address } = useAccount()
   const [user, setUser] = useState<User | null>(null)
   const [selectedTheme, setSelectedTheme] = useState<DashboardTheme>(DASHBOARD_THEMES[0])
@@ -110,7 +110,7 @@ export const Dashboard: React.FC = () => {
   const [draggedModule, setDraggedModule] = useState<Module | null>(null)
   const [resizingModule, setResizingModule] = useState<{ module: Module; direction: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [isEditingDisabled, setIsEditingDisabled] = useState(false)
+  const isEditingDisabled = selectedTheme.id === 1
   
   // 被禁止的用户名管理状态
   const [newForbiddenUsername, setNewForbiddenUsername] = useState('')
@@ -158,18 +158,15 @@ export const Dashboard: React.FC = () => {
           setModules(currentTheme.modules);
         }
         
-        // 设置初始编辑禁用状态
-        setIsEditingDisabled(selectedTheme.id === 1)
       } catch (error) {
         console.error('Failed to load theme layouts:', error);
         // 如果加载失败，使用默认布局
         setModules(getDefaultModules());
-        setIsEditingDisabled(selectedTheme.id === 1)
       }
     };
 
     loadThemeLayouts();
-  }, []); // 只在组件挂载时执行一次
+  }, [selectedTheme.id]); // 只在主题切换时重新同步布局
   
   // 加载被禁止的用户名列表
   useEffect(() => {
@@ -273,9 +270,40 @@ export const Dashboard: React.FC = () => {
 
   // 处理调整大小的全局事件
   useEffect(() => {
+    const resizeAtPoint = (clientX: number, clientY: number) => {
+      if (!resizingModule || !gridRef.current) return
+
+      try {
+        const rect = gridRef.current.getBoundingClientRect()
+        const x = clientX - rect.left
+        const y = clientY - rect.top
+
+        const cellWidth = rect.width / gridSize.cols
+        const cellHeight = rect.height / gridSize.rows
+
+        let newWidth = resizingModule.module.size.width
+        let newHeight = resizingModule.module.size.height
+
+        if (resizingModule.direction.includes('right')) {
+          newWidth = Math.max(1, Math.min(gridSize.cols - resizingModule.module.position.x, Math.ceil(x / cellWidth)))
+        }
+        if (resizingModule.direction.includes('bottom')) {
+          newHeight = Math.max(1, Math.min(gridSize.rows - resizingModule.module.position.y, Math.ceil(y / cellHeight)))
+        }
+
+        setModules(prev => prev.map(m =>
+          m.id === resizingModule.module.id
+            ? { ...m, size: { width: newWidth, height: newHeight } }
+            : m
+        ))
+      } catch (error) {
+        console.error('Error in handleResize:', error)
+      }
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       if (resizingModule) {
-        handleResize(e as any)
+        resizeAtPoint(e.clientX, e.clientY)
       }
     }
 
@@ -294,7 +322,7 @@ export const Dashboard: React.FC = () => {
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [resizingModule])
+  }, [gridSize.cols, gridSize.rows, resizingModule])
 
   const handleDragStart = (module: Module) => {
     setDraggedModule(module)
@@ -336,37 +364,6 @@ export const Dashboard: React.FC = () => {
 
   const handleResizeEnd = () => {
     setResizingModule(null)
-  }
-
-  const handleResize = (e: React.MouseEvent) => {
-    if (!resizingModule || !gridRef.current) return
-
-    try {
-      const rect = gridRef.current.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-
-      const cellWidth = rect.width / gridSize.cols
-      const cellHeight = rect.height / gridSize.rows
-
-      let newWidth = resizingModule.module.size.width
-      let newHeight = resizingModule.module.size.height
-
-      if (resizingModule.direction.includes('right')) {
-        newWidth = Math.max(1, Math.min(gridSize.cols - resizingModule.module.position.x, Math.ceil(x / cellWidth)))
-      }
-      if (resizingModule.direction.includes('bottom')) {
-        newHeight = Math.max(1, Math.min(gridSize.rows - resizingModule.module.position.y, Math.ceil(y / cellHeight)))
-      }
-
-      setModules(prev => prev.map(m => 
-        m.id === resizingModule.module.id 
-          ? { ...m, size: { width: newWidth, height: newHeight } }
-          : m
-      ))
-    } catch (error) {
-      console.error('Error in handleResize:', error)
-    }
   }
 
   const handleThemeChange = (theme: DashboardTheme) => {
@@ -729,8 +726,6 @@ export const Dashboard: React.FC = () => {
                           onClick={(e) => {
                             e.stopPropagation()
                             handleThemeChange(theme)
-                            // 设置编辑禁用状态
-                            setIsEditingDisabled(isCyberOrange)
                           }}
                           style={{
                             background: selectedTheme.id === theme.id ? `${selectedTheme.colors.primary}30` : 'rgba(255,255,255,0.05)',
@@ -1226,3 +1221,5 @@ export const Dashboard: React.FC = () => {
     </div>
   )
 }
+
+export default DashboardPage

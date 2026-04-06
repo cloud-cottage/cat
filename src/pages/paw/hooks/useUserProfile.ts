@@ -8,6 +8,8 @@ interface UserProfileProps {
   username?: string
 }
 
+type LayoutModule = NonNullable<User['layout']>['modules'][number]
+
 export const useUserProfile = ({ username: propUsername }: UserProfileProps) => {
   const { username: routeUsername } = useParams<{ username: string }>()
   const username = propUsername || routeUsername
@@ -18,7 +20,7 @@ export const useUserProfile = ({ username: propUsername }: UserProfileProps) => 
   const [user, setUser] = useState<User | null>(null)
   const [links, setLinks] = useState<Link[]>([])
   const [currentTheme, setCurrentTheme] = useState(THEMES[0])
-  const [layoutModules, setLayoutModules] = useState<any[]>([])
+  const [layoutModules, setLayoutModules] = useState<LayoutModule[]>([])
   const [isOwner, setIsOwner] = useState(false)
 
   // 刷新用户数据
