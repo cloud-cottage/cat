@@ -68,193 +68,212 @@ export const SocialModule: React.FC<SocialModuleProps> = ({
     setShowEditModal(false)
   }
 
+  const socialLinks = [
+    user?.twitterHandle
+      ? {
+          key: 'twitter',
+          label: 'X',
+          meta: `@${user.twitterHandle}`,
+          href: `https://x.com/${user.twitterHandle}`,
+          icon: 'ri-twitter-x-fill',
+          accent: '#111827'
+        }
+      : null,
+    user?.linkedInHandle
+      ? {
+          key: 'linkedin',
+          label: 'LinkedIn',
+          meta: user.linkedInHandle,
+          href: `https://www.linkedin.com/in/${user.linkedInHandle}`,
+          icon: 'ri-linkedin-box-fill',
+          accent: '#0A66C2'
+        }
+      : null,
+    user?.youtubeHandle
+      ? {
+          key: 'youtube',
+          label: 'YouTube',
+          meta: `@${user.youtubeHandle}`,
+          href: `https://youtube.com/@${user.youtubeHandle}`,
+          icon: 'ri-youtube-fill',
+          accent: '#FF0000'
+        }
+      : null,
+    user?.instagramHandle
+      ? {
+          key: 'instagram',
+          label: 'Instagram',
+          meta: `@${user.instagramHandle}`,
+          href: `https://instagram.com/${user.instagramHandle}`,
+          icon: 'ri-instagram-line',
+          accent: '#E1306C'
+        }
+      : null,
+    editForm.showGithub && editForm.githubHandle
+      ? {
+          key: 'github',
+          label: 'GitHub',
+          meta: editForm.githubHandle,
+          href: `https://github.com/${editForm.githubHandle}`,
+          icon: 'ri-github-fill',
+          accent: '#24292F'
+        }
+      : null,
+    editForm.showTelegram && editForm.telegramHandle
+      ? {
+          key: 'telegram',
+          label: 'Telegram',
+          meta: editForm.telegramHandle,
+          href: `https://t.me/${editForm.telegramHandle}`,
+          icon: 'ri-telegram-2-fill',
+          accent: '#229ED9'
+        }
+      : null
+  ].filter(
+    (link): link is {
+      key: string
+      label: string
+      meta: string
+      href: string
+      icon: string
+      accent: string
+    } => Boolean(link)
+  )
+
   return (
     <>
-      <div 
-        style={{ 
-          position: 'relative'
-        }}
-        onMouseEnter={(e) => {
-          // 显示编辑符号
-          const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement
-          if (editIcon) {
-            editIcon.style.opacity = '1'
-            editIcon.style.pointerEvents = 'auto'
-          }
-        }}
-        onMouseLeave={(e) => {
-          // 隐藏编辑符号
-          const editIcon = e.currentTarget.querySelector('.edit-icon') as HTMLElement
-          if (editIcon) {
-            editIcon.style.opacity = '0'
-            editIcon.style.pointerEvents = 'none'
-          }
-        }}
-      >
-        {/* 编辑符号 - 悬停时显示 */}
-        {isOwner && (
-          <div
-            className="edit-icon"
-            style={{
-              position: 'absolute',
-              top: '-8px',
-              right: '-8px',
-              width: '24px',
-              height: '24px',
-              background: 'var(--theme-primary)',
-              color: 'white',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: '12px',
-              opacity: '0',
-              pointerEvents: 'none',
-              transition: 'all 0.2s ease',
-              zIndex: 10,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-            }}
-            onClick={(e) => {
-              e.stopPropagation()
-              setShowEditModal(true)
-            }}
-            title="编辑社交媒体"
-          >
-            <i className="ri-edit-line"></i>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem',
+          flexWrap: 'wrap'
+        }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            padding: '0.45rem 0.75rem',
+            borderRadius: '999px',
+            background: 'rgba(var(--theme-primary-rgb), 0.1)',
+            color: 'var(--theme-primary)',
+            fontSize: '0.78rem',
+            fontWeight: 700
+          }}>
+            <i className="ri-radar-line"></i>
+            已连接 {socialLinks.length} 个渠道
           </div>
-        )}
-        
-        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* 只显示可点击的图标 */}
-          {user?.twitterHandle && (
-            <a
-              href={`https://twitter.com/${user.twitterHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
+
+          {isOwner && (
+            <button
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: '#1DA1F2',
-                color: 'white',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                cursor: 'pointer'
+                gap: '0.4rem',
+                padding: '0.45rem 0.75rem',
+                borderRadius: '999px',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(var(--theme-primary-rgb), 0.2)',
+                color: 'var(--theme-primary)',
+                fontSize: '0.78rem',
+                fontWeight: 600
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(29, 161, 242, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-              title="Twitter"
+              onClick={() => setShowEditModal(true)}
+              title="编辑社交媒体"
             >
-              <i className="ri-twitter-x-fill" style={{ fontSize: '10px' }}></i>
-            </a>
-          )}
-          
-          {user?.youtubeHandle && (
-            <a
-              href={`https://youtube.com/@${user.youtubeHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: '#FF0000',
-                color: 'white',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 0, 0, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-              title="YouTube"
-            >
-              <i className="ri-youtube-fill" style={{ fontSize: '10px' }}></i>
-            </a>
-          )}
-          
-          {editForm.showGithub && (
-            <a
-              href={`https://github.com/${editForm.githubHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: '#333',
-                color: 'white',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(51, 51, 51, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-              title="GitHub"
-            >
-              <i className="ri-github-fill" style={{ fontSize: '20px' }}></i>
-            </a>
-          )}
-          
-          {editForm.showTelegram && (
-            <a
-              href={`https://t.me/${editForm.telegramHandle}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: '#0088CC',
-                color: 'white',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 136, 204, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-              title="Telegram"
-            >
-              <i className="ri-telegram-2-fill" style={{ fontSize: '10px' }}></i>
-            </a>
+              <i className="ri-edit-line"></i>
+              编辑
+            </button>
           )}
         </div>
+
+        {socialLinks.length > 0 ? (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: socialLinks.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr',
+            gap: '0.75rem',
+            alignContent: 'start'
+          }}>
+            {socialLinks.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  minWidth: 0,
+                  padding: '0.75rem 0.85rem',
+                  borderRadius: '18px',
+                  background: 'rgba(var(--theme-primary-rgb), 0.08)',
+                  border: '1px solid rgba(var(--theme-primary-rgb), 0.18)',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  boxShadow: '0 8px 18px rgba(0,0,0,0.08)',
+                  backdropFilter: 'blur(12px)'
+                }}
+              >
+                <span style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  background: link.accent,
+                  color: '#ffffff',
+                  boxShadow: '0 8px 18px rgba(0,0,0,0.16)'
+                }}>
+                  <i className={link.icon}></i>
+                </span>
+                <span style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.18rem',
+                  minWidth: 0
+                }}>
+                  <span style={{
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    color: 'var(--theme-primary)'
+                  }}>
+                    {link.label}
+                  </span>
+                  <span style={{
+                    fontSize: '0.76rem',
+                    color: 'rgba(var(--theme-primary-rgb), 0.78)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {link.meta}
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+            minHeight: '96px',
+            padding: '1rem',
+            borderRadius: '18px',
+            border: '1px dashed rgba(var(--theme-primary-rgb), 0.35)',
+            background: 'rgba(var(--theme-primary-rgb), 0.08)',
+            color: 'rgba(var(--theme-primary-rgb), 0.82)',
+            textAlign: 'center',
+            lineHeight: 1.6
+          }}>
+            添加 X、LinkedIn、YouTube 或 Instagram，让访客能快速找到你。
+          </div>
+        )}
       </div>
 
       {/* 编辑模态框 */}

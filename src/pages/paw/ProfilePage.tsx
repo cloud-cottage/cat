@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { getThemeClassName, getThemeColors, type Theme } from '../../themes'
 import { useUserProfile } from './hooks/useUserProfile'
 import { api, type User } from './lib/api'
@@ -24,9 +24,103 @@ type AutoSaveField =
   | 'youtubeHandle'
   | 'instagramHandle'
 
+type LayoutMode = 'mobile' | 'tablet' | 'desktop'
+type ModuleType = 'profile' | 'social' | 'twitter' | 'links' | 'mostfind' | 'asset'
+
+const getLayoutMode = (width: number): LayoutMode => {
+  if (width < 768) {
+    return 'mobile'
+  }
+
+  if (width < 1024) {
+    return 'tablet'
+  }
+
+  return 'desktop'
+}
+
+const moduleIcons: Record<ModuleType, string> = {
+  profile: 'ri-user-3-line',
+  social: 'ri-at-line',
+  twitter: 'ri-twitter-x-line',
+  links: 'ri-links-line',
+  mostfind: 'ri-compass-3-line',
+  asset: 'ri-stack-line'
+}
+
+const getGridLayoutStyles = (layoutMode: LayoutMode): CSSProperties => {
+  if (layoutMode === 'mobile') {
+    return {
+      gridTemplateColumns: '1fr',
+      gridAutoRows: 'minmax(160px, auto)',
+      gap: '1rem'
+    }
+  }
+
+  if (layoutMode === 'tablet') {
+    return {
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+      gridAutoRows: 'minmax(180px, auto)',
+      gap: '1rem'
+    }
+  }
+
+  return {
+    gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+    gridTemplateRows: 'repeat(9, 180px)',
+    gap: '1rem',
+    minHeight: '900px'
+  }
+}
+
+const getModulePosition = (type: ModuleType, layoutMode: LayoutMode): CSSProperties => {
+  if (layoutMode === 'mobile') {
+    return {
+      gridColumn: '1 / -1'
+    }
+  }
+
+  if (layoutMode === 'tablet') {
+    switch (type) {
+      case 'profile':
+        return { gridColumn: '1 / 2', gridRow: '1 / 3' }
+      case 'mostfind':
+        return { gridColumn: '2 / 3', gridRow: '1 / 2' }
+      case 'social':
+        return { gridColumn: '2 / 3', gridRow: '2 / 3' }
+      case 'twitter':
+        return { gridColumn: '1 / 2', gridRow: '3 / 4' }
+      case 'links':
+        return { gridColumn: '2 / 3', gridRow: '3 / 6' }
+      case 'asset':
+        return { gridColumn: '1 / 2', gridRow: '4 / 6' }
+      default:
+        return { gridColumn: '1 / -1' }
+    }
+  }
+
+  switch (type) {
+    case 'profile':
+      return { gridColumn: '1 / 3', gridRow: '1 / 3' }
+    case 'social':
+      return { gridColumn: '1 / 3', gridRow: '3 / 4' }
+    case 'twitter':
+      return { gridColumn: '1 / 3', gridRow: '4 / 5' }
+    case 'mostfind':
+      return { gridColumn: '3 / 7', gridRow: '1 / 2' }
+    case 'links':
+      return { gridColumn: '3 / 7', gridRow: '2 / 10' }
+    case 'asset':
+      return { gridColumn: '1 / 3', gridRow: '5 / 10' }
+    default:
+      return { gridColumn: '1 / -1' }
+  }
+}
+
 const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => {
   const { loading, user, links, currentTheme, setCurrentTheme, isOwner, refreshUser } = useUserProfile({ username: propUsername })
   const { t } = useLanguage()
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(() => getLayoutMode(typeof window === 'undefined' ? 1280 : window.innerWidth))
   const [showThemeSelector, setShowThemeSelector] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('zh-CN') // 默认简体中文
   const [showProfileModal, setShowProfileModal] = useState(false)
@@ -220,15 +314,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
     if (!currentTheme) return;
     
     const themeClass = getThemeClassName(currentTheme.id);
+    const themeColors = getThemeColors(currentTheme, isDarkMode)
     document.body.className = document.body.className.replace(/theme-\w+/g, '');
     document.body.classList.add(themeClass);
     
     // 应用主题CSS变量
     const root = document.documentElement;
-    root.style.setProperty('--theme-primary', currentTheme.colors.primary);
-    root.style.setProperty('--theme-secondary', currentTheme.colors.secondary);
-    root.style.setProperty('--theme-bg', currentTheme.colors.bg);
-    root.style.setProperty('--theme-surface', currentTheme.colors.surface);
+    root.style.setProperty('--theme-primary', themeColors.primary);
+    root.style.setProperty('--theme-secondary', themeColors.secondary);
+    root.style.setProperty('--theme-bg', themeColors.bg);
+    root.style.setProperty('--theme-surface', themeColors.surface);
     
     // 计算RGB值用于透明度
     const hexToRgb = (hex: string) => {
@@ -238,7 +333,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
         '0, 0, 0';
     };
     
-    root.style.setProperty('--theme-primary-rgb', hexToRgb(currentTheme.colors.primary));
+    root.style.setProperty('--theme-primary-rgb', hexToRgb(themeColors.primary));
     
     // 添加加载动画样式
     const style = document.createElement('style');
@@ -254,36 +349,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
       document.body.className = document.body.className.replace(/theme-\w+/g, '');
       document.head.removeChild(style);
     };
-  }, [currentTheme]);
+  }, [currentTheme, isDarkMode]);
 
   // 响应式设计
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.innerWidth < 768;
-      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-      const gridContainer = document.querySelector('.grid-container');
-      
-      if (gridContainer) {
-        if (isMobile) {
-          // 移动端：单列布局
-          (gridContainer as HTMLElement).style.gridTemplateColumns = '1fr';
-          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(4, auto)';
-          (gridContainer as HTMLElement).style.gap = '1rem';
-          (gridContainer as HTMLElement).style.padding = '0.5rem';
-        } else if (isTablet) {
-          // 平板：双列布局
-          (gridContainer as HTMLElement).style.gridTemplateColumns = 'repeat(2, 1fr)';
-          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(2, auto)';
-          (gridContainer as HTMLElement).style.gap = '1rem';
-          (gridContainer as HTMLElement).style.padding = '1rem';
-        } else {
-          // 桌面：原始布局
-          (gridContainer as HTMLElement).style.gridTemplateColumns = 'repeat(6, 1fr)';
-          (gridContainer as HTMLElement).style.gridTemplateRows = 'repeat(9, 180px)';
-          (gridContainer as HTMLElement).style.gap = '1rem';
-          (gridContainer as HTMLElement).style.padding = '1rem';
-        }
-      }
+      setLayoutMode(getLayoutMode(window.innerWidth))
     };
 
     handleResize();
@@ -354,9 +425,33 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
   }
 
   const themeClass = getThemeClassName(currentTheme.id);
+  const themeColors = getCurrentThemeColors()
+  const currentLanguageInfo = getCurrentLanguage()
+  const actionButtonStyle: CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    minHeight: '44px',
+    padding: layoutMode === 'mobile' ? '0.75rem 1rem' : '0.8rem 1.1rem',
+    borderRadius: '999px',
+    border: '1px solid rgba(255,255,255,0.12)',
+    background: `linear-gradient(135deg, ${themeColors.primary} 0%, ${themeColors.secondary} 100%)`,
+    color: '#ffffff',
+    boxShadow: '0 12px 30px rgba(0,0,0,0.18)',
+    fontSize: '0.9rem',
+    fontWeight: 600,
+    backdropFilter: 'blur(14px)'
+  }
+  const utilityButtonStyle: CSSProperties = {
+    ...actionButtonStyle,
+    background: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.06)',
+    color: isDarkMode ? '#ffffff' : '#111827',
+    boxShadow: 'none'
+  }
   
   // 简单的模块数组
-  const modules = [
+  const modules: Array<{ id: string; name: string; content: string; type: ModuleType }> = [
     { 
       id: 'profile', 
       name: '用户资料', 
@@ -379,8 +474,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
       id: 'links', 
       name: '注册链接', 
       content: `共 ${links.length} 个链接`,
-      type: 'links',
-      data: links
+      type: 'links'
     },
     { 
       id: 'mostfind', 
@@ -397,17 +491,18 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
   ];
   
   return (
-    <div id="root" style={{
-      paddingTop: '40px',     // DPR=2 时显示为 80px
-      backgroundColor: '#362639'
+    <div id="paw-app" style={{
+      padding: layoutMode === 'mobile' ? '1rem 0 5rem' : '2rem 0 6rem',
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #2a1b33 0%, #362639 40%, #221724 100%)'
     }}>
       <div id="paw-container" className={`${themeClass}`} style={{
         width: '100%',
         maxWidth: '800px',      // DPR=2 时显示为 1600px
-        minWidth: '400px',      // DPR=2 时显示为 800px
+        minWidth: layoutMode === 'mobile' ? '0' : '320px',
         margin: '0 auto',
         minHeight: '100vh',
-        background: getCurrentThemeColors().bg,
+        background: themeColors.bg,
         color: isDarkMode ? '#ffffff' : '#000000',
         fontFamily: 'system-ui, sans-serif',
         position: 'relative',
@@ -416,163 +511,135 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
         flexDirection: 'column',
         flexShrink: 0,
         flexGrow: 0,
-        paddingTop: '40px',     // DPR=2 时显示为 80px
-        borderRadius: '40px'     // DPR=2 时显示为 80px
-      }}
-      onMouseEnter={(e) => {
-        // 显示主题切换按钮
-        const themeToggle = e.currentTarget.querySelector('.theme-toggle') as HTMLElement;
-        if (themeToggle) {
-          themeToggle.style.opacity = '1';
-          themeToggle.style.pointerEvents = 'auto';
-        }
-      }}
-      onMouseLeave={(e) => {
-        // 隐藏主题切换按钮
-        const themeToggle = e.currentTarget.querySelector('.theme-toggle') as HTMLElement;
-        if (themeToggle) {
-          themeToggle.style.opacity = '0';
-          themeToggle.style.pointerEvents = 'none';
-        }
+        paddingTop: layoutMode === 'mobile' ? '1rem' : '1.5rem',
+        paddingBottom: layoutMode === 'mobile' ? '1.25rem' : '2rem',
+        borderRadius: layoutMode === 'mobile' ? '28px' : '40px',
+        border: '1px solid rgba(255,255,255,0.12)',
+        boxShadow: isDarkMode ? '0 30px 80px rgba(0,0,0,0.36)' : '0 30px 80px rgba(15,23,42,0.12)',
+        overflow: 'hidden'
       }}
     >
-      {/* 主题切换按钮 - 悬停时显示 */}
       <div
-        className="theme-toggle"
         style={{
           position: 'absolute',
-          top: '20px',
-          right: '20px',
-          width: '40px',
-          height: '40px',
-          background: getCurrentThemeColors().primary,
-          color: 'white',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          fontSize: '16px',
-          opacity: '0',
+          inset: 0,
           pointerEvents: 'none',
-          transition: 'all 0.2s ease',
-          zIndex: 1000,
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+          background: 'radial-gradient(circle at top right, rgba(var(--theme-primary-rgb), 0.24), transparent 35%), radial-gradient(circle at bottom left, rgba(var(--theme-primary-rgb), 0.18), transparent 38%)'
         }}
-        onClick={() => setShowThemeSelector(!showThemeSelector)}
-        title="切换主题"
-      >
-        <i className="ri-edit-line"></i>
-      </div>
+      />
       {/* 页眉容器 */}
       <div id="paw-header" style={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '0 2rem',
-        marginBottom: '2rem',
-        zIndex: 1000
+        alignItems: layoutMode === 'mobile' ? 'stretch' : 'center',
+        flexDirection: layoutMode === 'mobile' ? 'column' : 'row',
+        gap: '1rem',
+        padding: layoutMode === 'mobile' ? '0 1rem' : '0 2rem',
+        marginBottom: '1.5rem',
+        zIndex: 1000,
+        position: 'relative'
       }}>
-        {/* 左侧：猫爪按钮 */}
-        <button
-          className="cat-paw-btn cat-btn"
-          onClick={() => setShowCatPawModal(true)}
-          title={t('clickToViewMore')}
-        >
-          <Icon name="paw" size={40} />
-        </button>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem'
+        }}>
+          <button
+            onClick={() => setShowCatPawModal(true)}
+            title={t('clickToViewMore')}
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '22px',
+              border: '1px solid rgba(255,255,255,0.14)',
+              background: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.72)',
+              color: 'inherit',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 12px 24px rgba(0,0,0,0.14)',
+              backdropFilter: 'blur(14px)'
+            }}
+          >
+            <Icon name="paw" size={32} />
+          </button>
 
-        {/* 右侧：编辑模式按钮组 */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.35rem'
+          }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'var(--theme-primary)'
+            }}>
+              CAT PROFILE
+            </span>
+            <div style={{
+              fontSize: layoutMode === 'mobile' ? '1rem' : '1.1rem',
+              fontWeight: 700
+            }}>
+              你的链上身份聚合器
+            </div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: isDarkMode ? 'rgba(255,255,255,0.72)' : 'rgba(15,23,42,0.68)'
+            }}>
+              整合社交身份、链接入口和公开链上足迹
+            </div>
+          </div>
+        </div>
+
         {isOwner && (
           <div style={{
             display: 'flex',
-            gap: '0.5rem',
-            alignItems: 'center'
+            gap: '0.75rem',
+            flexWrap: 'wrap',
+            justifyContent: layoutMode === 'mobile' ? 'flex-start' : 'flex-end'
           }}>
-            {/* 主题切换按钮 */}
             <button
-              className="cat-btn"
               onClick={() => setIsDarkMode(!isDarkMode)}
               style={{
-                background: isDarkMode ? '#2c3e50' : '#f39c12',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                ...utilityButtonStyle,
+                width: '44px',
+                minWidth: '44px',
+                padding: 0
               }}
               title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
             >
               {isDarkMode ? <i className="ri-moon-line"></i> : <i className="ri-sun-line"></i>}
             </button>
-            
-            {/* 主题选择按钮 */}
+
             <button
-                onClick={() => setShowThemeSelector(!showThemeSelector)}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  background: getCurrentThemeColors().primary,
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '25px',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  fontWeight: 'bold',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-                }}
-              >
-                🎨 切换主题
-              </button>
-            
-            {/* 语言切换按钮 */}
-            <button
-              className="cat-btn"
-              onClick={toggleLanguage}
-              style={{
-                padding: '0.75rem 1rem',
-                background: getCurrentThemeColors().primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: '25px',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-              }}
-              title={`当前语言: ${getCurrentLanguage().name} (点击切换)`}
+              onClick={() => setShowThemeSelector(!showThemeSelector)}
+              style={actionButtonStyle}
             >
-              <i className={getCurrentLanguage().icon} style={{ fontSize: '16px', marginRight: '0.5rem' }}></i>
+              <i className="ri-palette-line"></i>
+              主题
             </button>
-            
-            {/* 分享按钮 */}
+
             <button
-              className="cat-btn"
+              onClick={toggleLanguage}
+              style={utilityButtonStyle}
+              title={`当前语言: ${currentLanguageInfo.name} (点击切换)`}
+            >
+              <i className={currentLanguageInfo.icon}></i>
+              {currentLanguageInfo.name}
+            </button>
+
+            <button
               onClick={() => setShowShareModal(true)}
+              style={utilityButtonStyle}
               title={t('share')}
             >
-              <i className="ri-share-box-fill" style={{ fontSize: '24px' }}></i>
+              <i className="ri-share-box-line"></i>
+              分享
             </button>
           </div>
         )}
@@ -660,9 +727,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
       {/* 主体内容 */}
       <div id="paw-body" style={{
         flex: 1,
-        padding: '0 2rem',
+        padding: layoutMode === 'mobile' ? '0 1rem' : '0 2rem',
         width: '100%',  // 确保占满容器宽度
-        boxSizing: 'border-box'  // 包含padding在宽度内
+        boxSizing: 'border-box',  // 包含padding在宽度内
+        position: 'relative',
+        zIndex: 1
       }}>
         <div style={{
           display: 'flex',
@@ -670,57 +739,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
         }}>
           <div className={`grid-container ${themeClass}`} style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gridTemplateRows: 'repeat(9, 180px)',
-            gap: '1rem',
-            minHeight: '900px',
             width: '100%',  // 确保网格容器占满可用宽度
-            boxSizing: 'border-box'  // 包含padding在宽度内
+            boxSizing: 'border-box',  // 包含padding在宽度内
+            ...getGridLayoutStyles(layoutMode)
           }}>
                     {modules.map((module, index) => {
-            // 根据 default 主题的网格布局设置网格位置
-            const getPosition = (type: string) => {
-              // 将现有板块映射到 default 主题的网格位置（填满6列网格）
-              switch (type) {
-                case 'profile':
-                  return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
-                    gridRow: '1 / 3'      // 从第1行到第3行（占2行）
-                  };  
-                case 'social':
-                  return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
-                    gridRow: '3 / 4'      // 从第3行到第4行（占1行）
-                  };  
-                case 'twitter':
-                  return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
-                    gridRow: '4 / 5'      // 从第4行到第5行（占1行）
-                  };  
-                case 'mostfind':
-                  return { 
-                    gridColumn: '3 / 7',  // 从第3列到第7列（占4列）
-                    gridRow: '1 / 2'      // 从第1行到第2行（占1行）
-                  };  
-                case 'links':
-                  return { 
-                    gridColumn: '3 / 7',  // 从第3列到第7列（占4列）
-                    gridRow: '2 / 10'     // 从第2行到第10行（占8行）
-                  };  
-                case 'asset':
-                  return { 
-                    gridColumn: '1 / 3',  // 从第1列到第3列（占2列）
-                    gridRow: '5 / 10'     // 从第5行到第10行（占5行）
-                  };  
-                default:
-                  return { 
-                    gridColumn: '1 / 7',  // 从第1列到第7列（占全宽）
-                    gridRow: '6 / 10'     // 从第6行到第10行（占4行）
-                  };  
-              }
-            };
-
-            const position = getPosition(module.type);
+            const position = getModulePosition(module.type, layoutMode);
 
             return (
               <div
@@ -728,17 +752,70 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
                 className="module"
                 style={{
                   ...position,
-                  background: 'rgba(255,255,255,0.1)',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  position: 'relative'
+                  background: `linear-gradient(180deg, rgba(255,255,255,${isDarkMode ? 0.1 : 0.78}) 0%, rgba(var(--theme-primary-rgb), ${isDarkMode ? 0.14 : 0.1}) 100%)`,
+                  padding: layoutMode === 'mobile' ? '1rem' : '1.2rem',
+                  borderRadius: layoutMode === 'mobile' ? '24px' : '28px',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  border: `1px solid rgba(${isDarkMode ? '255,255,255' : '15,23,42'}, ${isDarkMode ? 0.1 : 0.08})`,
+                  boxShadow: isDarkMode ? '0 18px 40px rgba(0,0,0,0.24)' : '0 18px 40px rgba(15,23,42,0.08)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.9rem'
                 }}>
-                <h3>{module.name}</h3>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  background: 'radial-gradient(circle at top right, rgba(255,255,255,0.16), transparent 35%)'
+                }} />
+                <div style={{
+                  position: 'relative',
+                  zIndex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.9rem',
+                  height: '100%'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    gap: '1rem'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.35rem'
+                    }}>
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        color: 'var(--theme-primary)'
+                      }}>
+                        <i className={moduleIcons[module.type]}></i>
+                        <span>{module.name}</span>
+                      </div>
+                      <p style={{
+                        margin: 0,
+                        fontSize: '0.88rem',
+                        color: isDarkMode ? 'rgba(255,255,255,0.72)' : 'rgba(15,23,42,0.62)'
+                      }}>
+                        {module.content}
+                      </p>
+                    </div>
+                  </div>
                 
                 {module.type === 'profile' && (
                   <div 
                     style={{ 
-                      position: 'relative'
+                      position: 'relative',
+                      height: '100%'
                     }}
                     onMouseEnter={(e) => {
                       // 显示编辑符号
@@ -798,17 +875,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
                 )}
                 
                 {module.type === 'social' && (
-                  <SocialModule
-                    user={user}
-                    isOwner={isOwner}
-                    handleAutoSave={handleAutoSave}
-                  />
+                  <div style={{ height: '100%' }}>
+                    <SocialModule
+                      user={user}
+                      isOwner={isOwner}
+                      handleAutoSave={handleAutoSave}
+                    />
+                  </div>
                 )}
                 
                 {module.type === 'links' && (
                   <div 
                     style={{ 
-                      position: 'relative'
+                      position: 'relative',
+                      height: '100%'
                     }}
                     onMouseEnter={(e) => {
                       // 显示编辑符号
@@ -885,7 +965,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
                 {module.type === 'twitter' && (
                   <div 
                     style={{ 
-                      position: 'relative'
+                      position: 'relative',
+                      height: '100%'
                     }}
                     onMouseEnter={(e) => {
                       // 显示编辑符号
@@ -942,20 +1023,34 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
                       {isTwitterEditing ? <i className="ri-close-circle-line"></i> : <i className="ri-edit-line"></i>}
                     </div>
                     
-                    <p>{module.content}</p>
-                    
-                    {/* 如果用户设置了 Twitter Handle，显示 Twitter 时间线 */}
-                    {user?.twitterHandle && (
+                    {user?.twitterHandle ? (
                       <div style={{ 
-                        marginTop: '1rem',
+                        marginTop: '0.25rem',
                         maxWidth: '100%',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        height: '100%'
                       }}>
                         <TwitterTimeline twitterHandle={user.twitterHandle} />
+                      </div>
+                    ) : (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        borderRadius: '18px',
+                        border: '1px dashed rgba(var(--theme-primary-rgb), 0.35)',
+                        background: 'rgba(var(--theme-primary-rgb), 0.08)',
+                        color: isDarkMode ? 'rgba(255,255,255,0.72)' : 'rgba(15,23,42,0.62)',
+                        textAlign: 'center',
+                        padding: '1rem'
+                      }}>
+                        连接 X 账号后，这里会展示最近动态。
                       </div>
                     )}
                   </div>
                 )}
+                </div>
               </div>
             )}
             )}
@@ -1138,13 +1233,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
       )}
 
       {/* 二维码显示 - 右下角页脚 */}
-      <div id="paw-footer"
+      <div id="paw-floating-tools"
         style={{
           position: 'fixed',
-          bottom: '20px',
-          right: '20px',
+          bottom: layoutMode === 'mobile' ? '12px' : '20px',
+          right: layoutMode === 'mobile' ? '12px' : '20px',
           zIndex: 1000,
-          display: 'flex',
+          display: layoutMode === 'mobile' ? 'none' : 'flex',
           flexDirection: 'column',
           gap: '10px',
           alignItems: 'flex-end'
@@ -1152,9 +1247,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ username: propUsername }) => 
       >
         {/* 创建页面按钮 */}
         <button
-          className="cat-btn"
           onClick={() => setShowCreatePageModal(true)}
           style={{
+            ...actionButtonStyle,
             marginBottom: '10px'
           }}
           title={t('createOwnPage')}

@@ -22,8 +22,10 @@ export const LinksModule: React.FC<LinksModuleProps> = ({
           border: '1px solid rgba(var(--theme-primary-rgb), 0.1)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>�</div>
-          <div>暂无链接</div>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', opacity: 0.5 }}>
+            <i className="ri-links-line"></i>
+          </div>
+          <div>暂无链接，先添加一个主入口吧</div>
         </div>
       ) : (
         <div style={{
